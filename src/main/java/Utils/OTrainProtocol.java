@@ -2,11 +2,9 @@
     Author : Adrien Allemand
  */
 
-public class OtrainProtocol {
+public class OTrainProtocol {
 
     /* ---------{ Client side commands }--------- */
-
-    static String CONNECT = "CONNECT";
 
     // get the list of stations
     static String GET_GARES = "GET_GARES";
@@ -14,7 +12,7 @@ public class OtrainProtocol {
     static String GET_RESSOURCES = "GET_RESSOURCES";
 
 
-    /* Train related commands*/
+    /* Train related commands */
     // gets the train informations
     static String GET_TRAIN_STATUS = "GET_TRAIN_STATUS";
     // sends train to station
@@ -32,6 +30,17 @@ public class OtrainProtocol {
     // acquire an offer
     static String BUY_OFFRE = "BUY_OFFRE";
 
+    /* Production related commands */
+    // get the list of production
+    static String GET_PROD_QUEUE = "GET_PROD_QUEUE";
+    // adds the object to the prod queue
+    static String CRAFT = "CRAFT";
+    // removes the craft from prod queue
+    static String CANCEL_CRAFT = "CANCEL_CRAFT";
+
+    /* Connection related commands */
+    // connects to the server
+    static String CONNECT = "CONNECT";
 
 
     /* ---------{ Server side commands }--------- */
@@ -47,8 +56,5 @@ public class OtrainProtocol {
     static String AT_STATION = "AT_STATION";
     static String ON_THE_WAY = "ON_THE_WAY";
     static String ARRIVED = "ARRIVED";
-
-
-
 
 }
