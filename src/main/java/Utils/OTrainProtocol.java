@@ -2,6 +2,8 @@
     Author : Adrien Allemand
  */
 
+package Utils;
+
 public class OTrainProtocol {
 
     /* ---------{ Client side commands }--------- */
