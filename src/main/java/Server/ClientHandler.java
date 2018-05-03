@@ -21,22 +21,10 @@ ClientHandler implements Runnable {
     }
 
     public void run() {
-       /* try {*/
-
-            for(int i = 0; i < 8; ++i){
-                writer.println("Coucou" + i);
-                writer.flush();
-                try {
-                    System.out.println(reader.readLine());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-/*
+        try {
             //try to connect
             String password;
             do {
-
                 writer.println("SEND LOGGIN");//protocol
                 writer.flush();
                 username = reader.readLine();
@@ -47,12 +35,12 @@ ClientHandler implements Runnable {
 
             writer.println("YOU ARE LOGGED AS : " + username);//protocol
             writer.flush();
-            String line;
+            /*String line;
             while (running && (line = reader.readLine()) != null) {
                 //work...
-            }*//*
+            }*/
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 }

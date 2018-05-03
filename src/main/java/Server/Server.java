@@ -25,11 +25,6 @@ public class Server {
                     while(running) {
                         try {
                             Socket clientSocket = serverSocket.accept();
-                            //
-                            PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
-                            pw.println("println");
-                            pw.flush();
-                            //
                             ClientHandler clientHandler = new ClientHandler(clientSocket, db);
                             clientHandlers.add(clientHandler);
                             Thread clientThread = new Thread(clientHandler);
