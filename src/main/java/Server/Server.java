@@ -3,6 +3,7 @@ package Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLOutput;
 import java.util.LinkedList;
 
 public class Server {
@@ -13,7 +14,7 @@ public class Server {
 
     public void startServer() {
         try {
-            serverSocket = new ServerSocket(4444);//protocol
+            serverSocket = new ServerSocket(44444);//protocol
             clientHandlers = new LinkedList<ClientHandler>();
             running = true;
             db = new DataBase();
@@ -33,6 +34,8 @@ public class Server {
                     }
                 }
             });
+
+            serverThread.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
