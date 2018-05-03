@@ -17,7 +17,8 @@ public class Client {
         try {
             socket = new Socket("localhost", 44444);
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new PrintWriter(new ObjectOutputStream(socket.getOutputStream()));
+            writer = new PrintWriter(socket.getOutputStream());
+            System.out.println(reader.readLine());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,6 +48,11 @@ public class Client {
         }
 
         return "ERROR";
+    }
+
+    public void sendLine(String line) {
+        writer.println(line);
+        writer.flush();
     }
 
     public void sendLogin(String username, String password) {

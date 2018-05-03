@@ -1,6 +1,7 @@
 package Server;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLOutput;
@@ -24,6 +25,11 @@ public class Server {
                     while(running) {
                         try {
                             Socket clientSocket = serverSocket.accept();
+                            //
+                            PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
+                            pw.println("println");
+                            pw.flush();
+                            //
                             ClientHandler clientHandler = new ClientHandler(clientSocket, db);
                             clientHandlers.add(clientHandler);
                             Thread clientThread = new Thread(clientHandler);

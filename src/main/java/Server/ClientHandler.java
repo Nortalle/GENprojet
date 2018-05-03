@@ -16,8 +16,8 @@ ClientHandler implements Runnable {
         this.socket = socket;
         this.db = db;
         running = true;
-        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        writer = new PrintWriter(new ObjectOutputStream(socket.getOutputStream()));
+        reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+        writer = new PrintWriter(this.socket.getOutputStream());
     }
 
     public void run() {
@@ -26,6 +26,11 @@ ClientHandler implements Runnable {
             for(int i = 0; i < 8; ++i){
                 writer.println("Coucou" + i);
                 writer.flush();
+                try {
+                    System.out.println(reader.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 /*
             //try to connect
