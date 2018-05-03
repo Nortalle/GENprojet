@@ -22,6 +22,7 @@ public class TestConnection {
 
     @BeforeEach
     public  void setUpBeforeEach(){
+        System.out.println("---");
         client = new Client();
 
         client.connectServer();
@@ -30,13 +31,20 @@ public class TestConnection {
 
     @Test
     public void LoginCorrect(){
-
         String username = "vincent";
-
         System.out.println("Server : " + client.readLineFromServer());
         client.sendLogin(username, username);
-
         assertEquals("YOU ARE LOGGED AS : " + username, client.readLineFromServer());
+    }
+
+    @Test
+    public void LoginWrong(){
+        String username = "vincent";
+        String username2 = "other";
+        System.out.println("Server : " + client.readLineFromServer());
+        client.sendLogin(username, username2);
+        assertEquals("SEND LOGGIN", client.readLineFromServer());
+        client.sendLogin(username, username);
     }
 
 
