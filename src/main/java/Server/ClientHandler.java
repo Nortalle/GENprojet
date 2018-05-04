@@ -25,20 +25,6 @@ ClientHandler implements Runnable {
 
     public void run() {
         try {
-            //try to connect
-            /*String password;
-            do {
-                writer.println("SEND LOGGIN");//protocol
-                writer.flush();
-                username = reader.readLine();
-                password = reader.readLine();
-
-                System.out.println("user : " + username + " pass : " + password);
-            } while(!db.checkLoggin(username, password));
-
-            writer.println("YOU ARE LOGGED AS : " + username);//protocol
-            writer.flush();*/
-
             waitForAuthentification();
 
             String line = reader.readLine();
@@ -60,18 +46,19 @@ ClientHandler implements Runnable {
             boolean logged = false;
             boolean signedUp;
             while(!logged) {
-                String resquest = reader.readLine();
+                String request = reader.readLine();
+                while(!request.equals(OTrainProtocol.CONNECT) && !request.equals(OTrainProtocol.SIGN_UP)) request = reader.readLine();
                 username = reader.readLine();
                 String password = reader.readLine();
-                if(resquest.equals(OTrainProtocol.CONNECT)) {
+                if(request.equals(OTrainProtocol.CONNECT)) {
                     logged = db.checkLoggin(username, password);
                     writer.println(logged ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
                     writer.flush();
-                } else if(resquest.equals(OTrainProtocol.SIGN_UP)) {
+                } else if(request.equals(OTrainProtocol.SIGN_UP)) {
                     if(username == null || password == null || username.equals("")) {
                         signedUp = false;
                     } else {
-                        signedUp = true;//or not
+                        signedUp = db.insertUser(username, password);
                     }
                     writer.println(signedUp ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
                     writer.flush();
