@@ -52,6 +52,22 @@ public class DataBase {
     /**
      * @return if all users were delete
      */
+    public boolean deleteUser(String username) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM Utilisateur WHERE nomUtilisateur=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            int status = ps.executeUpdate();
+            if(status == 0) return true;
+            else return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * @return if all users were delete
+     */
     public boolean deleteAllUsers() {
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Utilisateur;", Statement.RETURN_GENERATED_KEYS);
@@ -114,7 +130,6 @@ public class DataBase {
             resultSet = ps.executeQuery();
             if(resultSet.next()) {
                 for(int i = 1; i < 10; i++) {
-                    System.out.println(resultSet.getInt(i+1));
                     resources[i-1] = resultSet.getInt(i+1);
                 }
             }
