@@ -1,5 +1,7 @@
 package Server;
 
+import Utils.OTrainProtocol;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -15,7 +17,7 @@ public class Server {
 
     public void startServer() {
         try {
-            serverSocket = new ServerSocket(44444);//protocol
+            serverSocket = new ServerSocket(OTrainProtocol.PORT);//protocol
             clientHandlers = new LinkedList<ClientHandler>();
             running = true;
             db = new DataBase();

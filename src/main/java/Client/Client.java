@@ -1,6 +1,7 @@
 package Client;
 
 import Gui.LoginForm;
+import Utils.OTrainProtocol;
 
 import javax.swing.*;
 import java.io.*;
@@ -15,7 +16,7 @@ public class Client {
     public void connectServer() {
 
         try {
-            socket = new Socket("localhost", 44444);
+            socket = new Socket("localhost", OTrainProtocol.PORT);
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream());
         } catch (IOException e) {
@@ -39,6 +40,14 @@ public class Client {
     }
 
     public void sendLogin(String username, String password) {
+        writer.println(OTrainProtocol.CONNECT);
+        writer.println(username);
+        writer.println(password);
+        writer.flush();
+    }
+
+    public void signUp(String username, String password) {
+        writer.println(OTrainProtocol.SIGN_UP);
         writer.println(username);
         writer.println(password);
         writer.flush();

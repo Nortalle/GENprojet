@@ -1,5 +1,7 @@
 package Server;
 
+import Utils.OTrainProtocol;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -18,12 +20,13 @@ ClientHandler implements Runnable {
         running = true;
         reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         writer = new PrintWriter(this.socket.getOutputStream());
+        username = null;
     }
 
     public void run() {
         try {
             //try to connect
-            String password;
+            /*String password;
             do {
                 writer.println("SEND LOGGIN");//protocol
                 writer.flush();
@@ -34,7 +37,10 @@ ClientHandler implements Runnable {
             } while(!db.checkLoggin(username, password));
 
             writer.println("YOU ARE LOGGED AS : " + username);//protocol
-            writer.flush();
+            writer.flush();*/
+
+            waitForAuthentification();
+
             String line = reader.readLine();
             while (running && line != null) {
                 //work...
@@ -47,5 +53,33 @@ ClientHandler implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void waitForAuthentification() {
+        try {
+            boolean logged = false;
+            boolean signedUp;
+            while(!logged) {
+                String resquest = reader.readLine();
+                username = reader.readLine();
+                String password = reader.readLine();
+                if(resquest.equals(OTrainProtocol.CONNECT)) {
+                    logged = db.checkLoggin(username, password);
+                    writer.println(logged ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
+                    writer.flush();
+                } else if(resquest.equals(OTrainProtocol.SIGN_UP)) {
+                    if(username == null || password == null || username.equals("")) {
+                        signedUp = false;
+                    } else {
+                        signedUp = true;//or not
+                    }
+                    writer.println(signedUp ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
+                    writer.flush();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
