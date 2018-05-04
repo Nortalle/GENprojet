@@ -29,24 +29,31 @@ public class TestConnection {
     }
 
     @Test
-    public void LoginCorrect(){
-        client.sendLogin(username, username);
-        String line = client.readLineFromServer();
+    public void loginCorrect(){
+        String line = client.sendLogin(username, username);
         System.out.println("Server : " + line);
         assertEquals(OTrainProtocol.SUCCESS, line);
     }
 
     @Test
-    public void LoginWrong(){
+    public void loginWrong(){
         String username2 = "other";
-        client.sendLogin(username, username2);
-        String line = client.readLineFromServer();
+        String line = client.sendLogin(username, username2);
         System.out.println("Server : " + line);
         assertEquals(OTrainProtocol.FAILURE, line);
-        client.sendLogin(username, username);
-        line = client.readLineFromServer();
+        line = client.sendLogin(username, username);
         System.out.println("Server : " + line);
     }
 
+    @Test
+    public void createNewUser(){
+        String username2 = "other";
+        assertEquals(OTrainProtocol.SUCCESS, client.signUp(username2, username2));
+    }
+
+    @Test
+    public void cantCreateAlreadyUsedUsername(){
+        assertEquals(OTrainProtocol.FAILURE, client.signUp(username, username));
+    }
 
 }

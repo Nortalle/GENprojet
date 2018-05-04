@@ -38,8 +38,10 @@ public class TestDataBase {
     public void insertNumberOfUsers(){
         String username = "user1";
         String password = "pass1";
-        dataBase.insertUser(username, password);
-        assertEquals(1, dataBase.getAllUsers().size());
+        int nbUsers = dataBase.getAllUsers().size();
+        if(dataBase.insertUser(username, password)) assertEquals(nbUsers + 1, dataBase.getAllUsers().size());
+        else assertEquals(nbUsers, dataBase.getAllUsers().size());
+
     }
 
     @Test
