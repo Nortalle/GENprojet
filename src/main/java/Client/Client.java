@@ -1,5 +1,6 @@
 package Client;
 
+import Gui.LoginForm;
 import Server.DataBase;
 
 import java.io.*;
@@ -45,6 +46,8 @@ public class Client {
 
     //temp
     public static void main(String ... args) {
+        LoginForm lf = new LoginForm();
+
         Client client = new Client();
         client.connectServer();
         String line = client.readLineFromServer();
