@@ -42,4 +42,16 @@ public class Client {
         writer.println(password);
         writer.flush();
     }
+
+    //temp
+    public static void main(String ... args) {
+        Client client = new Client();
+        client.connectServer();
+        String line = client.readLineFromServer();
+        client.sendLogin(args[0], args[1]);
+        while(true) {
+            System.out.println("Server : " + line);
+            line = client.readLineFromServer();
+        }
+    }
 }

@@ -32,19 +32,27 @@ public class TestConnection {
     @Test
     public void LoginCorrect(){
         String username = "vincent";
-        System.out.println("Server : " + client.readLineFromServer());
+        String line = client.readLineFromServer();
+        System.out.println("Server : " + line);
         client.sendLogin(username, username);
-        assertEquals("YOU ARE LOGGED AS : " + username, client.readLineFromServer());
+        line = client.readLineFromServer();
+        System.out.println("Server : " + line);
+        assertEquals("YOU ARE LOGGED AS : " + username, line);
     }
 
     @Test
     public void LoginWrong(){
         String username = "vincent";
         String username2 = "other";
-        System.out.println("Server : " + client.readLineFromServer());
+        String line = client.readLineFromServer();
+        System.out.println("Server : " + line);
         client.sendLogin(username, username2);
-        assertEquals("SEND LOGGIN", client.readLineFromServer());
+        line = client.readLineFromServer();
+        System.out.println("Server : " + line);
+        assertEquals("SEND LOGGIN", line);
         client.sendLogin(username, username);
+        line = client.readLineFromServer();
+        System.out.println("Server : " + line);
     }
 
 
