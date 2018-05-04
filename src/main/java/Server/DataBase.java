@@ -20,7 +20,7 @@ public class DataBase {
     }
 
     /**
-     * @param username new user
+     * @param username new player
      * @param password password
      * @return if user has been inserted (false if username already is data base)
      */
