@@ -64,10 +64,10 @@ public class Client {
         frame.setVisible(true);
 
         //test server responses
-        String line = client.readLineFromServer();
+        /*String line = client.readLineFromServer();
         while(true) {
             System.out.println("Server : " + line);
             line = client.readLineFromServer();
-        }
+        }*/
     }
 }

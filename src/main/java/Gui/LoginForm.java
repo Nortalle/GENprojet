@@ -1,21 +1,21 @@
 package Gui;
 
 import Client.Client;
+import Utils.OTrainProtocol;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginForm {
-    private JTextArea OTrainTextArea;
     private JPasswordField input_password;
     private JTextField input_username;
     private JButton button_sign_up;
     private JButton button_login;
     private JPanel panel_main;
     private JPanel panel_buttons;
-    private JTextArea label_password;
-    private JTextArea label_username;
+    private JLabel label_info;
 
     private Client client;
 
@@ -25,12 +25,40 @@ public class LoginForm {
 
         button_sign_up.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                client.signUp(input_username.getText(), String.valueOf(input_password.getPassword()));
 
+                String answer = client.readLineFromServer();
+                if(answer.equals(OTrainProtocol.SUCCESS)) {
+                    label_info.setForeground(Color.GREEN);
+                    label_info.setText("New account created");
+                }
+                else if(answer.equals(OTrainProtocol.FAILURE)) {
+                    label_info.setForeground(Color.RED);
+                    label_info.setText("Fail to create new account");
+                }
+                else {
+                    label_info.setForeground(Color.RED);
+                    label_info.setText("ERROR");
+                }
             }
         });
         button_login.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 client.sendLogin(input_username.getText(), String.valueOf(input_password.getPassword()));
+
+                String answer = client.readLineFromServer();
+                if(answer.equals(OTrainProtocol.SUCCESS)) {
+                    label_info.setForeground(Color.GREEN);
+                    label_info.setText("You are logged");
+                }
+                else if(answer.equals(OTrainProtocol.FAILURE)) {
+                    label_info.setForeground(Color.RED);
+                    label_info.setText("Wrong username/password");
+                }
+                else {
+                    label_info.setForeground(Color.RED);
+                    label_info.setText("ERROR");
+                }
             }
         });
     }
