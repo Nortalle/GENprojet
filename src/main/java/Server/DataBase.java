@@ -29,6 +29,18 @@ public class DataBase {
         return false;
     }
 
+    public boolean deleteAllUsers() {
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM Utilisateur;", Statement.RETURN_GENERATED_KEYS);
+            int status = ps.executeUpdate();
+            if(status == 0) return true;
+            else return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public ArrayList<String> getAllusers() {
         ArrayList<String> result = new ArrayList<String>();
         try {
