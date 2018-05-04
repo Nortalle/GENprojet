@@ -31,7 +31,7 @@ public class TestDataBase {
         String username = "user1";
         String password = "pass1";
         dataBase.insertUser(username, password);
-        assertEquals(username, dataBase.getAllusers().get(0));
+        assertEquals(username, dataBase.getAllUsers().get(0));
     }
 
     @Test
@@ -39,7 +39,7 @@ public class TestDataBase {
         String username = "user1";
         String password = "pass1";
         dataBase.insertUser(username, password);
-        assertEquals(1, dataBase.getAllusers().size());
+        assertEquals(1, dataBase.getAllUsers().size());
     }
 
     @Test

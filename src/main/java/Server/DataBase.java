@@ -19,6 +19,11 @@ public class DataBase {
         }
     }
 
+    /**
+     * @param username new user
+     * @param password password
+     * @return if user has been inserted (false if username already is data base)
+     */
     public boolean insertUser(String username, String password) {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Utilisateur VALUES(?,?);", Statement.RETURN_GENERATED_KEYS);
@@ -33,6 +38,9 @@ public class DataBase {
         return false;
     }
 
+    /**
+     * @return if all users were delete
+     */
     public boolean deleteAllUsers() {
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Utilisateur;", Statement.RETURN_GENERATED_KEYS);
@@ -45,7 +53,10 @@ public class DataBase {
         return false;
     }
 
-    public ArrayList<String> getAllusers() {
+    /**
+     * @return list of all username
+     */
+    public ArrayList<String> getAllUsers() {
         ArrayList<String> result = new ArrayList<String>();
         try {
             ResultSet resultSet;
@@ -60,6 +71,11 @@ public class DataBase {
         return result;
     }
 
+    /**
+     * @param username player
+     * @param password password
+     * @return if login was successful
+     */
     public boolean checkLoggin(String username, String password) {
         try {
             ResultSet resultSet;
@@ -72,5 +88,27 @@ public class DataBase {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * @param username player
+     * @return tab of resources (Scrum, Eau, Bois, Charbon, Petrol, Fer, Cuivre, Acier, Or); -1 means unknown
+     */
+    public int[] getPlayerResources(String username) {
+        int resources[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                for(int i = 0; i < 9; i++) {
+                    resources[i] = resultSet.getInt(i + 1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resources;
     }
 }
