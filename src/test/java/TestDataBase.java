@@ -41,4 +41,12 @@ public class TestDataBase {
         dataBase.insertUser(username, password);
         assertEquals(1, dataBase.getAllusers().size());
     }
+
+    @Test
+    public void failInsertAlreadyExitingUser(){
+        String username = "user1";
+        String password = "pass1";
+        dataBase.insertUser(username, password);
+        assertFalse(dataBase.insertUser(username, password));
+    }
 }
