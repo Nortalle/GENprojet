@@ -3,6 +3,7 @@ package Client;
 import Gui.LoginForm;
 import Server.DataBase;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 
@@ -46,7 +47,13 @@ public class Client {
 
     //temp
     public static void main(String ... args) {
-        LoginForm lf = new LoginForm();
+
+        // Crée la fenêtre de login
+        JFrame frame = new JFrame("OTrain");
+        frame.setContentPane(new LoginForm().getPanel_main());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
 
         Client client = new Client();
         client.connectServer();
