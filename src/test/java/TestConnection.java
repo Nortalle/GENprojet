@@ -55,5 +55,4 @@ public class TestConnection {
     public void cantCreateAlreadyUsedUsername(){
         assertEquals(OTrainProtocol.FAILURE, client.signUp(username, username));
     }
-
 }
