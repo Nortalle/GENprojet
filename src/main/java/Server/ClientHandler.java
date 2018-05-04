@@ -35,10 +35,15 @@ ClientHandler implements Runnable {
 
             writer.println("YOU ARE LOGGED AS : " + username);//protocol
             writer.flush();
-            /*String line;
-            while (running && (line = reader.readLine()) != null) {
+            String line = reader.readLine();
+            while (running && line != null) {
                 //work...
-            }*/
+                System.out.println("Client (" + username + ") : " + line);
+                writer.println("You sent me that : " + line);
+                writer.flush();
+
+                line = reader.readLine();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

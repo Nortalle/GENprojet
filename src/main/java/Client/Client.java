@@ -44,7 +44,6 @@ public class Client {
         writer.flush();
     }
 
-    //temp
     public static void main(String ... args) {
         Client client = new Client();
 
@@ -55,9 +54,8 @@ public class Client {
         frame.pack();
         frame.setVisible(true);
 
-        //client.connectServer();
+        //test server responses
         String line = client.readLineFromServer();
-        //client.sendLogin(args[0], args[1]);
         while(true) {
             System.out.println("Server : " + line);
             line = client.readLineFromServer();
