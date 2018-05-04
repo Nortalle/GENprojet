@@ -1,5 +1,7 @@
 package Gui;
 
+import Client.Client;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,10 +17,20 @@ public class LoginForm {
     private JTextArea label_password;
     private JTextArea label_username;
 
-    public LoginForm() {
+    private Client client;
+
+    public LoginForm(Client c) {
+        client = c;
+        client.connectServer();
+
         button_sign_up.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
+            }
+        });
+        button_login.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                client.sendLogin(input_username.getText(), String.valueOf(input_password.getPassword()));
             }
         });
     }
