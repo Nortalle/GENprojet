@@ -31,6 +31,17 @@ public class DataBase {
             ps.setObject(2, password);
             int status = ps.executeUpdate();
             if(status == 0) return false;
+
+            ps = connection.prepareStatement("INSERT INTO Joueur VALUES(?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            status = ps.executeUpdate();
+            if(status == 0) return false;
+
+            ps = connection.prepareStatement("INSERT INTO RessourcesParJoueur VALUES(?,default,default,default,default,default,default,default,default,default);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            status = ps.executeUpdate();
+
+            if(status == 0) return false;
             else return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -98,12 +109,13 @@ public class DataBase {
         int resources[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
         try {
             ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM RessourcesParJoueur WHERE nomJoueur=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             resultSet = ps.executeQuery();
             if(resultSet.next()) {
-                for(int i = 0; i < 9; i++) {
-                    resources[i] = resultSet.getInt(i + 1);
+                for(int i = 1; i < 10; i++) {
+                    System.out.println(resultSet.getInt(i+1));
+                    resources[i-1] = resultSet.getInt(i+1);
                 }
             }
         } catch (SQLException e) {

@@ -11,42 +11,46 @@ public class RessourcesForm {
 
     private Client client;
     private JPanel panel_main;
-    private JButton deconnecterButton;
+    private JButton disconnectButton;
     private JButton actualiserButton;
     private JPanel RessourcesPanel;
     private JPanel ObjectsPanel;
     private JPanel ActionPanel;
+    private JLabel label_resources;
     private LinkedList<JLabel> ressources = new LinkedList<JLabel>();
     private LinkedList<JLabel> objects = new LinkedList<JLabel>();
 
 
     public RessourcesForm(Client c) {
         this.client = c;
-        updateRessources();
+        updateResources();
 
         actualiserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                updateRessources();
+                updateResources();
             }
         });
-        deconnecterButton.addActionListener(new ActionListener() {
+        disconnectButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 client.disconnect();
             }
         });
     }
 
-    private void updateRessources(){
-
-        //ressources = client.getAllClientRessrouces;
-        for(JLabel r : ressources){
-            RessourcesPanel.add(r);
+    private void updateResources(){
+        client.getResources();
+        String answer = client.readLineFromServer();
+        label_resources.setText(answer);
+        /*
+        //resources = client.getAllClientResources;
+        for(JLabel r : resources){
+            ResourcesPanel.add(r);
         }
 
         //objects = client.getAllClientObjects;
         for(JLabel o : objects){
             ObjectsPanel.add(o);
-        }
+        }*/
     }
 
     public JPanel getPanel_main() {

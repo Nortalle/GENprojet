@@ -81,6 +81,12 @@ public class Client {
         writer.flush();
     }
 
+    public void getResources() {
+        writer.println(OTrainProtocol.GET_RESSOURCES);
+        writer.println(username);
+        writer.flush();
+    }
+
     public static void main(String ... args) {
         Client client = new Client();
         client.startingFrame();

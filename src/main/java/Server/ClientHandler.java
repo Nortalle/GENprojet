@@ -31,8 +31,15 @@ ClientHandler implements Runnable {
             while (running && line != null) {
                 //work...
                 System.out.println("Client (" + username + ") : " + line);
-                writer.println("You sent me that : " + line);
-                writer.flush();
+                if(line.equals(OTrainProtocol.GET_RESSOURCES)) {
+                    int resources[] = db.getPlayerResources(username);
+                    String r = "";
+                    for(int i = 0; i < resources.length; i++) r += resources[i] + ", ";
+                    writer.println(r);
+                    writer.flush();
+                }
+                /*writer.println("You sent me that : " + line);
+                writer.flush();*/
 
                 line = reader.readLine();
             }
