@@ -10,7 +10,7 @@ public class TestDataBase {
 
     @BeforeAll
     public static void setUpBeforeAll() {
-        dataBase = new DataBase("jdbc:mysql://localhost:3306/GEN_otrain?user=root&password=root");
+        dataBase = new DataBase();
     }
 
     @BeforeEach

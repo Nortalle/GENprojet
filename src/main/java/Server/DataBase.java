@@ -4,9 +4,13 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DataBase {
-    Connection connection;
+    private Connection connection;
+    private final static String URL = "jdbc:mysql://localhost:3306/GEN_otrain?user=root&password=root";
 
-    //jdbc:mysql://localhost:3306/GEN_otrain?user=root&password=root
+    public DataBase() {
+        this(URL);
+    }
+
     public DataBase(String url) {
         try {
             connection = DriverManager.getConnection(url);

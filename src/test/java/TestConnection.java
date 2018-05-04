@@ -3,7 +3,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 import Server.Server;
-import Server.DataBase;
 import Client.Client;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +23,7 @@ public class TestConnection {
         System.out.println("---");
         client = new Client();
         client.connectServer();
-        DataBase dataBase = new DataBase("jdbc:mysql://localhost:3306/GEN_otrain?user=root&password=root");
+        DataBase dataBase = new DataBase();
         dataBase.insertUser(username, username);
     }
 

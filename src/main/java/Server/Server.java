@@ -18,8 +18,7 @@ public class Server {
             serverSocket = new ServerSocket(44444);//protocol
             clientHandlers = new LinkedList<ClientHandler>();
             running = true;
-            String url = "jdbc:mysql://localhost:3306/GEN_otrain?user=root&password=root";
-            db = new DataBase(url);
+            db = new DataBase();
 
             Thread serverThread = new Thread(new Runnable() {
                 public void run() {
