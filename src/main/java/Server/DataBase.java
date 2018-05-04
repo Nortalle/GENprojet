@@ -44,7 +44,7 @@ public class DataBase {
     public ArrayList<String> getAllusers() {
         ArrayList<String> result = new ArrayList<String>();
         try {
-            ResultSet resultSet = null;
+            ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT nomUtilisateur FROM Utilisateur;", Statement.RETURN_GENERATED_KEYS);
             resultSet = ps.executeQuery();
             while(resultSet.next()) {
@@ -57,6 +57,16 @@ public class DataBase {
     }
 
     public boolean checkLoggin(String username, String password) {
-        return username.equals(password);
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT motDePasse FROM Utilisateur WHERE nomUtilisateur=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()) return password.equals(resultSet.getString(1));
+            else return false;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
