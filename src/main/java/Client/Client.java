@@ -13,6 +13,9 @@ public class Client {
     private PrintWriter writer;
     private String username;
 
+    //GUI
+    private JFrame frame;
+
     public void connectServer() {
 
         try {
@@ -24,13 +27,38 @@ public class Client {
         }
     }
 
+    public void disconnect() {
+        try {
+            socket.close();
+            reader.close();
+            writer.close();
+            setFrameContent(new LoginForm(this).getPanel_main());
+            connectServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startingFrame() {
+        frame = new JFrame("OTrain");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setFrameContent(new LoginForm(this).getPanel_main());
+        frame.setVisible(true);
+
+        connectServer();
+    }
+
+    public void setFrameContent(JPanel panel) {
+        frame.setContentPane(panel);
+        frame.pack();
+    }
+
     public String readLineFromServer() {
         try {
             return reader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return "ERROR";
     }
 
@@ -55,13 +83,14 @@ public class Client {
 
     public static void main(String ... args) {
         Client client = new Client();
+        client.startingFrame();
 
         // Crée la fenêtre de login
-        JFrame frame = new JFrame("OTrain");
+        /*JFrame frame = new JFrame("OTrain");
         frame.setContentPane(new LoginForm(client).getPanel_main());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-        frame.setVisible(true);
+        frame.setVisible(true);*/
 
         //test server responses
         /*String line = client.readLineFromServer();

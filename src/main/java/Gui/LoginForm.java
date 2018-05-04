@@ -21,7 +21,7 @@ public class LoginForm {
 
     public LoginForm(Client c) {
         client = c;
-        client.connectServer();
+        //client.connectServer();
 
         button_sign_up.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -50,6 +50,8 @@ public class LoginForm {
                 if(answer.equals(OTrainProtocol.SUCCESS)) {
                     label_info.setForeground(Color.GREEN);
                     label_info.setText("You are logged");
+                    //
+                    client.setFrameContent(new RessourcesForm(client).getPanel_main());
                 }
                 else if(answer.equals(OTrainProtocol.FAILURE)) {
                     label_info.setForeground(Color.RED);

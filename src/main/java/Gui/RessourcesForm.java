@@ -10,7 +10,7 @@ import Client.*;
 public class RessourcesForm {
 
     private Client client;
-    private JPanel mainPanel;
+    private JPanel panel_main;
     private JButton deconnecterButton;
     private JButton actualiserButton;
     private JPanel RessourcesPanel;
@@ -20,8 +20,8 @@ public class RessourcesForm {
     private LinkedList<JLabel> objects = new LinkedList<JLabel>();
 
 
-    public RessourcesForm(Client client) {
-        this.client = client;
+    public RessourcesForm(Client c) {
+        this.client = c;
         updateRessources();
 
         actualiserButton.addActionListener(new ActionListener() {
@@ -31,7 +31,7 @@ public class RessourcesForm {
         });
         deconnecterButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //client.disconnect()
+                client.disconnect();
             }
         });
     }
@@ -47,6 +47,10 @@ public class RessourcesForm {
         for(JLabel o : objects){
             ObjectsPanel.add(o);
         }
+    }
+
+    public JPanel getPanel_main() {
+        return panel_main;
     }
 
     private void createUIComponents() {
