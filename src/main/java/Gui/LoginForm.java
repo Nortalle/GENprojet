@@ -25,9 +25,8 @@ public class LoginForm {
 
         button_sign_up.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                client.signUp(input_username.getText(), String.valueOf(input_password.getPassword()));
+                String answer = client.signUp(input_username.getText(), String.valueOf(input_password.getPassword()));
 
-                String answer = client.readLineFromServer();
                 if(answer.equals(OTrainProtocol.SUCCESS)) {
                     label_info.setForeground(Color.GREEN);
                     label_info.setText("New account created");
@@ -44,9 +43,8 @@ public class LoginForm {
         });
         button_login.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                client.sendLogin(input_username.getText(), String.valueOf(input_password.getPassword()));
+                String answer = client.sendLogin(input_username.getText(), String.valueOf(input_password.getPassword()));
 
-                String answer = client.readLineFromServer();
                 if(answer.equals(OTrainProtocol.SUCCESS)) {
                     label_info.setForeground(Color.GREEN);
                     label_info.setText("You are logged");

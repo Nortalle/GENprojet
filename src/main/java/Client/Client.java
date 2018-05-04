@@ -67,24 +67,45 @@ public class Client {
         writer.flush();
     }
 
-    public void sendLogin(String username, String password) {
+    public String sendLogin(String username, String password) {
         writer.println(OTrainProtocol.CONNECT);
         writer.println(username);
         writer.println(password);
         writer.flush();
+        String answer = "ERROR";
+        try {
+            answer = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return answer;
     }
 
-    public void signUp(String username, String password) {
+    public String signUp(String username, String password) {
         writer.println(OTrainProtocol.SIGN_UP);
         writer.println(username);
         writer.println(password);
         writer.flush();
+        String answer = "ERROR";
+        try {
+            answer = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return answer;
     }
 
-    public void getResources() {
+    public String getResources() {
         writer.println(OTrainProtocol.GET_RESSOURCES);
         writer.println(username);
         writer.flush();
+        String answer = "ERROR";
+        try {
+            answer = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return answer;
     }
 
     public static void main(String ... args) {

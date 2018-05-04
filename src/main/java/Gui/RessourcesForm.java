@@ -17,8 +17,6 @@ public class RessourcesForm {
     private JPanel ObjectsPanel;
     private JPanel ActionPanel;
     private JLabel label_resources;
-    private LinkedList<JLabel> ressources = new LinkedList<JLabel>();
-    private LinkedList<JLabel> objects = new LinkedList<JLabel>();
 
 
     public RessourcesForm(Client c) {
@@ -38,19 +36,8 @@ public class RessourcesForm {
     }
 
     private void updateResources(){
-        client.getResources();
-        String answer = client.readLineFromServer();
+        String answer = client.getResources();
         label_resources.setText(answer);
-        /*
-        //resources = client.getAllClientResources;
-        for(JLabel r : resources){
-            ResourcesPanel.add(r);
-        }
-
-        //objects = client.getAllClientObjects;
-        for(JLabel o : objects){
-            ObjectsPanel.add(o);
-        }*/
     }
 
     public JPanel getPanel_main() {

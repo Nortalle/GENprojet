@@ -33,7 +33,7 @@ ClientHandler implements Runnable {
                 System.out.println("Client (" + username + ") : " + line);
                 if(line.equals(OTrainProtocol.GET_RESSOURCES)) {
                     int resources[] = db.getPlayerResources(username);
-                    String r = "";
+                    String r = "";//need change to send tab
                     for(int i = 0; i < resources.length; i++) r += resources[i] + ", ";
                     writer.println(r);
                     writer.flush();
