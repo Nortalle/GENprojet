@@ -24,7 +24,21 @@ public class TestDataBase {
         String username = "user1";
         String password = "pass1";
         assertTrue(dataBase.insertUser(username, password));
-        assertEquals("user1", dataBase.getAllusers().get(0));
+    }
+
+    @Test
+    public void insertGetAllUsers(){
+        String username = "user1";
+        String password = "pass1";
+        dataBase.insertUser(username, password);
+        assertEquals(username, dataBase.getAllusers().get(0));
+    }
+
+    @Test
+    public void insertNumberOfUsers(){
+        String username = "user1";
+        String password = "pass1";
+        dataBase.insertUser(username, password);
         assertEquals(1, dataBase.getAllusers().size());
     }
 }

@@ -21,8 +21,8 @@ public class DataBase {
             ps.setObject(1, username);
             ps.setObject(2, password);
             int status = ps.executeUpdate();
-            if(status == 0) return true;
-            else return false;
+            if(status == 0) return false;
+            else return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
