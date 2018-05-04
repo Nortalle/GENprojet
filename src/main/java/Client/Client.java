@@ -1,17 +1,16 @@
 package Client;
 
 import Gui.LoginForm;
-import Server.DataBase;
 
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 
 public class Client {
-
     private Socket socket;
     private BufferedReader reader;
     private PrintWriter writer;
+    private String username;
 
     public void connectServer() {
 
@@ -47,18 +46,18 @@ public class Client {
 
     //temp
     public static void main(String ... args) {
+        Client client = new Client();
 
         // Crée la fenêtre de login
         JFrame frame = new JFrame("OTrain");
-        frame.setContentPane(new LoginForm().getPanel_main());
+        frame.setContentPane(new LoginForm(client).getPanel_main());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
 
-        Client client = new Client();
-        client.connectServer();
+        //client.connectServer();
         String line = client.readLineFromServer();
-        client.sendLogin(args[0], args[1]);
+        //client.sendLogin(args[0], args[1]);
         while(true) {
             System.out.println("Server : " + line);
             line = client.readLineFromServer();
