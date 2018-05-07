@@ -18,6 +18,18 @@ public class Resources {
     private int acier;
     private int or;
 
+    Resources(){
+        scrum = 0;
+        eau = 0;
+        bois = 0;
+        chardon = 0;
+        petrol = 0;
+        fer = 0;
+        cuivre = 0;
+        acier = 0;
+        or = 0;
+    }
+
     Resources(int [] ressources){
         scrum = ressources[0];
         eau = ressources[1];
