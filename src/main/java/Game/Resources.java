@@ -6,8 +6,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * Class which represents all the resources of a player
+ *
+ * @author Vincent Guidoux
+ */
 public class Resources {
 
+    //unité monétaire du jeu
     private int scrum;
     private int eau;
     private int bois;
@@ -18,18 +24,27 @@ public class Resources {
     private int acier;
     private int or;
 
+    /**
+     * default constructor which init all the resources to zero
+     */
     Resources(){
-        scrum = 0;
-        eau = 0;
-        bois = 0;
-        chardon = 0;
-        petrol = 0;
-        fer = 0;
-        cuivre = 0;
-        acier = 0;
-        or = 0;
+        init();
     }
 
+    /**
+     * constructor which init all the resources with the given value
+     *
+     * @param value : value to initialize all the ressources
+     */
+    Resources(int value){
+        setAll(value);
+    }
+
+    /**
+     * constructor which init all the resources with the given tab
+     *
+     * @param ressources tab of resources (Scrum, Eau, Bois, Charbon, Petrol, Fer, Cuivre, Acier, Or); -1 means unknown
+     */
     Resources(int [] ressources){
         scrum = ressources[0];
         eau = ressources[1];
@@ -42,6 +57,10 @@ public class Resources {
         or = ressources[8];
     }
 
+    /**
+     *
+     * @return the resources Jsonified
+     */
     String toJSON(){
 
         Gson moteurJson = new GsonBuilder().create();
@@ -60,6 +79,19 @@ public class Resources {
         return moteurJson.toJson(ressources);
     }
 
+    /**
+     * Sets all the resources to zero
+     */
+    void init(){
+
+        setAll(0);
+    }
+
+    /**
+     * Sets the object with the given Json
+     *
+     * @param from : Json to sets the object
+     */
     void fromJSON(String from){
 
         Gson moteurJson = new GsonBuilder().create();
@@ -75,9 +107,7 @@ public class Resources {
         cuivre = ressources.get("cuivre").getAsInt();
         acier = ressources.get("acier").getAsInt();
         or = ressources.get("or").getAsInt();
-
     }
-
 
 
     public int getScrum() {
@@ -152,4 +182,19 @@ public class Resources {
         this.or = or;
     }
 
+    /**
+     * Sets all the resources to the given value
+     * @param all : value to set all the ressources
+     */
+    public void setAll(int all){
+        scrum = all;
+        eau = all;
+        bois = all;
+        chardon = all;
+        petrol = all;
+        fer = all;
+        cuivre = all;
+        acier = all;
+        or = all;
+    }
 }
