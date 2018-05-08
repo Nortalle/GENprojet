@@ -1,15 +1,11 @@
 package Gui;
 
-import javax.imageio.ImageIO;
+import Client.Client;
+import Game.Resources;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
-
-import Client.*;
 
 public class RessourcesForm {
 
@@ -50,10 +46,8 @@ public class RessourcesForm {
 
     private void updateResources(){
         String answer = client.getResources();
-
-        // maj ressources
-
-        //label_resources.setText(answer);
+        Resources resources = new Resources(answer);
+        label_resources.setText(answer);
     }
 
     public JPanel getPanel_main() {
