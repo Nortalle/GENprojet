@@ -1,8 +1,12 @@
 package Gui;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import Client.*;
@@ -16,6 +20,15 @@ public class RessourcesForm {
     private JPanel RessourcesPanel;
     private JPanel ObjectsPanel;
     private JPanel ActionPanel;
+    private JLabel scrum_i;
+    private JLabel water_i;
+    private JLabel wood_i;
+    private JLabel coal_i;
+    private JLabel oil_i;
+    private JLabel iron_ore_i;
+    private JLabel copper_ore_i;
+    private JLabel steel_i;
+    private JLabel gold_ore_i;
     private JLabel label_resources;
 
 
@@ -37,7 +50,10 @@ public class RessourcesForm {
 
     private void updateResources(){
         String answer = client.getResources();
-        label_resources.setText(answer);
+
+        // maj ressources
+
+        //label_resources.setText(answer);
     }
 
     public JPanel getPanel_main() {
