@@ -25,13 +25,6 @@ public class Resources {
     private int or;
 
     /**
-     * default constructor which init all the resources to zero
-     */
-    public Resources(){
-        init();
-    }
-
-    /**
      * constructor which init all the resources with the given value
      *
      * @param value : value to initialize all the resources
@@ -55,6 +48,15 @@ public class Resources {
         cuivre = resources[6];
         acier = resources[7];
         or = resources[8];
+    }
+
+    /**
+     * constructor which init all the resources with the given json
+     *
+     * @param json : json of the resources
+     */
+    public Resources(String json){
+        fromJSON(json);
     }
 
     /**
