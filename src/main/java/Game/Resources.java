@@ -27,7 +27,7 @@ public class Resources {
     /**
      * default constructor which init all the resources to zero
      */
-    Resources(){
+    public Resources(){
         init();
     }
 
@@ -36,7 +36,7 @@ public class Resources {
      *
      * @param value : value to initialize all the resources
      */
-    Resources(int value){
+    public Resources(int value){
         setAll(value);
     }
 
@@ -45,7 +45,7 @@ public class Resources {
      *
      * @param resources tab of resources (Scrum, Eau, Bois, Charbon, Petrol, Fer, Cuivre, Acier, Or); -1 means unknown
      */
-    Resources(int [] resources){
+    public Resources(int [] resources){
         scrum = resources[0];
         eau = resources[1];
         bois = resources[2];
@@ -61,7 +61,7 @@ public class Resources {
      *
      * @return the resources Jsonified
      */
-    String toJSON(){
+    public String toJSON(){
 
         Gson jsonEngine = new GsonBuilder().create();
 
@@ -82,7 +82,7 @@ public class Resources {
     /**
      * Sets all the resources to zero
      */
-    void init(){
+    public void init(){
 
         setAll(0);
     }
@@ -92,7 +92,7 @@ public class Resources {
      *
      * @param from : Json to sets the object
      */
-    void fromJSON(String from){
+    public void fromJSON(String from){
 
         Gson jsonEngine = new GsonBuilder().create();
 
