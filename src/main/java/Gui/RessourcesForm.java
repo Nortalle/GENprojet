@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
 import Client.*;
+import Game.Resources;
 
 public class RessourcesForm {
 
@@ -37,6 +38,8 @@ public class RessourcesForm {
 
     private void updateResources(){
         String answer = client.getResources();
+        Resources resources = new Resources();
+        resources.fromJSON(answer);
         label_resources.setText(answer);
     }
 
