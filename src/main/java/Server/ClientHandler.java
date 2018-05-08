@@ -26,7 +26,7 @@ ClientHandler implements Runnable {
 
     public void run() {
         try {
-            waitForAuthentification();
+            waitForAuthentication();
 
             String line = reader.readLine();
             while (running && line != null) {
@@ -35,7 +35,7 @@ ClientHandler implements Runnable {
                 if(line.equals(OTrainProtocol.GET_RESSOURCES)) {
                     int r[] = db.getPlayerResources(username);
                     Resources resources = new Resources(r);
-                    writer.println(resources.);
+                    writer.println(resources.toJSON());
                     writer.flush();
                 }
                 /*writer.println("You sent me that : " + line);
@@ -48,7 +48,7 @@ ClientHandler implements Runnable {
         }
     }
 
-    private void waitForAuthentification() {
+    private void waitForAuthentication() {
         try {
             boolean logged = false;
             boolean signedUp;
