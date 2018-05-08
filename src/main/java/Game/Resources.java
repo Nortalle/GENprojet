@@ -136,7 +136,7 @@ public class Resources {
         this.bois = bois;
     }
 
-    public int getChardon() {
+    public int getCharbon() {
         return chardon;
     }
 

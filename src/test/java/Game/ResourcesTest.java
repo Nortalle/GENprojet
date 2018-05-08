@@ -32,7 +32,7 @@ class ResourcesTest {
         assertEquals(40, ressources.getScrum());
         assertEquals(0, ressources.getEau());
         assertEquals(30, ressources.getBois());
-        assertEquals(0, ressources.getChardon());
+        assertEquals(0, ressources.getCharbon());
         assertEquals(40, ressources.getPetrol());
         assertEquals(0, ressources.getFer());
         assertEquals(0, ressources.getCuivre());
