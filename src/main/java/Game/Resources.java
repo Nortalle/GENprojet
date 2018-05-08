@@ -34,7 +34,7 @@ public class Resources {
     /**
      * constructor which init all the resources with the given value
      *
-     * @param value : value to initialize all the ressources
+     * @param value : value to initialize all the resources
      */
     Resources(int value){
         setAll(value);
@@ -43,18 +43,18 @@ public class Resources {
     /**
      * constructor which init all the resources with the given tab
      *
-     * @param ressources tab of resources (Scrum, Eau, Bois, Charbon, Petrol, Fer, Cuivre, Acier, Or); -1 means unknown
+     * @param resources tab of resources (Scrum, Eau, Bois, Charbon, Petrol, Fer, Cuivre, Acier, Or); -1 means unknown
      */
-    Resources(int [] ressources){
-        scrum = ressources[0];
-        eau = ressources[1];
-        bois = ressources[2];
-        chardon = ressources[3];
-        petrol = ressources[4];
-        fer = ressources[5];
-        cuivre = ressources[6];
-        acier = ressources[7];
-        or = ressources[8];
+    Resources(int [] resources){
+        scrum = resources[0];
+        eau = resources[1];
+        bois = resources[2];
+        chardon = resources[3];
+        petrol = resources[4];
+        fer = resources[5];
+        cuivre = resources[6];
+        acier = resources[7];
+        or = resources[8];
     }
 
     /**
@@ -63,20 +63,20 @@ public class Resources {
      */
     String toJSON(){
 
-        Gson moteurJson = new GsonBuilder().create();
+        Gson jsonEngine = new GsonBuilder().create();
 
-        JsonObject ressources = new JsonObject();
-        ressources.add("scrum", new JsonPrimitive(scrum));
-        ressources.add("eau", new JsonPrimitive(eau));
-        ressources.add("bois", new JsonPrimitive(bois));
-        ressources.add("chardon", new JsonPrimitive(chardon));
-        ressources.add("petrol", new JsonPrimitive(petrol));
-        ressources.add("fer", new JsonPrimitive(fer));
-        ressources.add("cuivre", new JsonPrimitive(cuivre));
-        ressources.add("acier", new JsonPrimitive(acier));
-        ressources.add("or", new JsonPrimitive(or));
+        JsonObject resources = new JsonObject();
+        resources.add("scrum", new JsonPrimitive(scrum));
+        resources.add("eau", new JsonPrimitive(eau));
+        resources.add("bois", new JsonPrimitive(bois));
+        resources.add("chardon", new JsonPrimitive(chardon));
+        resources.add("petrol", new JsonPrimitive(petrol));
+        resources.add("fer", new JsonPrimitive(fer));
+        resources.add("cuivre", new JsonPrimitive(cuivre));
+        resources.add("acier", new JsonPrimitive(acier));
+        resources.add("or", new JsonPrimitive(or));
 
-        return moteurJson.toJson(ressources);
+        return jsonEngine.toJson(resources);
     }
 
     /**
@@ -94,19 +94,19 @@ public class Resources {
      */
     void fromJSON(String from){
 
-        Gson moteurJson = new GsonBuilder().create();
+        Gson jsonEngine = new GsonBuilder().create();
 
-        JsonObject ressources = moteurJson.fromJson(from, JsonObject.class);
+        JsonObject resources = jsonEngine.fromJson(from, JsonObject.class);
 
-        scrum = ressources.get("scrum").getAsInt();
-        eau = ressources.get("eau").getAsInt();
-        bois = ressources.get("bois").getAsInt();
-        chardon = ressources.get("chardon").getAsInt();
-        petrol = ressources.get("petrol").getAsInt();
-        fer = ressources.get("fer").getAsInt();
-        cuivre = ressources.get("cuivre").getAsInt();
-        acier = ressources.get("acier").getAsInt();
-        or = ressources.get("or").getAsInt();
+        scrum = resources.get("scrum").getAsInt();
+        eau = resources.get("eau").getAsInt();
+        bois = resources.get("bois").getAsInt();
+        chardon = resources.get("chardon").getAsInt();
+        petrol = resources.get("petrol").getAsInt();
+        fer = resources.get("fer").getAsInt();
+        cuivre = resources.get("cuivre").getAsInt();
+        acier = resources.get("acier").getAsInt();
+        or = resources.get("or").getAsInt();
     }
 
 
