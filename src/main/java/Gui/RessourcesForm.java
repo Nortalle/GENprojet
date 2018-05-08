@@ -17,8 +17,8 @@ public class RessourcesForm {
     private JPanel ObjectsPanel;
     private JPanel ActionPanel;
     private JLabel scrum_i;
-    private JLabel water_i;
-    private JLabel wood_i;
+    private JLabel eau_i;
+    private JLabel bois_i;
     private JLabel coal_i;
     private JLabel oil_i;
     private JLabel iron_ore_i;
@@ -47,7 +47,16 @@ public class RessourcesForm {
     private void updateResources(){
         String answer = client.getResources();
         Resources resources = new Resources(answer);
-        label_resources.setText(answer);
+        scrum_i.setText(Integer.toString(resources.getScrum()));
+        eau_i.setText(Integer.toString(resources.getEau()));
+        bois_i.setText(Integer.toString(resources.getBois()));
+        coal_i.setText(Integer.toString(resources.getCharbon()));
+        oil_i.setText(Integer.toString(resources.getPetrol()));
+        iron_ore_i.setText(Integer.toString(resources.getFer()));
+        copper_ore_i.setText(Integer.toString(resources.getCuivre()));
+        steel_i.setText(Integer.toString(resources.getAcier()));
+        gold_ore_i.setText(Integer.toString(resources.getOr()));
+
     }
 
     public JPanel getPanel_main() {
