@@ -3,12 +3,12 @@
   <grid id="27dc6" binding="panel_main" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="500" height="400"/>
+      <xy x="20" y="20" width="646" height="400"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="55487" binding="RessourcesPanel" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="55487" binding="RessourcesPanel" layout-manager="GridLayoutManager" row-count="2" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -26,22 +26,114 @@
           </component>
           <hspacer id="5cea5">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="5" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
           </hspacer>
+          <grid id="8cb4c" layout-manager="GridLayoutManager" row-count="1" column-count="9" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="9b1d6" class="javax.swing.JLabel" binding="eau_i">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="icons/Water.png"/>
+                  <text value="0"/>
+                  <toolTipText value="Water"/>
+                </properties>
+              </component>
+              <component id="f4956" class="javax.swing.JLabel" binding="bois_i">
+                <constraints>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="icons/Raw_wood.png"/>
+                  <text value="0"/>
+                  <toolTipText value="Wood"/>
+                </properties>
+              </component>
+              <component id="12976" class="javax.swing.JLabel" binding="coal_i">
+                <constraints>
+                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="icons/Coal.png"/>
+                  <text value="0"/>
+                  <toolTipText value="Coal"/>
+                </properties>
+              </component>
+              <component id="439dd" class="javax.swing.JLabel" binding="oil_i">
+                <constraints>
+                  <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="icons/Crude_oil.png"/>
+                  <text value="0"/>
+                  <toolTipText value="Oil"/>
+                </properties>
+              </component>
+              <component id="8c67f" class="javax.swing.JLabel" binding="iron_ore_i">
+                <constraints>
+                  <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="icons/Iron_ore.png"/>
+                  <text value="0"/>
+                  <toolTipText value="Iron Ore"/>
+                </properties>
+              </component>
+              <component id="f6ddb" class="javax.swing.JLabel" binding="copper_ore_i">
+                <constraints>
+                  <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="icons/Copper_ore.png"/>
+                  <text value="0"/>
+                  <toolTipText value="Copper Ore"/>
+                </properties>
+              </component>
+              <component id="d0b7e" class="javax.swing.JLabel" binding="steel_i">
+                <constraints>
+                  <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="icons/acier.png"/>
+                  <text value="0"/>
+                  <toolTipText value="Steel"/>
+                </properties>
+              </component>
+              <component id="8cfb7" class="javax.swing.JLabel" binding="gold_ore_i">
+                <constraints>
+                  <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="icons/gold_ore.png"/>
+                  <text value="0"/>
+                  <toolTipText value="Gold Ore"/>
+                </properties>
+              </component>
+              <component id="377e6" class="javax.swing.JLabel" binding="scrum_i">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="icons/scrum_icon.png"/>
+                  <text value="0"/>
+                  <toolTipText value="Scrums"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
           <vspacer id="2d396">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
-          <component id="21fd9" class="javax.swing.JLabel" binding="label_resources">
-            <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Label"/>
-            </properties>
-          </component>
         </children>
       </grid>
       <grid id="17091" binding="ObjectsPanel" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

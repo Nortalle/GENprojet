@@ -1,5 +1,6 @@
 package Server;
 
+import Game.Resources;
 import Utils.OTrainProtocol;
 
 import java.io.*;
@@ -25,17 +26,16 @@ ClientHandler implements Runnable {
 
     public void run() {
         try {
-            waitForAuthentification();
+            waitForAuthentication();
 
             String line = reader.readLine();
             while (running && line != null) {
                 //work...
                 System.out.println("Client (" + username + ") : " + line);
                 if(line.equals(OTrainProtocol.GET_RESSOURCES)) {
-                    int resources[] = db.getPlayerResources(username);
-                    String r = "";//need change to send tab
-                    for(int i = 0; i < resources.length; i++) r += resources[i] + ", ";
-                    writer.println(r);
+                    int r[] = db.getPlayerResources(username);
+                    Resources resources = new Resources(r);
+                    writer.println(resources.toJSON());
                     writer.flush();
                 }
                 /*writer.println("You sent me that : " + line);
@@ -48,7 +48,7 @@ ClientHandler implements Runnable {
         }
     }
 
-    private void waitForAuthentification() {
+    private void waitForAuthentication() {
         try {
             boolean logged = false;
             boolean signedUp;
