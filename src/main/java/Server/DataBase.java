@@ -45,9 +45,27 @@ public class DataBase {
             ps = connection.prepareStatement("INSERT INTO RessourcesParJoueur VALUES(?,default,default,default,default,default,default,default,default,default);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             status = ps.executeUpdate();
-
             if(status == 0) return false;
-            else return true;
+
+            ps = connection.prepareStatement("INSERT INTO Train VALUES(?,'Tom',?,0);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, getStartingStationId());
+            status = ps.executeUpdate();
+            if(status == 0) return false;
+
+            //DEFAULT LOCO + WAGONS//
+            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,'Loco');", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            status = ps.executeUpdate();
+            if(status == 0) return false;
+
+            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,'Drill');", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            status = ps.executeUpdate();
+            if(status == 0) return false;
+            // //
+
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -310,7 +328,7 @@ public class DataBase {
     public boolean canCreateStationAt(int x, int y) {
         try {
             ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT x, y FROM Gare;", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("SELECT posX, posY FROM Gare;", Statement.RETURN_GENERATED_KEYS);
             resultSet = ps.executeQuery();
             while(resultSet.next()) {
                 if(resultSet.getInt(1) == x && resultSet.getInt(2) == y) return false;
