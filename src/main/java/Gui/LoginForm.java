@@ -49,7 +49,7 @@ public class LoginForm {
                     label_info.setForeground(Color.GREEN);
                     label_info.setText("You are logged");
                     //
-                    client.setFrameContent(new RessourcesForm(client).getPanel_main());
+                    client.setFrameContent(new ClientForm(client).getPanel_main());
                 }
                 else if(answer.equals(OTrainProtocol.FAILURE)) {
                     label_info.setForeground(Color.RED);

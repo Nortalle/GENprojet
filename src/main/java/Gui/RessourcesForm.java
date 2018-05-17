@@ -59,7 +59,7 @@ public class RessourcesForm {
 
     }
 
-    public JPanel getPanel_main() {
+    public JComponent getPanel_main() {
         return panel_main;
     }
 
