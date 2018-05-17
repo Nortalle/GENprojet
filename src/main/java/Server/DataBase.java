@@ -1,5 +1,10 @@
 package Server;
 
+import Game.Mine;
+import Game.Train;
+import Game.TrainStation;
+import Game.Wagon;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -138,4 +143,158 @@ public class DataBase {
         }
         return resources;
     }
+
+    // TRAIN REQUESTS
+
+    public boolean createTrain(String username, String trainName){
+        return false;
+    }
+
+    public Train getTrain(String username){
+        Train train = null;
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Train WHERE `proprietaire`=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            resultSet = ps.executeQuery();
+            if(!resultSet.next()){return null;}
+            String owner = resultSet.getString("proprietaire");
+            String name = resultSet.getString("nom");
+            int currentTS = resultSet.getInt("gareActuelle");
+            /*
+            Train train = new Train(owner, name, currentTS);
+            */
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return train;
+    }
+
+    // WAGOON REQUESTS
+
+    public boolean addWagoon(String username, int weight, int level, String type){
+        return false;
+    }
+
+    public ArrayList<Wagon> getWagoons(String type){
+        return null;
+    }
+
+    public ArrayList<Wagon> getAllWagoons(String username){
+        return null;
+    }
+
+    // STATION REQUESTS
+
+    public boolean createStation(int posX, int posY, int nbrPlatforms, int platformSize){
+        return false;
+    }
+
+    public TrainStation getTrainStation(int newTsLine){
+        TrainStation trainStation = null;
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE `id`= " + newTsLine + ";", Statement.RETURN_GENERATED_KEYS);
+            resultSet = ps.executeQuery();
+            if(!resultSet.next()){return null;}
+            int id = resultSet.getInt("id");
+            int posX = resultSet.getInt("posX");
+            int posY = resultSet.getInt("posY");
+            int nbOfPlatforms = resultSet.getInt("nbrQuai");
+            int sizeOfPlatforms = resultSet.getInt("tailleQuai");
+            ArrayList<Mine> mines = getAllMinesOfStation(id);
+            /*
+            TrainStation trainStation = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
+            */
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return trainStation;
+    }
+
+    public ArrayList<TrainStation> getAllTrainStations(){
+        ArrayList<TrainStation> result = new ArrayList<TrainStation>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare;", Statement.RETURN_GENERATED_KEYS);
+            resultSet = ps.executeQuery();
+            while(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int posX = resultSet.getInt("posX");
+                int posY = resultSet.getInt("posY");
+                int nbOfPlatforms = resultSet.getInt("nbrQuai");
+                int sizeOfPlatforms = resultSet.getInt("tailleQuai");
+                ArrayList<Mine> mines = getAllMinesOfStation(id);
+                /*
+                TrainStation trainStation = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
+                result.add(trainStation);
+                */
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public int getNbUsedPlatforms(int trainStation){
+        int nbUsedPlatforms = 0;
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM Train WHERE `emplacement` =?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, trainStation);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()){
+                nbUsedPlatforms = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nbUsedPlatforms;
+    }
+
+    public boolean sendTrainToNewStation(String username, int trainStation){
+        try {
+            TrainStation ts = getTrainStation(trainStation);
+            if(ts == null){return false;}
+            //A modifier pour donner le vrai temps de trajet initial (pour le moment toujours à 100)
+            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? `tempsArriveeEstime`=100 WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
+            ps.executeQuery();
+
+
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // MINE REQUESTS
+
+    public boolean addMine(int emplacement, String type){
+        return false;
+    }
+
+    public ArrayList<Mine> getAllMinesOfStation(int trainStation){
+        ArrayList<Mine> result = new ArrayList<Mine>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Mine WHERE `emplacement` = " + trainStation + ";", Statement.RETURN_GENERATED_KEYS);
+            resultSet = ps.executeQuery();
+            while(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String type = resultSet.getString("type");
+                int qteRessources = resultSet.getInt("qteRessources");
+                int emplacement = resultSet.getInt("emplacement");
+                /*
+                Mine mine = new Mine(id, type, qteRessources, emplacement);
+                result.add(mine);
+                */
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 }

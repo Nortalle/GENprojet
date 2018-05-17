@@ -95,6 +95,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `Mine` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(45) NOT NULL,
+  `qteRessources` INT NOT NULL DEFAULT 100,
   `emplacement` INT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `mine_UNIQUE` (`id` ASC),
@@ -109,8 +110,9 @@ ENGINE = InnoDB;
 -- La train n'a qu'un seul proprietaire et le joueur n'a qu'un seul train
 CREATE TABLE IF NOT EXISTS `Train` (
   `proprietaire` VARCHAR(45) NOT NULL,
-  `nom` VARCHAR(45) NOT NULL, 
-  `gareActuelle` INT NOT NULL,  
+  `nom` VARCHAR(45), 
+  `gareActuelle` INT NOT NULL, 
+  `tempsArriveeEstime` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`proprietaire`),
   UNIQUE INDEX `proprietaire_UNIQUE` (`proprietaire` ASC),
   CONSTRAINT `fk_joueur_train`
