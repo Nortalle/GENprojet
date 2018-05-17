@@ -32,6 +32,7 @@ public class ChangeStationTest {
         dataBase.deleteUser(username);
         dataBase.insertUser(username, password);
         String line = client.sendLogin(username, password);
+        System.out.println(line);
     }
 
     @Test

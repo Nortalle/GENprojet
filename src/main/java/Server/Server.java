@@ -1,5 +1,6 @@
 package Server;
 
+import Server.Controller.Travel;
 import Utils.OTrainProtocol;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ public class Server {
     private LinkedList<ClientHandler> clientHandlers;
     private boolean running;
     private DataBase db;
+    private Travel travelController;
 
     private Server(){}
 
@@ -24,6 +26,8 @@ public class Server {
     public void init() {
         db = new DataBase();
         db.insertTrainStation(0, 0, 30, 30);// make sure the starting station exist
+        travelController = new Travel();
+        new Thread(travelController).start();
 
     }
 
@@ -56,7 +60,11 @@ public class Server {
         }
     }
 
-    public void removeHadler(ClientHandler handler) {
+    public Travel getTravelController() {
+        return travelController;
+    }
+
+    public void removeHandler(ClientHandler handler) {
         clientHandlers.remove(handler);
     }
 

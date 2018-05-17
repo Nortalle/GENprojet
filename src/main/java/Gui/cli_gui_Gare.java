@@ -46,9 +46,9 @@ public class cli_gui_Gare {
         button_view.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // peupler les panel
-                    // info station
-                    // players at station
-                    // mines at station
+                // info station
+                // players at station
+                // mines at station
                 TrainStation ts = (TrainStation) select_station.getSelectedItem();
                 setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
             }
@@ -80,6 +80,12 @@ public class cli_gui_Gare {
     private void setStationInfo(String name, int x, int y) {
         label_stationName.setText(name);
         label_stationCoords.setText(x + ";" + y);
+
+        // temp
+        int totalTime = 20;// hard coded
+        progressBar1.setMaximum(totalTime);
+        Client.getInstance().updateTrainStatus();
+        progressBar1.setValue(totalTime - Client.getInstance().getTrain().getTrainStationETA());
     }
 
     public JPanel getPanel_main() {
