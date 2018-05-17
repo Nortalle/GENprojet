@@ -64,7 +64,6 @@ public class Resources {
      * @return the resources Jsonified
      */
     public String toJSON(){
-
         Gson jsonEngine = new GsonBuilder().create();
 
         JsonObject resources = new JsonObject();
@@ -95,7 +94,6 @@ public class Resources {
      * @param from : Json to sets the object
      */
     public void fromJSON(String from){
-
         Gson jsonEngine = new GsonBuilder().create();
 
         JsonObject resources = jsonEngine.fromJson(from, JsonObject.class);
