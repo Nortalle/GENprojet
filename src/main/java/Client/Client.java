@@ -1,7 +1,12 @@
 package Client;
 
+import Game.TrainStation;
 import Gui.LoginForm;
 import Utils.OTrainProtocol;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import javax.swing.*;
 import java.io.*;
@@ -105,6 +110,20 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return answer;
+    }
+
+    public String getStations() {
+        writer.println(OTrainProtocol.GET_GARES);
+        writer.println(username);
+        writer.flush();
+        String answer = "ERROR";
+        try {
+            answer = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return answer;
     }
 
