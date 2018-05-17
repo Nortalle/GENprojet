@@ -80,17 +80,48 @@ CREATE TABLE IF NOT EXISTS `ObjetsParJoueur` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+-- table Gare
+CREATE TABLE IF NOT EXISTS `Gare` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `posX` INT NOT NULL,
+  `posY` INT NOT NULL,
+  `nbrQuai` INT NOT NULL,
+  `tailleQuai` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `gare_UNIQUE`(`id` ASC))
+ENGINE = InnoDB;
+
+-- table Mine
+CREATE TABLE IF NOT EXISTS `Mine` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NOT NULL,
+  `emplacement` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `mine_UNIQUE` (`id` ASC),
+  CONSTRAINT `fk_gare_mine`
+	FOREIGN KEY (`emplacement`)
+    REFERENCES `Gare` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
 -- table Train
 -- La train n'a qu'un seul proprietaire et le joueur n'a qu'un seul train
 CREATE TABLE IF NOT EXISTS `Train` (
   `proprietaire` VARCHAR(45) NOT NULL,
   `nom` VARCHAR(45) NOT NULL, 
+  `gareActuelle` INT NOT NULL,  
   PRIMARY KEY (`proprietaire`),
   UNIQUE INDEX `proprietaire_UNIQUE` (`proprietaire` ASC),
   CONSTRAINT `fk_joueur_train`
     FOREIGN KEY (`proprietaire`)
     REFERENCES `Joueur` (`nomJoueur`)
     ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_gare_train`
+    FOREIGN KEY (`gareActuelle`)
+    REFERENCES `Gare` (`id`)
+    ON DELETE RESTRICT
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 

@@ -1,6 +1,8 @@
 package Server;
 
 import Game.Resources;
+import Game.Train;
+import Game.TrainStation;
 import Utils.OTrainProtocol;
 
 import java.io.*;
@@ -38,8 +40,27 @@ ClientHandler implements Runnable {
                     writer.println(resources.toJSON());
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_GARES)) {
-
+                    //ArrayList<TrainStation> trainStations = db.getAllTrainStations();
+                    //writer.println(TrainStations.toJsaon(trainStations));//need to JSON static
+                    //writer.flush();
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
+                    /*String newTsLine = reader.readLine();
+                    Train train = db.getTrain(username);
+                    TrainStation trainStation = db.getTrainStation(newTsLine);
+                    if(trainStation.getSizeOfPlatforms() >= train.getSize()) {
+                        if(db.getNbUsedPlatforms(trainStation) < trainStation.getNbOfPlatforms()) {
+                            if(db.sendTrainToNewStation(username, trainStation)) {
+                                writer.println(OTrainProtocol.SUCCESS);
+                            } else {
+                                writer.println(OTrainProtocol.FAILURE);
+                            }
+                        } else {
+                            writer.println(OTrainProtocol.FAILURE);
+                        }
+                    } else {
+                        writer.println(OTrainProtocol.FAILURE);
+                    }
+                    writer.flush();*/
 
                 } else if(line.equals(OTrainProtocol.MINE)) {
 
