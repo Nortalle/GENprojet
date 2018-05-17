@@ -115,7 +115,7 @@ public class Client {
 
     public String getStations() {
         writer.println(OTrainProtocol.GET_GARES);
-        writer.println(username);
+        //writer.println(username);
         writer.flush();
         String answer = "ERROR";
         try {

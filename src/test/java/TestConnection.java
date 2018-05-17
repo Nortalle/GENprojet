@@ -8,8 +8,6 @@ import Client.Client;
 import org.junit.jupiter.api.Test;
 
 public class TestConnection {
-
-    private static Server server;
     private static Client client;
     private static String username = "vincent";
 
