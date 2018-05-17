@@ -161,6 +161,12 @@ public class DataBase {
 
     // TRAIN REQUESTS
 
+    /**
+     *
+     * @param username player owner of the train
+     * @param trainName name of the train
+     * @return true if the train has been created, else false
+     */
     public boolean createTrain(String username, String trainName){
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Train VALUES(?,?);", Statement.RETURN_GENERATED_KEYS);
@@ -176,6 +182,10 @@ public class DataBase {
         return false;
     }
 
+    /**
+     * @param username player owner of the train
+     * @return the player's train
+     */
     public Train getTrain(String username){
         Train train = null;
         try {
@@ -199,6 +209,13 @@ public class DataBase {
 
     // WAGOON REQUESTS
 
+    /**
+     * @param username the player owner of the train
+     * @param weight the weight of the wagoon
+     * @param level the level of the wagoon
+     * @param type the type of the wagoon
+     * @return true if the wagoon has been created, else false
+     */
     public boolean addWagoon(String username, int weight, int level, String type){
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Utilisateur VALUES(?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
@@ -216,16 +233,78 @@ public class DataBase {
         return false;
     }
 
-    public ArrayList<Wagon> getWagoons(String username, String type){
-        return null;
+    /**
+     *
+     * @param username the player owner of the train
+     * @param type type of the wagoons that want to be get
+     * @return a list containing all the owner's wagoons of this type
+     */
+    public ArrayList<Wagon> getWagoonsOfType(String username, String type){
+        ArrayList<Wagon> result = new ArrayList<Wagon>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=? AND `type`=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, type);
+            resultSet = ps.executeQuery();
+            while(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String owner = resultSet.getString("proprietaire");
+                String _type = resultSet.getString("type");
+                int weight = resultSet.getInt("poids");
+                int level = resultSet.getInt("niveau");
+                /*
+                Wagon wagon = new Wagon(id, owner, _type, weight, level);
+                result.add(wagon);
+                */
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
+    /**
+     *
+     * @param username player owner of the train
+     * @return the liste of all the wagoons of the train
+     */
     public ArrayList<Wagon> getAllWagoons(String username){
-        return null;
+        ArrayList<Wagon> result = new ArrayList<Wagon>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            resultSet = ps.executeQuery();
+            while(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String owner = resultSet.getString("proprietaire");
+                String type = resultSet.getString("type");
+                int weight = resultSet.getInt("poids");
+                int level = resultSet.getInt("niveau");
+                /*
+                Wagon wagon = new Wagon(id, owner, type, weight, level);
+                result.add(wagon);
+                */
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     // STATION REQUESTS
 
+    /**
+     * @param posX position X of the station
+     * @param posY position Y of the station
+     * @param nbrPlatforms number of platforms in the station
+     * @param platformSize size of the platforms in the station
+     *
+     * @return true if the station has been added, else falee
+     */
     public boolean createStation(int posX, int posY, int nbrPlatforms, int platformSize){
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO TrainStation VALUES(?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
@@ -243,6 +322,10 @@ public class DataBase {
         return false;
     }
 
+    /**
+     * @param newTsLine the id of the station
+     * @return the station corresponding to the id
+     */
     public TrainStation getTrainStation(int newTsLine){
         TrainStation trainStation = null;
         try {
@@ -267,6 +350,9 @@ public class DataBase {
         return trainStation;
     }
 
+    /**
+     * @return a list containing all the stations of the database
+     */
     public ArrayList<TrainStation> getAllTrainStations(){
         ArrayList<TrainStation> result = new ArrayList<TrainStation>();
         try {
@@ -292,7 +378,11 @@ public class DataBase {
         return result;
     }
 
-
+    /**
+     * @param x position x of the station
+     * @param y position y of the station
+     * @return the station corresponding to those positions
+     */
     public int getTrainStationIdByPos(int x, int y) {
         int result = -1;
         try {
@@ -310,7 +400,9 @@ public class DataBase {
         return result;
     }
 
-
+    /**
+     * @return the id of the starting station
+     */
     public int getStartingStationId() {
         return getTrainStationIdByPos(0, 0);
     }
@@ -332,6 +424,11 @@ public class DataBase {
         return false;
     }
 
+    /**
+     * @param x position x where we want to create a station
+     * @param y position y where we want to create a station
+     * @return
+     */
     public boolean canCreateStationAt(int x, int y) {
         try {
             ResultSet resultSet;
@@ -347,7 +444,10 @@ public class DataBase {
         return false;
     }
 
-
+    /**
+     * @param trainStation id of the station
+     * @return number of train currently at the station
+     */
     public int getNbUsedPlatforms(int trainStation){
         int nbUsedPlatforms = 0;
         try {
@@ -364,6 +464,11 @@ public class DataBase {
         return nbUsedPlatforms;
     }
 
+    /**
+     * @param username player who wants to move
+     * @param trainStation id of the station where the player wants to move
+     * @return true is the player has been able to move, else false
+     */
     public boolean sendTrainToNewStation(String username, int trainStation){
         try {
             TrainStation ts = getTrainStation(trainStation);
@@ -386,6 +491,12 @@ public class DataBase {
 
     // MINE REQUESTS
 
+    /**
+     * @param emplacement station where the mine will be added
+     * @param qteRessources quantity of ressources of the mine
+     * @param type type of the mine
+     * @return true if the mine has been added, else false
+     */
     public boolean addMine(int emplacement, int qteRessources, String type){
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Mine VALUES(?,?,?);", Statement.RETURN_GENERATED_KEYS);
@@ -403,6 +514,10 @@ public class DataBase {
 
     }
 
+    /**
+     * @param trainStation id of the station
+     * @return the list of all the mines at the station
+     */
     public ArrayList<Mine> getAllMinesOfStation(int trainStation){
         ArrayList<Mine> result = new ArrayList<Mine>();
         try {
