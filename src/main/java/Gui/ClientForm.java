@@ -20,10 +20,10 @@ public class ClientForm {
     //Ressources
     private JPanel RessouresGUI;
 
-    //Onglets
-    private JPanel Onglets;
-    private JTabbedPane Train;
-    private JPanel TrainGUI;
+    //panelTabs
+    private JPanel panelTabs;
+    private JTabbedPane tabs;
+    private JPanel TabGare;
     private JPanel Hangar;
     private JPanel Inventaire;
     private JPanel Mine;
@@ -32,7 +32,6 @@ public class ClientForm {
     //Logs
     private JPanel Logs;
     private JTextPane LoggerTestPane;
-    private JPanel RessourcesPanel;
     private JLabel eau_i;
     private JLabel bois_i;
     private JLabel coal_i;
@@ -42,6 +41,7 @@ public class ClientForm {
     private JLabel steel_i;
     private JLabel gold_ore_i;
     private JLabel scrum_i;
+    private JPanel RessourcesPanel;
 
     private Client client;
 
