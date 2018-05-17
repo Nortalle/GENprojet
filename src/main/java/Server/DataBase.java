@@ -293,11 +293,13 @@ public class DataBase {
     }
 
 
-    public int getStartingStationId() {
+    public int getStartingStationIdByPos(int x, int y) {
         int result = -1;
         try {
             ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT id FROM Gare WHERE posX = 0 AND posY = 0;", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("SELECT id FROM Gare WHERE posX = ? AND posY = ?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, x);
+            ps.setObject(2, y);
             resultSet = ps.executeQuery();
             if(resultSet.next()) {
                 result = resultSet.getInt(1);
@@ -306,6 +308,11 @@ public class DataBase {
             e.printStackTrace();
         }
         return result;
+    }
+
+
+    public int getStartingStationId() {
+        return getStartingStationIdByPos(0, 0);
     }
 
     public boolean insertTrainStation(int x, int y, int nbPlat, int sizePlat) {
@@ -362,12 +369,13 @@ public class DataBase {
             TrainStation ts = getTrainStation(trainStation);
             if(ts == null){return false;}
             //A modifier pour donner le vrai temps de trajet initial (pour le moment toujours à 100)
-            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? `tempsArriveeEstime`=100 WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, username);
+            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? `tempsArriveeEstime`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, trainStation);
+            ps.setObject(2, 100);
+            ps.setObject(3, username);
             ps.executeUpdate();
 
-
-
+            return true;
         }catch (SQLException e) {
             e.printStackTrace();
         }
