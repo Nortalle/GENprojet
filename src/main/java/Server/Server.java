@@ -3,10 +3,8 @@ package Server;
 import Utils.OTrainProtocol;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLOutput;
 import java.util.LinkedList;
 
 public class Server {
@@ -23,12 +21,18 @@ public class Server {
         return instance;
     }
 
+    public void init() {
+        db = new DataBase();
+        //db.insertTrainStation();// make sure the starting station exist
+
+    }
+
     public void startServer() {
         try {
+            init();
             serverSocket = new ServerSocket(OTrainProtocol.PORT);
             clientHandlers = new LinkedList<ClientHandler>();
             running = true;
-            db = new DataBase();
 
             Thread serverThread = new Thread(new Runnable() {
                 public void run() {
