@@ -1,6 +1,7 @@
 package Gui;
 
 import Client.Client;
+import Game.Train;
 import Game.TrainStation;
 
 import javax.swing.*;
@@ -26,6 +27,12 @@ public class cli_gui_Gare {
     public cli_gui_Gare() {
 
         Update();
+        Client.getInstance().updateTrainStatus();
+        TrainStation ts = Client.getInstance().getTrain().getTrainStation();
+        setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
+
+        String line = Client.getInstance().getStations();
+        for(TrainStation station : TrainStation.listFromJSON(line)) select_station.addItem(station);
 
         button_travel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -38,11 +45,15 @@ public class cli_gui_Gare {
                     // info station
                     // players at station
                     // mines at station
+                TrainStation ts = (TrainStation) select_station.getSelectedItem();
+                setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
             }
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                Client.getInstance().updateTrainStatus();
+                TrainStation ts = Client.getInstance().getTrain().getTrainStation();
+                setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
             }
         });
         select_station.addPopupMenuListener(new PopupMenuListener() {
@@ -52,18 +63,19 @@ public class cli_gui_Gare {
                 for(TrainStation ts : TrainStation.listFromJSON(line)) select_station.addItem(ts);
             }
 
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
 
-            }
-
-            public void popupMenuCanceled(PopupMenuEvent e) {
-
-            }
+            public void popupMenuCanceled(PopupMenuEvent e) {}
         });
     }
 
     public void Update(){
         // peuple les
+    }
+
+    private void setStationInfo(String name, int x, int y) {
+        label_stationName.setText(name);
+        label_stationCoords.setText(x + ";" + y);
     }
 
     public JPanel getPanel_main() {

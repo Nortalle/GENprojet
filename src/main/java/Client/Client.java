@@ -1,5 +1,6 @@
 package Client;
 
+import Game.Train;
 import Game.TrainStation;
 import Gui.LoginForm;
 import Utils.OTrainProtocol;
@@ -18,6 +19,7 @@ public class Client {
     private BufferedReader reader;
     private PrintWriter writer;
     private String username;
+    private Train train;
 
     public static Client getInstance() {
         if(instance == null) instance = new Client();
@@ -33,6 +35,7 @@ public class Client {
             socket = new Socket("localhost", OTrainProtocol.PORT);
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream());
+            train = new Train();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,6 +120,23 @@ public class Client {
             e.printStackTrace();
         }
         return answer;
+    }
+
+    public Train getTrain() {
+        return train;
+    }
+
+    public void updateTrainStatus() {
+        writer.println(OTrainProtocol.GET_TRAIN_STATUS);
+        writer.flush();
+        String answer = "ERROR";
+        try {
+            answer = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        train.fromJSON(answer);
     }
 
     public String getStations() {

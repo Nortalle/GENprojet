@@ -189,10 +189,11 @@ public class DataBase {
             if(!resultSet.next()){return null;}
             String owner = resultSet.getString("proprietaire");
             String name = resultSet.getString("nom");
-            int currentTS = resultSet.getInt("gareActuelle");
-            /*
-            Train train = new Train(owner, name, currentTS);
-            */
+            int currentTs = resultSet.getInt("gareActuelle");
+            int eta = resultSet.getInt("tempsArriveeEstime");
+
+            train = new Train(null, null, getTrainStation(currentTs), eta);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

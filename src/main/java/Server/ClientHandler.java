@@ -40,9 +40,12 @@ ClientHandler implements Runnable {
                     Resources resources = new Resources(r);
                     writer.println(resources.toJSON());
                     writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_TRAIN_STATUS)) {
+                    writer.println(db.getTrain(username).toJSON());
+                    writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_GARES)) {
                     ArrayList<TrainStation> trainStations = db.getAllTrainStations();
-                    writer.println(TrainStation.listToJSON(trainStations));//need to JSON static
+                    writer.println(TrainStation.listToJSON(trainStations));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
                     String newTsLine = reader.readLine();

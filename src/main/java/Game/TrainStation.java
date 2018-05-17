@@ -79,11 +79,24 @@ public class TrainStation {
         return id;
     }
 
+    public int getPosX() {
+        return posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
     public int getNbOfPlatforms() {
         return nbOfPlatforms;
     }
 
     public int getSizeOfPlatforms() {
         return sizeOfPlatforms;
+    }
+
+    @Override
+    public String toString() {
+        return id + " : " + posX + ";" + posY;
     }
 }
