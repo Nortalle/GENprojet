@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ChangeStationTest {
     String username = "user1";
@@ -35,7 +36,9 @@ public class ChangeStationTest {
         System.out.println("Server : " + line);
         // insert train stations
         line = client.getStations();
-        assertEquals(dataBase.getAllTrainStations().size(), TrainStation.listFromJSON(line).size());
+        int nbStation = dataBase.getAllTrainStations().size();
+        if(nbStation < 1) fail("No stations, insert one or more");
+        assertEquals(nbStation, TrainStation.listFromJSON(line).size());
 
     }
 }
