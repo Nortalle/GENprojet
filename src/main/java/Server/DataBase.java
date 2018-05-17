@@ -367,7 +367,9 @@ public class DataBase {
     public boolean sendTrainToNewStation(String username, int trainStation){
         try {
             TrainStation ts = getTrainStation(trainStation);
-            if(ts == null){return false;}
+            if(ts == null) return false;
+            int currentTsId = getTrain(username).getTrainStation().getId();
+            if(ts.getId() == currentTsId) return false;
             //A modifier pour donner le vrai temps de trajet initial (pour le moment toujours à 100)
             PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=?, `tempsArriveeEstime`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, trainStation);

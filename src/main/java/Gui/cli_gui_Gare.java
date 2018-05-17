@@ -3,6 +3,7 @@ package Gui;
 import Client.Client;
 import Game.Train;
 import Game.TrainStation;
+import Utils.OTrainProtocol;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -36,7 +37,10 @@ public class cli_gui_Gare {
 
         button_travel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Client.getInstance().changeStation(((TrainStation) select_station.getSelectedItem()).getId());
+                TrainStation ts = (TrainStation) select_station.getSelectedItem();
+                String line = Client.getInstance().changeStation(ts.getId());
+                if(line.equals(OTrainProtocol.SUCCESS)) setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
+
             }
         });
         button_view.addActionListener(new ActionListener() {
