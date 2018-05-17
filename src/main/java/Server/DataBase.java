@@ -476,7 +476,7 @@ public class DataBase {
 
     /**
      * @param username player who wants to move
-     * @param trainStation id of the station where the player wants to move
+     * @param newTsId id of the station where the player wants to move
      * @return true is the player has been able to move, else false
      */
     public boolean sendTrainToNewStation(String username, int newTsId){
