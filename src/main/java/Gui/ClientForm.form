@@ -3,12 +3,12 @@
   <grid id="27dc6" binding="panel_main" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="650" height="432"/>
+      <xy x="20" y="20" width="650" height="445"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="d29a0" binding="Onglets" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="d29a0" binding="panelTabs" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -16,9 +16,9 @@
         <properties/>
         <border type="none"/>
         <children>
-          <tabbedpane id="2bee5" binding="Train">
+          <tabbedpane id="2bee5" binding="tabs">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="1" use-parent-layout="false">
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="2" use-parent-layout="false">
                 <preferred-size width="200" height="200"/>
               </grid>
             </constraints>
@@ -34,10 +34,10 @@
                 <border type="none"/>
                 <children/>
               </grid>
-              <grid id="6b554" binding="TrainGUI" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="6b554" binding="TabGare" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
-                  <tabbedpane title="TrainGUI"/>
+                  <tabbedpane title="Gare"/>
                 </constraints>
                 <properties/>
                 <border type="none"/>
@@ -106,28 +106,23 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="5d476" binding="RessourcesPanel" layout-manager="GridLayoutManager" row-count="2" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="7463b" binding="RessourcesPanel" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
-            <border type="none"/>
+            <border type="none" title="Ressources"/>
             <children>
-              <component id="e8409" class="javax.swing.JLabel">
+              <component id="e7bdb" class="javax.swing.JLabel">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Ressources"/>
+                  <text value=""/>
                 </properties>
               </component>
-              <hspacer id="6b387">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="5" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
-              <grid id="69070" layout-manager="GridLayoutManager" row-count="1" column-count="9" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="a6cce" layout-manager="GridLayoutManager" row-count="1" column-count="9" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -135,7 +130,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="93fd5" class="javax.swing.JLabel" binding="eau_i">
+                  <component id="f5493" class="javax.swing.JLabel" binding="eau_i">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -145,7 +140,7 @@
                       <toolTipText value="Water"/>
                     </properties>
                   </component>
-                  <component id="a1ef4" class="javax.swing.JLabel" binding="bois_i">
+                  <component id="f6be8" class="javax.swing.JLabel" binding="bois_i">
                     <constraints>
                       <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -155,7 +150,7 @@
                       <toolTipText value="Wood"/>
                     </properties>
                   </component>
-                  <component id="80ea7" class="javax.swing.JLabel" binding="coal_i">
+                  <component id="6b38" class="javax.swing.JLabel" binding="coal_i">
                     <constraints>
                       <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -165,7 +160,7 @@
                       <toolTipText value="Coal"/>
                     </properties>
                   </component>
-                  <component id="11dad" class="javax.swing.JLabel" binding="oil_i">
+                  <component id="f810b" class="javax.swing.JLabel" binding="oil_i">
                     <constraints>
                       <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -175,7 +170,7 @@
                       <toolTipText value="Oil"/>
                     </properties>
                   </component>
-                  <component id="9c472" class="javax.swing.JLabel" binding="iron_ore_i">
+                  <component id="1ea31" class="javax.swing.JLabel" binding="iron_ore_i">
                     <constraints>
                       <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -185,7 +180,7 @@
                       <toolTipText value="Iron Ore"/>
                     </properties>
                   </component>
-                  <component id="973bd" class="javax.swing.JLabel" binding="copper_ore_i">
+                  <component id="6887f" class="javax.swing.JLabel" binding="copper_ore_i">
                     <constraints>
                       <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
                     </constraints>
@@ -195,7 +190,7 @@
                       <toolTipText value="Copper Ore"/>
                     </properties>
                   </component>
-                  <component id="3754c" class="javax.swing.JLabel" binding="steel_i">
+                  <component id="c22f2" class="javax.swing.JLabel" binding="steel_i">
                     <constraints>
                       <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -205,7 +200,7 @@
                       <toolTipText value="Steel"/>
                     </properties>
                   </component>
-                  <component id="cb8d1" class="javax.swing.JLabel" binding="gold_ore_i">
+                  <component id="d6899" class="javax.swing.JLabel" binding="gold_ore_i">
                     <constraints>
                       <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -215,7 +210,7 @@
                       <toolTipText value="Gold Ore"/>
                     </properties>
                   </component>
-                  <component id="1bc8f" class="javax.swing.JLabel" binding="scrum_i">
+                  <component id="71678" class="javax.swing.JLabel" binding="scrum_i">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -227,11 +222,6 @@
                   </component>
                 </children>
               </grid>
-              <vspacer id="9a3cb">
-                <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </vspacer>
             </children>
           </grid>
         </children>
