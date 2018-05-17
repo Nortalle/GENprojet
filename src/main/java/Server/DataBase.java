@@ -184,11 +184,12 @@ public class DataBase {
             ps.setObject(1, username);
             resultSet = ps.executeQuery();
             if(!resultSet.next()){return null;}
-            String owner = resultSet.getString("proprietaire");
             String name = resultSet.getString("nom");
             int currentTs = resultSet.getInt("gareActuelle");
             int eta = resultSet.getInt("tempsArriveeEstime");
 
+            Integer realETA = Server.getInstance().getTravelController().getETA(username);
+            if(realETA != null) eta = realETA;
             train = new Train(new Loco(), new ArrayList<Wagon>(), getTrainStation(currentTs), eta);// TODO
 
         } catch (SQLException e) {
@@ -364,19 +365,30 @@ public class DataBase {
         return nbUsedPlatforms;
     }
 
-    public boolean sendTrainToNewStation(String username, int trainStation){
+    public int calculateTravelTime(int station1, int station2) {
+        TrainStation ts1 = getTrainStation(station1);
+        TrainStation ts2 = getTrainStation(station2);
+
+        System.out.println(station1 + " ****" + station2);
+        System.out.println(ts2.getPosX() + " " + ts1.getPosX() + " : " + ts2.getPosY() + " " + ts1.getPosY());
+        return Math.abs(ts2.getPosX() - ts1.getPosX()) + Math.abs(ts2.getPosY() - ts1.getPosY());
+    }
+
+    public boolean sendTrainToNewStation(String username, int newTsId){
         try {
-            TrainStation ts = getTrainStation(trainStation);
+            TrainStation ts = getTrainStation(newTsId);
             if(ts == null) return false;
             int currentTsId = getTrain(username).getTrainStation().getId();
             if(ts.getId() == currentTsId) return false;
             //A modifier pour donner le vrai temps de trajet initial (pour le moment toujours à 100)
+            int defaultETA = calculateTravelTime(currentTsId, newTsId);
             PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=?, `tempsArriveeEstime`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, trainStation);
-            ps.setObject(2, 100);
+            ps.setObject(1, newTsId);
+            ps.setObject(2, defaultETA);
             ps.setObject(3, username);
             ps.executeUpdate();
 
+            Server.getInstance().getTravelController().addTrain(username, defaultETA);
             return true;
         }catch (SQLException e) {
             e.printStackTrace();

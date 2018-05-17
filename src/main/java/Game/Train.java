@@ -11,13 +11,13 @@ public class Train {
     private Loco loco;
     private ArrayList<Wagon> wagons = new ArrayList<Wagon>();
     private TrainStation trainStation;
-    private long trainStationETA;// 0 = arrived
+    private int trainStationETA;// 0 = arrived
 
     public Train() {
 
     }
 
-    public Train(Loco l, ArrayList<Wagon> w, TrainStation ts, long eta) {
+    public Train(Loco l, ArrayList<Wagon> w, TrainStation ts, int eta) {
         loco = l;
         wagons = w;
         trainStation = ts;
@@ -33,7 +33,7 @@ public class Train {
         return trainStation;
     }
 
-    public long getTrainStationETA() {
+    public int getTrainStationETA() {
         return trainStationETA;
     }
 

@@ -49,15 +49,22 @@ ClientHandler implements Runnable {
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
                     String newTsLine = reader.readLine();
+                    System.out.println(newTsLine);
 
                     int trainStationId = Integer.valueOf(newTsLine);
 
                     Train train = db.getTrain(username);
                     TrainStation trainStation = db.getTrainStation(trainStationId);
                     boolean isSend = false;
-                    if(trainStation.getSizeOfPlatforms() >= train.getSize()) {
-                        if(db.getNbUsedPlatforms(trainStation.getId()) < trainStation.getNbOfPlatforms()) {
-                            isSend = db.sendTrainToNewStation(username, trainStation.getId());
+
+                    int eta = 0;
+                    Integer realETA = Server.getInstance().getTravelController().getETA(username);
+                    if(realETA != null) eta = realETA;
+                    if(eta == 0) {
+                        if (trainStation.getSizeOfPlatforms() >= train.getSize()) {
+                            if (db.getNbUsedPlatforms(trainStation.getId()) < trainStation.getNbOfPlatforms()) {
+                                isSend = db.sendTrainToNewStation(username, trainStation.getId());
+                            }
                         }
                     }
                     if(isSend) writer.println(OTrainProtocol.SUCCESS);
@@ -77,7 +84,7 @@ ClientHandler implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
 
-            Server.getInstance().removeHadler(this);
+            Server.getInstance().removeHandler(this);
         }
     }
 
