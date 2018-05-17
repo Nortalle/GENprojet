@@ -56,6 +56,10 @@ public class Server {
         }
     }
 
+    public void removeHadler(ClientHandler handler) {
+        clientHandlers.remove(handler);
+    }
+
     public static void main(String ... args) {
         Server.getInstance().startServer();
     }
