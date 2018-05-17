@@ -11,6 +11,18 @@ public class TrainStation {
     private int sizeOfPlatforms;
     private ArrayList<Mine> mines = new ArrayList<Mine>();
 
+    public TrainStation() {
+
+    }
+
+    public TrainStation(int x, int y, int nbPlat, int sizePlat, ArrayList<Mine> m) {
+        posX = x;
+        posY = y;
+        nbOfPlatforms = nbPlat;
+        sizeOfPlatforms = sizePlat;
+        mines = m;
+    }
+
     public String toJSON() {
         Gson jsonEngine = new GsonBuilder().create();
 
