@@ -15,8 +15,7 @@ public class TestConnection {
 
     @BeforeAll
     public static void setUpBeforeAll() {
-        server = new Server();
-        server.startServer();
+        Server.getInstance().startServer();
     }
 
     @BeforeEach
