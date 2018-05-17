@@ -147,6 +147,17 @@ public class DataBase {
     // TRAIN REQUESTS
 
     public boolean createTrain(String username, String trainName){
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Train VALUES(?,?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, trainName);
+            int status = ps.executeUpdate();
+            if(status != 0){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -173,10 +184,23 @@ public class DataBase {
     // WAGOON REQUESTS
 
     public boolean addWagoon(String username, int weight, int level, String type){
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Utilisateur VALUES(?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, weight);
+            ps.setObject(3, level);
+            ps.setObject(4, type);
+            int status = ps.executeUpdate();
+            if(status != 0){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
-    public ArrayList<Wagon> getWagoons(String type){
+    public ArrayList<Wagon> getWagoons(String username, String type){
         return null;
     }
 
@@ -187,6 +211,19 @@ public class DataBase {
     // STATION REQUESTS
 
     public boolean createStation(int posX, int posY, int nbrPlatforms, int platformSize){
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO TrainStation VALUES(?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, posX);
+            ps.setObject(2, posY);
+            ps.setObject(3, nbrPlatforms);
+            ps.setObject(4, platformSize);
+            int status = ps.executeUpdate();
+            if(status != 0){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -259,7 +296,8 @@ public class DataBase {
             if(ts == null){return false;}
             //A modifier pour donner le vrai temps de trajet initial (pour le moment toujours à 100)
             PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? `tempsArriveeEstime`=100 WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
-            ps.executeQuery();
+            ps.setObject(1, username);
+            ps.executeUpdate();
 
 
 
@@ -271,8 +309,21 @@ public class DataBase {
 
     // MINE REQUESTS
 
-    public boolean addMine(int emplacement, String type){
+    public boolean addMine(int emplacement, int qteRessources, String type){
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Mine VALUES(?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, type);
+            ps.setObject(2, qteRessources);
+            ps.setObject(3, emplacement);
+            int status = ps.executeUpdate();
+            if(status != 0){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
+
     }
 
     public ArrayList<Mine> getAllMinesOfStation(int trainStation){

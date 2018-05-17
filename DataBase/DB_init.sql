@@ -129,12 +129,13 @@ ENGINE = InnoDB;
 
 -- table Wagon
 CREATE TABLE IF NOT EXISTS `Wagon` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `proprietaire` VARCHAR(45) NOT NULL,
   `poids` INT NOT NULL DEFAULT 0,
   `niveau` INT NOT NULL DEFAULT 0,
   `type` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`proprietaire`),
-  UNIQUE INDEX `proprietaire_UNIQUE` (`proprietaire` ASC),
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   CONSTRAINT `fk_train_wagon`
     FOREIGN KEY (`proprietaire`)
     REFERENCES `train` (`proprietaire`)
