@@ -7,6 +7,7 @@ import Utils.OTrainProtocol;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class
 ClientHandler implements Runnable {
@@ -41,15 +42,18 @@ ClientHandler implements Runnable {
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_GARES)) {
                     ArrayList<TrainStation> trainStations = db.getAllTrainStations();
-                    writer.println(TrainStations.toJsaon(trainStations));//need to JSON static
+                    writer.println(TrainStation.listToJSON(trainStations));//need to JSON static
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
                     String newTsLine = reader.readLine();
+
+                    int trainStationId = Integer.valueOf(newTsLine);
+
                     Train train = db.getTrain(username);
-                    TrainStation trainStation = db.getTrainStation(newTsLine);
+                    TrainStation trainStation = db.getTrainStation(trainStationId);
                     if(trainStation.getSizeOfPlatforms() >= train.getSize()) {
-                        if(db.getNbUsedPlatforms(trainStation) < trainStation.getNbOfPlatforms()) {
-                            if(db.sendTrainToNewStation(username, trainStation)) {
+                        if(db.getNbUsedPlatforms(trainStation.getId()) < trainStation.getNbOfPlatforms()) {
+                            if(db.sendTrainToNewStation(username, trainStation.getId())) {
                                 writer.println(OTrainProtocol.SUCCESS);
                             } else {
                                 writer.println(OTrainProtocol.FAILURE);

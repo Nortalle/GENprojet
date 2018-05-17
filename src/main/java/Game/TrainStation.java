@@ -5,6 +5,7 @@ import com.google.gson.*;
 import java.util.ArrayList;
 
 public class TrainStation {
+    private int id;
     private int posX;
     private int posY;
     private int nbOfPlatforms;
@@ -13,7 +14,8 @@ public class TrainStation {
 
     public TrainStation() {}
 
-    public TrainStation(int x, int y, int nbPlat, int sizePlat, ArrayList<Mine> m) {
+    public TrainStation(int id, int x, int y, int nbPlat, int sizePlat, ArrayList<Mine> m) {
+        this.id = id;
         posX = x;
         posY = y;
         nbOfPlatforms = nbPlat;
@@ -25,6 +27,7 @@ public class TrainStation {
         Gson jsonEngine = new GsonBuilder().create();
 
         JsonObject trainStation = new JsonObject();
+        trainStation.add("id", new JsonPrimitive(id));
         trainStation.add("posX", new JsonPrimitive(posX));
         trainStation.add("posY", new JsonPrimitive(posY));
         trainStation.add("nbOfPlatforms", new JsonPrimitive(nbOfPlatforms));
@@ -40,6 +43,7 @@ public class TrainStation {
         Gson jsonEngine = new GsonBuilder().create();
 
         JsonObject trainStation = jsonEngine.fromJson(from, JsonObject.class);
+        posX = trainStation.get("id").getAsInt();
         posX = trainStation.get("posX").getAsInt();
         posY = trainStation.get("posY").getAsInt();
         nbOfPlatforms = trainStation.get("nbOfPlatforms ").getAsInt();
@@ -68,6 +72,10 @@ public class TrainStation {
         }
 
         return trainStations;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getNbOfPlatforms() {
