@@ -37,6 +37,14 @@ ClientHandler implements Runnable {
                     Resources resources = new Resources(r);
                     writer.println(resources.toJSON());
                     writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_GARES)) {
+
+                } else if(line.equals(OTrainProtocol.GO_TO)) {
+
+                } else if(line.equals(OTrainProtocol.MINE)) {
+
+                } else if(line.equals(OTrainProtocol.STOP_MINE)) {
+
                 }
                 /*writer.println("You sent me that : " + line);
                 writer.flush();*/
