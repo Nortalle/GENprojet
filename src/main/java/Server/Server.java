@@ -10,10 +10,18 @@ import java.sql.SQLOutput;
 import java.util.LinkedList;
 
 public class Server {
+    private static Server instance;
     private ServerSocket serverSocket;
     private LinkedList<ClientHandler> clientHandlers;
     private boolean running;
     private DataBase db;
+
+    private Server(){}
+
+    public static Server getInstance() {
+        if(instance == null) instance = new Server();
+        return instance;
+    }
 
     public void startServer() {
         try {
@@ -45,7 +53,6 @@ public class Server {
     }
 
     public static void main(String ... args) {
-        Server server = new Server();
-        server.startServer();
+        Server.getInstance().startServer();
     }
 }
