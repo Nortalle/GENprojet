@@ -12,6 +12,14 @@ public class Train {
 
     }
 
+    public Train(Loco l, ArrayList<Wagon> w, TrainStation ts, long eta) {
+        loco = l;
+        wagons = w;
+        trainStation = ts;
+        trainStationETA = eta;
+
+    }
+
     public int getSize() {
         return wagons.size() + 1;
     }

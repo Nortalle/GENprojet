@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public class Mine {
     private String resource;
 
+    public Mine() {}
+
     public Mine(String r) {
         resource = r;
     }
@@ -47,7 +49,7 @@ public class Mine {
 
         ArrayList<String> jMines = jsonEngine.fromJson(from, ArrayList.class);
         for(String s : jMines) {
-            Mine m = new Mine("");//bad
+            Mine m = new Mine();//bad ?
             m.fromJSON(s);
             mines.add(m);
         }

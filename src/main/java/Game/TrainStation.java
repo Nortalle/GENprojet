@@ -11,9 +11,7 @@ public class TrainStation {
     private int sizeOfPlatforms;
     private ArrayList<Mine> mines = new ArrayList<Mine>();
 
-    public TrainStation() {
-
-    }
+    public TrainStation() {}
 
     public TrainStation(int x, int y, int nbPlat, int sizePlat, ArrayList<Mine> m) {
         posX = x;
