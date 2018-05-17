@@ -1,6 +1,11 @@
 package Gui;
 
+import Client.Client;
+import Game.TrainStation;
+
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -37,6 +42,21 @@ public class cli_gui_Gare {
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        select_station.addPopupMenuListener(new PopupMenuListener() {
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                String line = Client.getInstance().getStations();
+                select_station.removeAllItems();
+                for(TrainStation ts : TrainStation.listFromJSON(line)) select_station.addItem(ts);
+            }
+
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+
+            }
+
+            public void popupMenuCanceled(PopupMenuEvent e) {
 
             }
         });

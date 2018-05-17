@@ -13,10 +13,16 @@ import java.io.*;
 import java.net.Socket;
 
 public class Client {
+    private static Client instance;
     private Socket socket;
     private BufferedReader reader;
     private PrintWriter writer;
     private String username;
+
+    public static Client getInstance() {
+        if(instance == null) instance = new Client();
+        return instance;
+    }
 
     //GUI
     private JFrame frame;
@@ -115,7 +121,6 @@ public class Client {
 
     public String getStations() {
         writer.println(OTrainProtocol.GET_GARES);
-        //writer.println(username);
         writer.flush();
         String answer = "ERROR";
         try {
@@ -128,8 +133,7 @@ public class Client {
     }
 
     public static void main(String ... args) {
-        Client client = new Client();
-        client.startingFrame();
+        Client.getInstance().startingFrame();
 
         // Crée la fenêtre de login
         /*JFrame frame = new JFrame("OTrain");
