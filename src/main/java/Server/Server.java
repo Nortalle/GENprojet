@@ -17,7 +17,7 @@ public class Server {
 
     public void startServer() {
         try {
-            serverSocket = new ServerSocket(OTrainProtocol.PORT);//protocol
+            serverSocket = new ServerSocket(OTrainProtocol.PORT);
             clientHandlers = new LinkedList<ClientHandler>();
             running = true;
             db = new DataBase();
