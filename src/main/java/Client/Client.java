@@ -152,6 +152,20 @@ public class Client {
         return answer;
     }
 
+    public String changeStation(int stationId) {
+        writer.println(OTrainProtocol.GO_TO);
+        writer.println(stationId);
+        writer.flush();
+        String answer = "ERROR";
+        try {
+            answer = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return answer;
+    }
+
     public static void main(String ... args) {
         Client.getInstance().startingFrame();
 

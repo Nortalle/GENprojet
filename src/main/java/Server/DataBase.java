@@ -1,9 +1,6 @@
 package Server;
 
-import Game.Mine;
-import Game.Train;
-import Game.TrainStation;
-import Game.Wagon;
+import Game.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -192,7 +189,7 @@ public class DataBase {
             int currentTs = resultSet.getInt("gareActuelle");
             int eta = resultSet.getInt("tempsArriveeEstime");
 
-            train = new Train(null, null, getTrainStation(currentTs), eta);
+            train = new Train(new Loco(), new ArrayList<Wagon>(), getTrainStation(currentTs), eta);// TODO
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -259,6 +256,8 @@ public class DataBase {
             int nbOfPlatforms = resultSet.getInt("nbrQuai");
             int sizeOfPlatforms = resultSet.getInt("tailleQuai");
             ArrayList<Mine> mines = getAllMinesOfStation(id);
+            // TODO
+            if(mines == null) mines = new ArrayList<Mine>();
 
             trainStation = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
 
@@ -294,7 +293,7 @@ public class DataBase {
     }
 
 
-    public int getStartingStationIdByPos(int x, int y) {
+    public int getTrainStationIdByPos(int x, int y) {
         int result = -1;
         try {
             ResultSet resultSet;
@@ -313,7 +312,7 @@ public class DataBase {
 
 
     public int getStartingStationId() {
-        return getStartingStationIdByPos(0, 0);
+        return getTrainStationIdByPos(0, 0);
     }
 
     public boolean insertTrainStation(int x, int y, int nbPlat, int sizePlat) {
@@ -338,7 +337,7 @@ public class DataBase {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT posX, posY FROM Gare;", Statement.RETURN_GENERATED_KEYS);
             resultSet = ps.executeQuery();
-            while(resultSet.next()) {
+            while(resultSet.next()) {// bad need change
                 if(resultSet.getInt(1) == x && resultSet.getInt(2) == y) return false;
             }
             return true;
@@ -353,7 +352,7 @@ public class DataBase {
         int nbUsedPlatforms = 0;
         try {
             ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM Train WHERE `emplacement` =?;", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM Train WHERE `gareActuelle` =?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, trainStation);
             resultSet = ps.executeQuery();
             if(resultSet.next()){
@@ -370,7 +369,7 @@ public class DataBase {
             TrainStation ts = getTrainStation(trainStation);
             if(ts == null){return false;}
             //A modifier pour donner le vrai temps de trajet initial (pour le moment toujours à 100)
-            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? `tempsArriveeEstime`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=?, `tempsArriveeEstime`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, trainStation);
             ps.setObject(2, 100);
             ps.setObject(3, username);

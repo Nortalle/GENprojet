@@ -43,7 +43,7 @@ public class TrainStation {
         Gson jsonEngine = new GsonBuilder().create();
 
         JsonObject trainStation = jsonEngine.fromJson(from, JsonObject.class);
-        posX = trainStation.get("id").getAsInt();
+        id = trainStation.get("id").getAsInt();
         posX = trainStation.get("posX").getAsInt();
         posY = trainStation.get("posY").getAsInt();
         nbOfPlatforms = trainStation.get("nbOfPlatforms").getAsInt();

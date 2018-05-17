@@ -36,7 +36,7 @@ public class cli_gui_Gare {
 
         button_travel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // envoyer la requête de changement de gare
+                Client.getInstance().changeStation(((TrainStation) select_station.getSelectedItem()).getId());
             }
         });
         button_view.addActionListener(new ActionListener() {
