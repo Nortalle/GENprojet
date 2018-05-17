@@ -54,19 +54,14 @@ ClientHandler implements Runnable {
 
                     Train train = db.getTrain(username);
                     TrainStation trainStation = db.getTrainStation(trainStationId);
+                    boolean isSend = false;
                     if(trainStation.getSizeOfPlatforms() >= train.getSize()) {
                         if(db.getNbUsedPlatforms(trainStation.getId()) < trainStation.getNbOfPlatforms()) {
-                            if(db.sendTrainToNewStation(username, trainStation.getId())) {
-                                writer.println(OTrainProtocol.SUCCESS);
-                            } else {
-                                writer.println(OTrainProtocol.FAILURE);
-                            }
-                        } else {
-                            writer.println(OTrainProtocol.FAILURE);
+                            isSend = db.sendTrainToNewStation(username, trainStation.getId());
                         }
-                    } else {
-                        writer.println(OTrainProtocol.FAILURE);
                     }
+                    if(isSend) writer.println(OTrainProtocol.SUCCESS);
+                    else writer.println(OTrainProtocol.FAILURE);
                     writer.flush();
 
                 } else if(line.equals(OTrainProtocol.MINE)) {
