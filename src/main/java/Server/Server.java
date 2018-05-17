@@ -23,7 +23,7 @@ public class Server {
 
     public void init() {
         db = new DataBase();
-        //db.insertTrainStation();// make sure the starting station exist
+        db.insertTrainStation(0, 0, 30, 30);// make sure the starting station exist
 
     }
 

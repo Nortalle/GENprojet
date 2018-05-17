@@ -5,12 +5,22 @@ import com.google.gson.*;
 import java.util.ArrayList;
 
 public class Mine {
+    private int id;
     private String resource;
+    private int amount;
+    private int place;
 
     public Mine() {}
 
     public Mine(String r) {
         resource = r;
+    }
+
+    public Mine(int i, String r, int a, int p) {
+        id = i;
+        resource = r;
+        amount = a;
+        place = p;
     }
 
     public String getResource() {

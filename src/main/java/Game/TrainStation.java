@@ -46,9 +46,10 @@ public class TrainStation {
         posX = trainStation.get("id").getAsInt();
         posX = trainStation.get("posX").getAsInt();
         posY = trainStation.get("posY").getAsInt();
-        nbOfPlatforms = trainStation.get("nbOfPlatforms ").getAsInt();
+        nbOfPlatforms = trainStation.get("nbOfPlatforms").getAsInt();
         sizeOfPlatforms = trainStation.get("sizeOfPlatforms").getAsInt();
 
+        // mines ???
     }
 
     public static String listToJSON(ArrayList<TrainStation> trainStations) {

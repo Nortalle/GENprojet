@@ -240,9 +240,9 @@ public class DataBase {
             int nbOfPlatforms = resultSet.getInt("nbrQuai");
             int sizeOfPlatforms = resultSet.getInt("tailleQuai");
             ArrayList<Mine> mines = getAllMinesOfStation(id);
-            /*
-            TrainStation trainStation = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
-            */
+
+            trainStation = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -262,10 +262,10 @@ public class DataBase {
                 int nbOfPlatforms = resultSet.getInt("nbrQuai");
                 int sizeOfPlatforms = resultSet.getInt("tailleQuai");
                 ArrayList<Mine> mines = getAllMinesOfStation(id);
-                /*
+
                 TrainStation trainStation = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
                 result.add(trainStation);
-                */
+
 
             }
         } catch (SQLException e) {
@@ -273,6 +273,55 @@ public class DataBase {
         }
         return result;
     }
+
+
+    public int getStartingStationId() {
+        int result = -1;
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT id FROM Gare WHERE posX = 0 AND posY = 0;", Statement.RETURN_GENERATED_KEYS);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public boolean insertTrainStation(int x, int y, int nbPlat, int sizePlat) {
+        if(!canCreateStationAt(x, y)) return false;
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Gare VALUES(default,?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, x);
+            ps.setObject(2, y);
+            ps.setObject(3, nbPlat);
+            ps.setObject(4, sizePlat);
+            int status = ps.executeUpdate();
+            if(status == 0) return false;
+            else return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean canCreateStationAt(int x, int y) {
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT x, y FROM Gare;", Statement.RETURN_GENERATED_KEYS);
+            resultSet = ps.executeQuery();
+            while(resultSet.next()) {
+                if(resultSet.getInt(1) == x && resultSet.getInt(2) == y) return false;
+            }
+            return true;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
     public int getNbUsedPlatforms(int trainStation){
         int nbUsedPlatforms = 0;
@@ -337,10 +386,10 @@ public class DataBase {
                 String type = resultSet.getString("type");
                 int qteRessources = resultSet.getInt("qteRessources");
                 int emplacement = resultSet.getInt("emplacement");
-                /*
+
                 Mine mine = new Mine(id, type, qteRessources, emplacement);
                 result.add(mine);
-                */
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
