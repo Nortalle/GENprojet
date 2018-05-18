@@ -469,9 +469,6 @@ public class DataBase {
     public int calculateTravelTime(int station1, int station2) {
         TrainStation ts1 = getTrainStation(station1);
         TrainStation ts2 = getTrainStation(station2);
-
-        System.out.println(station1 + " ****" + station2);
-        System.out.println(ts2.getPosX() + " " + ts1.getPosX() + " : " + ts2.getPosY() + " " + ts1.getPosY());
         return Math.abs(ts2.getPosX() - ts1.getPosX()) + Math.abs(ts2.getPosY() - ts1.getPosY());
     }
 
