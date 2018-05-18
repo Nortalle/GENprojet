@@ -42,11 +42,11 @@ public class Mine {
     public void fromJSON(String from) {
         Gson jsonEngine = new GsonBuilder().create();
 
-        JsonObject trainStation = jsonEngine.fromJson(from, JsonObject.class);
-        id = trainStation.get("id").getAsInt();
-        resource = trainStation.get("resource").getAsString();
-        amount = trainStation.get("amount").getAsInt();
-        place = trainStation.get("place").getAsInt();
+        JsonObject mine = jsonEngine.fromJson(from, JsonObject.class);
+        id = mine.get("id").getAsInt();
+        resource = mine.get("resource").getAsString();
+        amount = mine.get("amount").getAsInt();
+        place = mine.get("place").getAsInt();
     }
 
     public static String listToJSON(ArrayList<Mine> mines) {
