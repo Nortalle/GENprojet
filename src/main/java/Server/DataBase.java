@@ -200,7 +200,7 @@ public class DataBase {
 
             Integer realETA = Server.getInstance().getTravelController().getETA(username);
             if(realETA != null) eta = realETA;
-            train = new Train(new Loco(), new ArrayList<Wagon>(), getTrainStation(currentTs), eta);// TODO
+            train = new Train(new ArrayList<Wagon>(), getTrainStation(currentTs), eta);// TODO
 
         } catch (SQLException e) {
             e.printStackTrace();
