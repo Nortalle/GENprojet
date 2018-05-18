@@ -65,4 +65,14 @@ public class WagonStats {
     // -- level 5 -- //
     public static final int PUMP_V5_MINING_TIME = 10;
     public static final int PUMP_V5_MINING_AMOUNT = 3;
+
+    public static String getName(int id) {
+        switch (id) {
+            case LOCO_ID: return LOCO_NAME;
+            case DRILL_ID: return DRILL_NAME;
+            case SAW_ID: return SAW_NAME;
+            case PUMP_ID: return PUMP_NAME;
+        }
+        return "unknown";
+    }
 }

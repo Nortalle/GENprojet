@@ -12,9 +12,9 @@ public class Mine {
 
     public Mine() {}
 
-    public Mine(String r) {
+    /*public Mine(String r) {
         resource = r;
-    }
+    }*/
 
     public Mine(int i, String r, int a, int p) {
         id = i;

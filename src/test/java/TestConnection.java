@@ -10,10 +10,12 @@ import org.junit.jupiter.api.Test;
 public class TestConnection {
     private static Client client;
     private static String username = "vincent";
+    private static DataBase dataBase;
 
     @BeforeAll
     public static void setUpBeforeAll() {
         Server.getInstance().startServer();
+        dataBase = new DataBase();
     }
 
     @BeforeEach
@@ -21,7 +23,7 @@ public class TestConnection {
         System.out.println("---");
         client = new Client();
         client.connectServer();
-        DataBase dataBase = new DataBase();
+        dataBase.deleteUser(username);
         dataBase.insertUser(username, username);
     }
 
@@ -45,6 +47,7 @@ public class TestConnection {
     @Test
     public void createNewUser(){
         String username2 = "other";
+        dataBase.deleteUser(username2);
         assertEquals(OTrainProtocol.SUCCESS, client.signUp(username2, username2));
     }
 
