@@ -483,15 +483,15 @@ public class DataBase {
             if(ts == null) return false;
             int currentTsId = getTrain(username).getTrainStation().getId();
             if(ts.getId() == currentTsId) return false;
-            //A modifier pour donner le vrai temps de trajet initial (pour le moment toujours à 100)
-            int defaultETA = calculateTravelTime(currentTsId, newTsId);
+            //A modifier pour donner le vrai temps de trajet initial
+            int eta = calculateTravelTime(currentTsId, newTsId);
             PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=?, `tempsArriveeEstime`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, newTsId);
-            ps.setObject(2, defaultETA);
+            ps.setObject(2, eta);
             ps.setObject(3, username);
             ps.executeUpdate();
 
-            Server.getInstance().getTravelController().addTrain(username, defaultETA);
+            Server.getInstance().getTravelController().addTrain(username, eta);
             return true;
         }catch (SQLException e) {
             e.printStackTrace();
