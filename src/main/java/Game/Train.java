@@ -39,7 +39,7 @@ public class Train {
         Gson gson = new GsonBuilder().create();
 
         JsonObject train = new JsonObject();
-        train.add("wagons", new JsonPrimitive("wagons"));// TODO
+        train.add("wagons", new JsonPrimitive(Wagon.listToJSON(wagons)));
         train.add("trainStation", new JsonPrimitive(trainStation.toJSON()));
         train.add("trainStationETA", new JsonPrimitive(trainStationETA));
 
@@ -50,7 +50,7 @@ public class Train {
         Gson gson = new GsonBuilder().create();
 
         JsonObject train = gson.fromJson(from, JsonObject.class);
-        //wagons = train.get("wagons");
+        wagons = Wagon.listFromJSON(train.get("wagons").getAsString());
         if(trainStation == null) trainStation = new TrainStation();// to change
         trainStation.fromJSON(train.get("trainStation").getAsString());
         trainStationETA = train.get("trainStationETA").getAsInt();
