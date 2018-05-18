@@ -25,31 +25,31 @@ public class TestDataBase {
 
     @Test
     public void insertNewUser(){
-        assertTrue(dataBase.insertUser(username, password));
+        assertTrue(dataBase.insertPlayer(username, password));
     }
 
     @Test
     public void numberOfUsersAfterInsert(){
         int nbUsers = dataBase.getAllUsers().size();
-        if(dataBase.insertUser(username, password)) assertEquals(nbUsers + 1, dataBase.getAllUsers().size());
+        if(dataBase.insertPlayer(username, password)) assertEquals(nbUsers + 1, dataBase.getAllUsers().size());
         else assertEquals(nbUsers, dataBase.getAllUsers().size());
     }
 
     @Test
     public void failInsertAlreadyExitingUser(){
-        dataBase.insertUser(username, password);
-        assertFalse(dataBase.insertUser(username, password));
+        dataBase.insertPlayer(username, password);
+        assertFalse(dataBase.insertPlayer(username, password));
     }
 
     @Test
     public void insertNewUserAlsoInsertNewResourcesPerUser(){
-        dataBase.insertUser(username, password);
+        dataBase.insertPlayer(username, password);
         assertTrue(dataBase.getPlayerResources(username)[0] > -1);
     }
 
     @Test
     public void deleteUserAlsoDeleteResourcesPerUser(){
-        dataBase.insertUser(username, password);
+        dataBase.insertPlayer(username, password);
         dataBase.deleteUser(username);
         assertTrue(dataBase.getPlayerResources(username)[0] == -1);
     }

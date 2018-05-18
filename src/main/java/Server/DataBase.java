@@ -26,7 +26,7 @@ public class DataBase {
      * @param password password
      * @return if user has been inserted (false if username already is data base)
      */
-    public boolean insertUser(String username, String password) {
+    public boolean insertPlayer(String username, String password) {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Utilisateur VALUES(?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
@@ -70,27 +70,13 @@ public class DataBase {
     }
 
     /**
-     * @return if all users were delete
+     * @param username username
+     * @return if user was delete
      */
     public boolean deleteUser(String username) {
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Utilisateur WHERE nomUtilisateur=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
-            int status = ps.executeUpdate();
-            if(status == 0) return true;
-            else return false;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
-     * @return if all users were delete
-     */
-    public boolean deleteAllUsers() {
-        try {
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM Utilisateur;", Statement.RETURN_GENERATED_KEYS);
             int status = ps.executeUpdate();
             if(status == 0) return true;
             else return false;
@@ -123,7 +109,7 @@ public class DataBase {
      * @param password password
      * @return if login was successful
      */
-    public boolean checkLoggin(String username, String password) {
+    public boolean checkLogin(String username, String password) {
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT motDePasse FROM Utilisateur WHERE nomUtilisateur=?", Statement.RETURN_GENERATED_KEYS);
@@ -208,16 +194,16 @@ public class DataBase {
         return train;
     }
 
-    // WAGOON REQUESTS
+    // WAGON REQUESTS
 
     /**
      * @param username the player owner of the train
-     * @param weight the weight of the wagoon
-     * @param level the level of the wagoon
-     * @param type the type of the wagoon
-     * @return true if the wagoon has been created, else false
+     * @param weight the weight of the wagon
+     * @param level the level of the wagon
+     * @param type the type of the wagon
+     * @return true if the wagon has been created, else false
      */
-    public boolean addWagoon(String username, int weight, int level, String type){
+    public boolean addWagon(String username, int weight, int level, String type){
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Utilisateur VALUES(?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
@@ -237,10 +223,10 @@ public class DataBase {
     /**
      *
      * @param username the player owner of the train
-     * @param type type of the wagoons that want to be get
-     * @return a list containing all the owner's wagoons of this type
+     * @param type type of the wagons that want to be get
+     * @return a list containing all the owner's wagons of this type
      */
-    public ArrayList<Wagon> getWagoonsOfType(String username, String type){
+    public ArrayList<Wagon> getWagonsOfType(String username, String type){
         ArrayList<Wagon> result = new ArrayList<Wagon>();
         try {
             ResultSet resultSet;
@@ -269,9 +255,9 @@ public class DataBase {
     /**
      *
      * @param username player owner of the train
-     * @return the liste of all the wagoons of the train
+     * @return the liste of all the wagons of the train
      */
-    public ArrayList<Wagon> getAllWagoons(String username){
+    public ArrayList<Wagon> getAllWagons(String username){
         ArrayList<Wagon> result = new ArrayList<Wagon>();
         try {
             ResultSet resultSet;
@@ -420,6 +406,24 @@ public class DataBase {
             int status = ps.executeUpdate();
             if(status == 0) return false;
             else return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    /**
+     * @param id id of station
+     * @return if station was delete
+     */
+    public boolean deleteTrainStation(int id) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM Gare WHERE id=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, id);
+            int status = ps.executeUpdate();
+            if(status == 0) return true;
+            else return false;
         } catch (SQLException e) {
             e.printStackTrace();
         }

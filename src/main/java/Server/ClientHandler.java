@@ -1,7 +1,6 @@
 package Server;
 
 import Game.Resources;
-import Game.Train;
 import Game.TrainStation;
 import Utils.OTrainProtocol;
 
@@ -84,14 +83,14 @@ ClientHandler implements Runnable {
                 username = reader.readLine();
                 String password = reader.readLine();
                 if(request.equals(OTrainProtocol.CONNECT)) {
-                    logged = db.checkLoggin(username, password);
+                    logged = db.checkLogin(username, password);
                     writer.println(logged ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
                     writer.flush();
                 } else if(request.equals(OTrainProtocol.SIGN_UP)) {
                     if(username == null || password == null || username.equals("")) {
                         signedUp = false;
                     } else {
-                        signedUp = db.insertUser(username, password);
+                        signedUp = db.insertPlayer(username, password);
                     }
                     writer.println(signedUp ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
                     writer.flush();

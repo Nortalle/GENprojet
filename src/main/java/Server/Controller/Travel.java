@@ -47,9 +47,10 @@ public class Travel implements Runnable {
         if(realETA != null) eta = realETA;
         if(eta == 0) {
             if(newTrainStation.getSizeOfPlatforms() >= train.getSize()) {
-                if(db.sendTrainToNewStation(username, newTrainStation.getId())) {
-                    return true;
-                }
+                if(db.getNbUsedPlatforms(newTsId) < newTrainStation.getNbOfPlatforms())
+                    if(db.sendTrainToNewStation(username, newTrainStation.getId())) {
+                        return true;
+                    }
             }
         }
         return false;

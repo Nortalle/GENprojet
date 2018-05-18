@@ -24,7 +24,7 @@ public class TestConnection {
         client = new Client();
         client.connectServer();
         dataBase.deleteUser(username);
-        dataBase.insertUser(username, username);
+        dataBase.insertPlayer(username, username);
     }
 
     @Test
