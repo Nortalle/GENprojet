@@ -19,7 +19,7 @@ public class TestDataBase {
     @BeforeEach
     public  void setUpBeforeEach(){
         System.out.println("---");
-        dataBase.deleteAllUsers();
+        dataBase.deleteUser(username);
         Server.getInstance().init();
     }
 
@@ -29,13 +29,7 @@ public class TestDataBase {
     }
 
     @Test
-    public void insertGetAllUsers(){
-        dataBase.insertUser(username, password);
-        assertEquals(username, dataBase.getAllUsers().get(0));
-    }
-
-    @Test
-    public void insertNumberOfUsers(){
+    public void numberOfUsersAfterInsert(){
         int nbUsers = dataBase.getAllUsers().size();
         if(dataBase.insertUser(username, password)) assertEquals(nbUsers + 1, dataBase.getAllUsers().size());
         else assertEquals(nbUsers, dataBase.getAllUsers().size());
