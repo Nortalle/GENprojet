@@ -12,9 +12,17 @@ import com.google.gson.JsonPrimitive;
  * @author Vincent Guidoux
  */
 public class Resources {
+    private static final int SCRUM_ID = 0;
+    private static final int EAU_ID = 1;
+    private static final int BOIS_ID = 2;
+    private static final int CHARBON_ID = 3;
+    private static final int PETROL_ID = 4;
+    private static final int FER_ID = 5;
+    private static final int CUIVRE_ID = 6;
+    private static final int ACIER_ID = 7;
+    private static final int OR_ID = 8;
 
-    //unité monétaire du jeu
-    private int scrum;
+    private int scrum;//unité monétaire du jeu
     private int eau;
     private int bois;
     private int chardon;

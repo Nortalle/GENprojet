@@ -1,14 +1,22 @@
 package Game;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class MinesTest {
     @BeforeAll
     public static void setUpBeforeAll() {
-        System.out.println("--- BeforeAll ---");
+
+    }
+
+    @BeforeEach
+    public  void setUpBeforeEach(){
+        System.out.println("---");
     }
 
     @Test
@@ -26,6 +34,6 @@ public class MinesTest {
         String json = Mine.listToJSON(mines);
         ArrayList<Mine> newMines = Mine.listFromJSON(json);
         for(Mine m : newMines) System.out.println("- " + m.getResource());
-
+        assertEquals(mines.get(1).getResource(), newMines.get(1).getResource());
     }
 }
