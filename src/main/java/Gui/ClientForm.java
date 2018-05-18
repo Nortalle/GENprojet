@@ -45,8 +45,7 @@ public class ClientForm {
 
     private Client client;
 
-    public ClientForm(Client client) {
-        this.client = client;
+    public ClientForm() {
         updateResources();
 
         LOG.log("Ouverture de ce que le client va voir");
@@ -55,7 +54,7 @@ public class ClientForm {
     }
 
     private void updateResources(){
-        String answer = client.getResources();
+        String answer = Client.getInstance().getResources();
         Resources resources = new Resources(answer);
         scrum_i.setText(Integer.toString(resources.getScrum()));
         eau_i.setText(Integer.toString(resources.getEau()));
