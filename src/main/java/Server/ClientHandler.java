@@ -18,9 +18,9 @@ ClientHandler implements Runnable {
     private PrintWriter writer;
     private String username;
 
-    public ClientHandler(Socket socket, DataBase db) throws IOException {
+    public ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
-        this.db = db;
+        db = Server.getInstance().getDataBase();
         running = true;
         reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         writer = new PrintWriter(this.socket.getOutputStream());
@@ -50,25 +50,11 @@ ClientHandler implements Runnable {
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
                     String newTsLine = reader.readLine();
                     System.out.println(newTsLine);
-
-                    int trainStationId = Integer.valueOf(newTsLine);
-
-                    Train train = db.getTrain(username);
-                    TrainStation trainStation = db.getTrainStation(trainStationId);
-                    boolean isSend = false;
-
-                    int eta = 0;
-                    Integer realETA = Server.getInstance().getTravelController().getETA(username);
-                    if(realETA != null) eta = realETA;
-                    if(eta == 0) {
-                        if (trainStation.getSizeOfPlatforms() >= train.getSize()) {
-                            if (db.getNbUsedPlatforms(trainStation.getId()) < trainStation.getNbOfPlatforms()) {
-                                isSend = db.sendTrainToNewStation(username, trainStation.getId());
-                            }
-                        }
+                    if(Server.getInstance().getTravelController().ctrlChangeStation(username, newTsLine)) {
+                        writer.println(OTrainProtocol.SUCCESS);
+                    } else {
+                        writer.println(OTrainProtocol.FAILURE);
                     }
-                    if(isSend) writer.println(OTrainProtocol.SUCCESS);
-                    else writer.println(OTrainProtocol.FAILURE);
                     writer.flush();
 
                 } else if(line.equals(OTrainProtocol.MINE)) {

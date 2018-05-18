@@ -324,14 +324,15 @@ public class DataBase {
     }
 
     /**
-     * @param newTsLine the id of the station
+     * @param tsId the id of the station
      * @return the station corresponding to the id
      */
-    public TrainStation getTrainStation(int newTsLine){
+    public TrainStation getTrainStation(int tsId){
         TrainStation trainStation = null;
         try {
             ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE `id`= " + newTsLine + ";", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE `id`=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, tsId);
             resultSet = ps.executeQuery();
             if(!resultSet.next()){return null;}
             int id = resultSet.getInt("id");
@@ -339,7 +340,7 @@ public class DataBase {
             int posY = resultSet.getInt("posY");
             int nbOfPlatforms = resultSet.getInt("nbrQuai");
             int sizeOfPlatforms = resultSet.getInt("tailleQuai");
-            ArrayList<Mine> mines = getAllMinesOfStation(id);
+            ArrayList<Mine> mines = getAllMinesOfStation(tsId);
             // TODO
             if(mines == null) mines = new ArrayList<Mine>();
 

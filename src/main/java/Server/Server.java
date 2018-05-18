@@ -13,7 +13,7 @@ public class Server {
     private ServerSocket serverSocket;
     private LinkedList<ClientHandler> clientHandlers;
     private boolean running;
-    private DataBase db;
+    private DataBase dataBase;
     private Travel travelController;
 
     private Server(){}
@@ -24,8 +24,8 @@ public class Server {
     }
 
     public void init() {
-        db = new DataBase();
-        db.insertTrainStation(0, 0, 30, 30);// make sure the starting station exist
+        dataBase = new DataBase();
+        dataBase.insertTrainStation(0, 0, 30, 30);// make sure the starting station exist
         travelController = new Travel();
         new Thread(travelController).start();
 
@@ -43,7 +43,7 @@ public class Server {
                     while(running) {
                         try {
                             Socket clientSocket = serverSocket.accept();
-                            ClientHandler clientHandler = new ClientHandler(clientSocket, db);
+                            ClientHandler clientHandler = new ClientHandler(clientSocket);
                             clientHandlers.add(clientHandler);
                             Thread clientThread = new Thread(clientHandler);
                             clientThread.start();
@@ -62,6 +62,10 @@ public class Server {
 
     public Travel getTravelController() {
         return travelController;
+    }
+
+    public DataBase getDataBase() {
+        return dataBase;
     }
 
     public void removeHandler(ClientHandler handler) {
