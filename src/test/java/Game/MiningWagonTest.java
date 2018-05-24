@@ -19,8 +19,8 @@ public class MiningWagonTest {
     public static void setUpBeforeAll() {
         mineId = 1;
         wagonId = 1;
-        mine = new Mine(mineId, "thing", 1000, 1);
-        wagon = new WagonMining(wagonId, 1000, 1, WagonStats.DRILL_ID, mine);
+        mine = new Mine(mineId, 2, 1000, 1);
+        wagon = new WagonMining(wagonId, mine);
     }
 
     @BeforeEach
@@ -44,7 +44,7 @@ public class MiningWagonTest {
     void jsonList() {
         ArrayList<Wagon> wagons = new ArrayList<Wagon>();
         wagons.add(new Wagon());
-        wagons.add(new WagonMining());
+        wagons.add(new Wagon());// no correct
         ArrayList<Wagon> newWagons = Wagon.listFromJSON(Wagon.listToJSON(wagons));
         System.out.println(newWagons.get(0));
         for(int i = 0; i < wagons.size(); i++) {

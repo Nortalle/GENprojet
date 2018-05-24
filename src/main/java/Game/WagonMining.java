@@ -36,7 +36,8 @@ public class WagonMining  {
         Gson jsonEngine = new GsonBuilder().create();
 
         JsonObject miningWagon = new JsonObject();
-        if(currentMine == null) currentMine = new Mine(-1, "", -1, -1);// TODO
+        if(currentMine == null) currentMine = new Mine();// TODO
+        miningWagon.add("id", new JsonPrimitive(id));
         miningWagon.add("currentMine", new JsonPrimitive(currentMine.toJSON()));
 
         return jsonEngine.toJson(miningWagon);
@@ -46,7 +47,12 @@ public class WagonMining  {
         Gson jsonEngine = new GsonBuilder().create();
 
         JsonObject miningWagon = jsonEngine.fromJson(from, JsonObject.class);
+        id = miningWagon.get("int").getAsInt();
         if(currentMine == null) currentMine = new Mine();// can we do better ?
         currentMine.fromJSON(miningWagon.get("currentMine").getAsString());
+    }
+
+    public int getId() {
+        return id;
     }
 }
