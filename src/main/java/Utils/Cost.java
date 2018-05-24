@@ -1,15 +1,15 @@
 package Utils;
 
 public class Cost{
-    private Ressource ressource;
+    private Ressource.Type ressource;
     private int quantity;
 
-    Cost( Ressource r, int q){
+    Cost( Ressource.Type r, int q){
         ressource = r;
         quantity = q;
     }
 
-    public Ressource getRessource() {
+    public Ressource.Type getRessource() {
         return ressource;
     }
 

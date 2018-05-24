@@ -1,5 +1,6 @@
 package Game;
 
+import Utils.Ressource;
 import com.google.gson.*;
 
 import java.util.ArrayList;
@@ -86,6 +87,6 @@ public class Mine {
 
     @Override
     public String toString() {
-        return id + " " + resource + " : " + amount;
+        return id + " " + Ressource.RessourceToString(Ressource.Type.values()[resource]) + " : " + amount;
     }
 }
