@@ -68,12 +68,17 @@ public class cli_gui_Mine {
         //String listOfMines = "<html>";
         comboBox1.removeAllItems();
         availableMinesPanel.removeAll();
-        availableMinesPanel.setLayout(new FlowLayout());
+        int i = 0;
+        availableMinesPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
         for(Mine m : train.getTrainStation().getMines()) {
 
             JLabel label = new JLabel(m.toString());
-            //availableMinesPanel.setLayout(new FlowLayout());
-            availableMinesPanel.add(label);
+
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridx = 0;
+            gbc.gridy = i++;
+            availableMinesPanel.add(label,gbc);
             //listOfMines += m + "<br/>";
             comboBox1.addItem(m);
         }
