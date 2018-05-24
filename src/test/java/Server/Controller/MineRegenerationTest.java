@@ -47,6 +47,16 @@ class MineRegenerationTest {
         assertEquals(1000, mines.get(1).getAmount());
         assertEquals(901, mines.get(2).getAmount());
         assertEquals(1, mines.get(3).getAmount());
+
+        Mine mine5 = new Mine(5, "or", 50, 1);
+        mines.add(mine5);
+
+        start = System.currentTimeMillis();
+        while(System.currentTimeMillis() - start < 2500){
+
+        }
+
+        assertEquals(52, mines.get(4).getAmount());
     }
 
 }

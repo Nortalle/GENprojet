@@ -54,8 +54,11 @@ public class MineRegeneration implements Runnable {
 
     }
 
+    public void addMine(Mine mine_to_add){
+        this.mines.add(mine_to_add);
+    }
+
     public ArrayList<Mine> getMines() {
         return mines;
     }
-
 }
