@@ -1,5 +1,6 @@
 package Server;
 
+import Server.Controller.MineRegeneration;
 import Server.Controller.Travel;
 import Utils.OTrainProtocol;
 
@@ -15,6 +16,7 @@ public class Server {
     private boolean running;
     private DataBase dataBase;
     private Travel travelController;
+    private MineRegeneration regenerationController;
 
     private Server(){}
 
@@ -28,7 +30,8 @@ public class Server {
         dataBase.insertTrainStation(0, 0, 30, 30);// make sure the starting station exist
         travelController = new Travel();
         new Thread(travelController).start();
-
+        regenerationController = new MineRegeneration();
+        new Thread(regenerationController).start();
     }
 
     public void startServer() {
