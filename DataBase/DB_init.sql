@@ -94,7 +94,7 @@ ENGINE = InnoDB;
 -- table Mine
 CREATE TABLE IF NOT EXISTS `Mine` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `type` VARCHAR(45) NOT NULL,
+  `type` INT NOT NULL,
   `qteRessources` INT NOT NULL DEFAULT 100,
   `emplacement` INT NOT NULL,
   PRIMARY KEY (`id`),
