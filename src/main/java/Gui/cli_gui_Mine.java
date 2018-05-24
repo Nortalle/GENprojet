@@ -34,9 +34,11 @@ public class cli_gui_Mine {
         startMiningButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // TODO
+                Train train = Client.getInstance().getTrain();
+                if(train.getTrainStationETA() > 0) return;
                 Mine mine = (Mine) comboBox1.getSelectedItem();
                 Wagon wagon = null;
-                for(Wagon w : Client.getInstance().getTrain().getWagons()) {
+                for(Wagon w : train.getWagons()) {
                     if(w.getTypeID() == WagonStats.DRILL_ID) {
                         wagon = w;
                         break;
@@ -44,7 +46,9 @@ public class cli_gui_Mine {
                 }
                 String line = Client.getInstance().startMining(wagon.getId(), mine.getId());
                 System.out.println(line);
-                if(line.equals(OTrainProtocol.SUCCESS));
+                if(line.equals(OTrainProtocol.SUCCESS)) {
+                    
+                }
             }
         });
     }
