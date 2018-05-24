@@ -8,7 +8,7 @@ public class Reciept {
 
     private static LinkedList<Reciept> allReciepts = new LinkedList<Reciept>();
 
-    static LinkedList<Reciept> getAllReciepts(){
+    public static LinkedList<Reciept> getAllReciepts(){
         return allReciepts;
     }
 
