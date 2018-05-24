@@ -565,4 +565,29 @@ public class DataBase {
         return result;
     }
 
+
+    /**
+     * @return the list of all the mines
+     */
+    public ArrayList<Mine> getAllMines(){
+        ArrayList<Mine> result = new ArrayList<Mine>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Mine");
+            resultSet = ps.executeQuery();
+            while(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String type = resultSet.getString("type");
+                int qteRessources = resultSet.getInt("qteRessources");
+                int emplacement = resultSet.getInt("emplacement");
+
+                Mine mine = new Mine(id, type, qteRessources, emplacement);
+                result.add(mine);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
