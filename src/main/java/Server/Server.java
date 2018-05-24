@@ -1,5 +1,6 @@
 package Server;
 
+import Server.Controller.MineController;
 import Server.Controller.MineRegeneration;
 import Server.Controller.Travel;
 import Utils.OTrainProtocol;
@@ -17,6 +18,7 @@ public class Server {
     private DataBase dataBase;
     private Travel travelController;
     private MineRegeneration regenerationController;
+    private MineController mineController;
 
     private Server(){}
 
@@ -32,6 +34,8 @@ public class Server {
         //new Thread(travelController).start(); Ce n'est plus un thread.
         regenerationController = new MineRegeneration();
         new Thread(regenerationController).start();
+        mineController = new MineController();
+        new Thread(mineController).start();
     }
 
     public void startServer() {
@@ -69,6 +73,10 @@ public class Server {
 
     public MineRegeneration getRegenerationController() {
         return regenerationController;
+    }
+
+    public MineController getMineController() {
+        return mineController;
     }
 
     public DataBase getDataBase() {

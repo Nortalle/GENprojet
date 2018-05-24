@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class WagonMining  {
-    private int id;
+    private Wagon wagon;
     private Mine currentMine;
 
     public WagonMining() {}
@@ -15,8 +15,8 @@ public class WagonMining  {
         fromJSON(json);
     }
 
-    public WagonMining(int id, Mine currentMine) {
-        this.id = id;
+    public WagonMining(Wagon wagon, Mine currentMine) {
+        this.wagon = wagon;
         this.currentMine = currentMine;
     }
 
@@ -36,8 +36,9 @@ public class WagonMining  {
         Gson jsonEngine = new GsonBuilder().create();
 
         JsonObject miningWagon = new JsonObject();
-        if(currentMine == null) currentMine = new Mine();// TODO
-        miningWagon.add("id", new JsonPrimitive(id));
+        if(currentMine == null) wagon = new Wagon();
+        miningWagon.add("wagon", new JsonPrimitive(wagon.toJSON()));
+        if(currentMine == null) currentMine = new Mine();
         miningWagon.add("currentMine", new JsonPrimitive(currentMine.toJSON()));
 
         return jsonEngine.toJson(miningWagon);
@@ -47,12 +48,13 @@ public class WagonMining  {
         Gson jsonEngine = new GsonBuilder().create();
 
         JsonObject miningWagon = jsonEngine.fromJson(from, JsonObject.class);
-        id = miningWagon.get("int").getAsInt();
+        if(wagon == null) wagon = new Wagon();// can we do better ?
+        currentMine.fromJSON(miningWagon.get("wagon").getAsString());
         if(currentMine == null) currentMine = new Mine();// can we do better ?
         currentMine.fromJSON(miningWagon.get("currentMine").getAsString());
     }
 
-    public int getId() {
-        return id;
+    public Wagon getWagon() {
+        return wagon;
     }
 }

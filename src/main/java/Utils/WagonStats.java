@@ -1,5 +1,7 @@
 package Utils;
 
+import Game.Wagon;
+
 public class WagonStats {
 
     // --- LOCO --- //
@@ -44,5 +46,9 @@ public class WagonStats {
 
     public static int getMiningTime(int type, int level) {
         return MINING_TIME[type - 2][level - 1];
+    }
+
+    public static int getMiningTime(Wagon wagon) {
+        return MINING_TIME[wagon.getTypeID() - 2][wagon.getLevel() - 1];
     }
 }
