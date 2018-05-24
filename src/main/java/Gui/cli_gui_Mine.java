@@ -67,10 +67,12 @@ public class cli_gui_Mine {
         Train train = Client.getInstance().getTrain();
         //String listOfMines = "<html>";
         comboBox1.removeAllItems();
+        availableMinesPanel.removeAll();
+        availableMinesPanel.setLayout(new FlowLayout());
         for(Mine m : train.getTrainStation().getMines()) {
 
             JLabel label = new JLabel(m.toString());
-            availableMinesPanel.setLayout(new FlowLayout());
+            //availableMinesPanel.setLayout(new FlowLayout());
             availableMinesPanel.add(label);
             //listOfMines += m + "<br/>";
             comboBox1.addItem(m);
