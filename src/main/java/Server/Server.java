@@ -67,6 +67,10 @@ public class Server {
         return travelController;
     }
 
+    public MineRegeneration getRegenerationController() {
+        return regenerationController;
+    }
+
     public DataBase getDataBase() {
         return dataBase;
     }

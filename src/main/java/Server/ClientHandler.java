@@ -57,8 +57,13 @@ ClientHandler implements Runnable {
                     writer.flush();
 
                 } else if(line.equals(OTrainProtocol.MINE)) {
+                    String wagonLine = reader.readLine();
+                    String mineLine = reader.readLine();
+                    // Mining Controller
 
                 } else if(line.equals(OTrainProtocol.STOP_MINE)) {
+                    String wagonLine = reader.readLine();
+                    // Mining Controller
 
                 }
                 /*writer.println("You sent me that : " + line);
