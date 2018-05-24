@@ -58,21 +58,18 @@ public class TrainStation {
     public static String listToJSON(ArrayList<TrainStation> trainStations) {
         Gson jsonEngine = new GsonBuilder().create();
 
-        return jsonEngine.toJson(trainStations);
-
-        /*JsonArray list = new JsonArray();
+        JsonArray list = new JsonArray();
         for(TrainStation ts : trainStations) list.add(new JsonPrimitive(ts.toJSON()));
 
-        return jsonEngine.toJson(list);*/
+        return jsonEngine.toJson(list);
     }
 
     public static ArrayList<TrainStation> listFromJSON(String from) {
-        //ArrayList<TrainStation> trainStations = new ArrayList<TrainStation>();
+        ArrayList<TrainStation> trainStations = new ArrayList<>();
         Gson jsonEngine = new GsonBuilder().create();
-        ArrayList<TrainStation> trainStations = jsonEngine.fromJson(from, ArrayList.class);
 
-        /*ArrayList<String> jTrainsStation = jsonEngine.fromJson(from, ArrayList.class);
-        for(String s : jTrainsStation) trainStations.add(new TrainStation(s));*/
+        ArrayList<String> jTrainsStation = jsonEngine.fromJson(from, ArrayList.class);
+        for(String s : jTrainsStation) trainStations.add(new TrainStation(s));
 
         return trainStations;
     }

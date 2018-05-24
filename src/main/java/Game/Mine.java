@@ -59,7 +59,7 @@ public class Mine {
     }
 
     public static ArrayList<Mine> listFromJSON(String from) {
-        ArrayList<Mine> mines = new ArrayList<Mine>();
+        ArrayList<Mine> mines = new ArrayList<>();
         Gson jsonEngine = new GsonBuilder().create();
 
         ArrayList<String> jMines = jsonEngine.fromJson(from, ArrayList.class);
