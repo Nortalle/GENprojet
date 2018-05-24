@@ -75,7 +75,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <nested-form id="78a9a" form-file="Gui/cli_gui_craft.form">
+                  <nested-form id="78a9a" form-file="Gui/cli_gui_craft.form" binding="panCraft">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
