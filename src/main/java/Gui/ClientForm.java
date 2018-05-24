@@ -62,7 +62,8 @@ public class ClientForm {
             public void actionPerformed(ActionEvent e) {
                 Client.getInstance().updateTrainStatus();
                 //craftPanel.update();
-                //minePanel.update();
+                minePanel.update();
+                // TODO
             }
         });
     }

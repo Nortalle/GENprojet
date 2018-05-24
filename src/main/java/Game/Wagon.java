@@ -73,4 +73,8 @@ public class Wagon {
     public int getId() {
         return id;
     }
+
+    public int getTypeID() {
+        return typeID;
+    }
 }

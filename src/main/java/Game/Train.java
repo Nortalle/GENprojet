@@ -23,6 +23,10 @@ public class Train {
 
     }
 
+    public ArrayList<Wagon> getWagons() {
+        return wagons;
+    }
+
     public int getSize() {
         return wagons.size();
     }

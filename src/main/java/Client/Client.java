@@ -166,6 +166,21 @@ public class Client {
         return answer;
     }
 
+    public String startMining(int wagonId, int mineId) {
+        writer.println(OTrainProtocol.MINE);
+        writer.println(wagonId);
+        writer.println(mineId);
+        writer.flush();
+        String answer = "ERROR";
+        try {
+            answer = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return answer;
+    }
+
     public static void main(String ... args) {
         Client.getInstance().startingFrame();
 
