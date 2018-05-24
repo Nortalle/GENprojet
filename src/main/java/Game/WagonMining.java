@@ -54,6 +54,10 @@ public class WagonMining  {
         currentMine.fromJSON(miningWagon.get("currentMine").getAsString());
     }
 
+    public Mine getMine(){
+        return this.currentMine;
+    }
+
     public Wagon getWagon() {
         return wagon;
     }
