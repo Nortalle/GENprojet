@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ChangeStationTest {
@@ -74,5 +75,29 @@ public class ChangeStationTest {
         clients[0].changeStation(stationId);
         clients[1].changeStation(stationId);
         assertEquals(OTrainProtocol.FAILURE, clients[2].changeStation(stationId));
+    }
+
+    @Test
+    public void changeStationTakeTime() {
+        int stationId = dataBase.getTrainStationIdByPos(x, y);
+        String line = client.changeStation(stationId);
+        client.updateTrainStatus();
+        assertTrue(client.getTrain().getTrainStationETA() > 0);
+    }
+
+    @Test
+    public void changeStationETAChange() {
+        int stationId = dataBase.getTrainStationIdByPos(x, y);
+        String line = client.changeStation(stationId);
+        client.updateTrainStatus();
+        int firstETA = client.getTrain().getTrainStationETA();
+
+        long start = System.currentTimeMillis();
+        while(System.currentTimeMillis() - start < 1500);
+
+        client.updateTrainStatus();
+        int secondETA = client.getTrain().getTrainStationETA();
+        System.out.println(firstETA + " -> " + secondETA);
+        assertTrue(firstETA > client.getTrain().getTrainStationETA());
     }
 }

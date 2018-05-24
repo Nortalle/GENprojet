@@ -25,6 +25,9 @@ public class MineRegeneration {
         init();
     }
 
+    /**
+     * Fait en sorte que tous les INTERVAL_MS, les mines se régénère de AMOUNT_TO_ADD
+     */
     private void init() {
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -43,13 +46,18 @@ public class MineRegeneration {
                         }
 
                         mine.setAmount(current_amount);
-
-                        //met à jour la base de donnée en même temps, ce n'est pas ce qu'on veut
-                        //Server.getInstance().getDataBase().setMineAmount(mine.getId(), current_amount);
                     }
                 }
+                //met à jour les mines de la base de donnée chaque seconde
+                updateDB();
             }
         }, INTERVAL_MS, INTERVAL_MS);
+    }
+
+    public void updateDB(){
+        for(Mine mine: mines){
+            Server.getInstance().getDataBase().setMineAmount(mine.getId(),mine.getAmount());
+        }
     }
 
     public void addMine(Mine mine_to_add) {
