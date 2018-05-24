@@ -3,13 +3,9 @@ package Server.Controller;
 import Game.Mine;
 import Server.Server;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
-public class MineRegeneration implements Runnable {
-
-
+public class MineRegeneration {
 
     //Contient toutes les mines du jeux
     private ArrayList<Mine> mines = new ArrayList<Mine>();
@@ -18,32 +14,31 @@ public class MineRegeneration implements Runnable {
     private int AMOUNT_TO_ADD = 1;
     private int INTERVAL_MS = 1000;
 
+
     public MineRegeneration() {
         this.mines = Server.getInstance().getDataBase().getAllMines();
+        init();
     }
 
     public MineRegeneration(ArrayList<Mine> mines) {
         this.mines = mines;
+        init();
     }
 
-    public void run() {
-
-        long start = System.currentTimeMillis();
-        while(true) {
-            start = System.currentTimeMillis();
-            long diff;
-            do {
-                diff = System.currentTimeMillis() - start;
-            }while(diff < INTERVAL_MS);
-                for(Mine mine : mines){
+    private void init() {
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                for (Mine mine : mines) {
 
                     int current_amount = mine.getAmount();
 
                     //Si la mine n'est pas pleine, on la régénère
-                    if(current_amount < MAX_AMOUNT){
+                    if (current_amount < MAX_AMOUNT) {
                         current_amount += AMOUNT_TO_ADD;
 
-                        if(current_amount > MAX_AMOUNT){
+                        //Si la mine est trop pleine, on la met au MAX_AMOUNT
+                        if (current_amount > MAX_AMOUNT) {
                             current_amount = MAX_AMOUNT;
                         }
 
@@ -51,10 +46,10 @@ public class MineRegeneration implements Runnable {
                     }
                 }
             }
-
+        }, INTERVAL_MS, INTERVAL_MS);
     }
 
-    public void addMine(Mine mine_to_add){
+    public void addMine(Mine mine_to_add) {
         this.mines.add(mine_to_add);
     }
 

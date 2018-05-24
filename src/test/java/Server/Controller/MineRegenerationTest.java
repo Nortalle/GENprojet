@@ -27,7 +27,6 @@ class MineRegenerationTest {
         mines.add(mine4);
 
         regeneration = new MineRegeneration(mines);
-        new Thread(regeneration).start();
     }
 
     @BeforeEach
@@ -52,7 +51,7 @@ class MineRegenerationTest {
         mines.add(mine5);
 
         start = System.currentTimeMillis();
-        while(System.currentTimeMillis() - start < 1500){
+        while(System.currentTimeMillis() - start < 1400){
 
         }
 

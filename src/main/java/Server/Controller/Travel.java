@@ -6,11 +6,9 @@ import Server.Server;
 import Server.DataBase;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class Travel {
     private HashMap<String, Integer> map = new HashMap<String, Integer>();// username, time remaining
@@ -21,18 +19,21 @@ public class Travel {
 
     public Travel() {
 
+
         start = System.currentTimeMillis();
-        ActionListener al = evt -> {
 
-            Iterator it = map.entrySet().iterator();
-            while(it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
-                pair.setValue(Math.max((int)(((Integer) pair.getValue()) - ((System.currentTimeMillis() - start) / 1000)), 0));// only seconds
+        new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Iterator it = map.entrySet().iterator();
+                while(it.hasNext()) {
+                    Map.Entry pair = (Map.Entry)it.next();
+                    pair.setValue(Math.max((int)(((Integer) pair.getValue()) - ((System.currentTimeMillis() - start) / 1000)), 0));// only seconds
 
-                start = System.currentTimeMillis();
+                    start = System.currentTimeMillis();
+                }
             }
-        };
-        timer = new Timer(INTERVAL_MS, al);
+        }, INTERVAL_MS, INTERVAL_MS);
     }
 
     public void addTrain(String username, int ETA) {
