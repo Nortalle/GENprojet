@@ -1,6 +1,9 @@
 package Gui;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import Client.*;
 import Game.Resources;
 
@@ -42,6 +45,7 @@ public class ClientForm {
     private JLabel gold_ore_i;
     private JLabel scrum_i;
     private JPanel RessourcesPanel;
+    private cli_gui_craft panCraft;
 
     private Client client;
 
@@ -51,6 +55,11 @@ public class ClientForm {
         LOG.log("Ouverture de ce que le client va voir");
 
 
+        tabs.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                panCraft.update();
+            }
+        });
     }
 
     private void updateResources(){

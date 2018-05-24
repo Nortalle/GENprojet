@@ -1,31 +1,16 @@
 package Utils;
 
 public enum  Ressource {
-    SCRUM,
-    WATER,
     WOOD_LOG,
     CHARCOAL,
-    OIL,
     IRON_ORE,
     COPPER_ORE,
-    STEEL_INGOT,
-    GOLD_ORE,
     IRON_INGOT,
     COPPER_INGOT,
-    PETROL_BARREL,
-    PLASTIC_SHEET,
-    COPPER_CABLE,
-    PROCESSOR,
-    RIVET,
     IRON_PLATE,
-    GOLD_INGOT,
-    GOLD_SHEET,
-    ROBOTIC_ARM,
-    PLANK,
-    WOODEN_CRATE,
-    NAILS,
     IRON_WHEEL,
     COPPER_GEAR,
     COPPER_TUBE,
     DRILL_T1
 }
+
