@@ -1,6 +1,7 @@
 package Gui;
 
 import Client.Client;
+import Game.Mine;
 import Game.Train;
 import Game.TrainStation;
 import Utils.OTrainProtocol;
@@ -8,6 +9,7 @@ import Utils.OTrainProtocol;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -24,6 +26,9 @@ public class cli_gui_Gare {
     private JPanel panel_progress;
     private JProgressBar progressBar1;
     private JButton button_currentStation;
+    private JPanel panel_liste_mines;
+    private JPanel panel_liste_joueurs;
+    private JPanel panel_infos;
 
     public cli_gui_Gare() {
 
@@ -74,10 +79,12 @@ public class cli_gui_Gare {
     }
 
     public void Update(){
-        // peuple les
+
+
     }
 
     private void setStationInfo(String name, int x, int y) {
+
         label_stationName.setText(name);
         label_stationCoords.setText(x + ";" + y);
 
@@ -85,7 +92,19 @@ public class cli_gui_Gare {
         int totalTime = 20;// hard coded
         progressBar1.setMaximum(totalTime);
         Client.getInstance().updateTrainStatus();
+
         progressBar1.setValue(totalTime - Client.getInstance().getTrain().getTrainStationETA());
+
+        // peuple le panel qui donne les mines présentes :
+        TrainStation ts = (TrainStation) select_station.getSelectedItem();
+
+        if(ts != null){
+            for(Mine m : ts.getMines()){
+                JLabel label = new JLabel(m.toString());
+                panel_liste_mines.setLayout(new FlowLayout());
+                panel_liste_mines.add(label);
+            }
+        }
     }
 
     public JPanel getPanel_main() {
