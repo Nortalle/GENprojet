@@ -309,7 +309,7 @@ public class DataBase {
                     case WagonStats.DRILL_ID:
                     case WagonStats.SAW_ID:
                     case WagonStats.PUMP_ID:
-                        wagon = new MiningWagon(id, weight, level, typeID, null);// get currentMine with Controller
+                        wagon = new WagonMining(id, weight, level, typeID, null);// get currentMine with Controller
                         break;
                     default:
                         wagon = new Wagon(id, weight, level, typeID);

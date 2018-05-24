@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MiningWagonTest {
-    private static MiningWagon wagon;
+    private static WagonMining wagon;
     private static Mine mine;
     private static int wagonId;
     private static int mineId;
@@ -20,7 +20,7 @@ public class MiningWagonTest {
         mineId = 1;
         wagonId = 1;
         mine = new Mine(mineId, "thing", 1000, 1);
-        wagon = new MiningWagon(wagonId, 1000, 1, WagonStats.DRILL_ID, mine);
+        wagon = new WagonMining(wagonId, 1000, 1, WagonStats.DRILL_ID, mine);
     }
 
     @BeforeEach
@@ -30,13 +30,13 @@ public class MiningWagonTest {
 
     @Test
     void jsonSuperWagon() {
-        MiningWagon newWagon = new MiningWagon(wagon.toJSON());
+        WagonMining newWagon = new WagonMining(wagon.toJSON());
         assertEquals(wagonId, newWagon.getId());
     }
 
     @Test
     void jsonCurrentMine() {
-        MiningWagon newWagon = new MiningWagon(wagon.toJSON());
+        WagonMining newWagon = new WagonMining(wagon.toJSON());
         assertEquals(mine.getResource(), newWagon.getCurrentMine().getResource());
     }
 
@@ -44,7 +44,7 @@ public class MiningWagonTest {
     void jsonList() {
         ArrayList<Wagon> wagons = new ArrayList<Wagon>();
         wagons.add(new Wagon());
-        wagons.add(new MiningWagon());
+        wagons.add(new WagonMining());
         ArrayList<Wagon> newWagons = Wagon.listFromJSON(Wagon.listToJSON(wagons));
         System.out.println(newWagons.get(0));
         for(int i = 0; i < wagons.size(); i++) {
