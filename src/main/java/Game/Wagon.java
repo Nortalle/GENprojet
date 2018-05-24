@@ -6,10 +6,10 @@ import com.google.gson.*;
 import java.util.ArrayList;
 
 public class Wagon {
-    int id;
-    int weight;
-    int level;
-    int typeID;
+    private int id;
+    private int weight;
+    private int level;
+    private int typeID;
 
     public Wagon() {}
 
@@ -68,5 +68,9 @@ public class Wagon {
     @Override
     public String toString() {
         return WagonStats.getName(typeID) + "-" + id;
+    }
+
+    public int getId() {
+        return id;
     }
 }
