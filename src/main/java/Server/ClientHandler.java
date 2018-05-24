@@ -1,7 +1,6 @@
 package Server;
 
 import Game.Resources;
-import Game.Train;
 import Game.TrainStation;
 import Utils.OTrainProtocol;
 
@@ -18,9 +17,9 @@ ClientHandler implements Runnable {
     private PrintWriter writer;
     private String username;
 
-    public ClientHandler(Socket socket, DataBase db) throws IOException {
+    public ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
-        this.db = db;
+        db = Server.getInstance().getDataBase();
         running = true;
         reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         writer = new PrintWriter(this.socket.getOutputStream());
@@ -50,25 +49,11 @@ ClientHandler implements Runnable {
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
                     String newTsLine = reader.readLine();
                     System.out.println(newTsLine);
-
-                    int trainStationId = Integer.valueOf(newTsLine);
-
-                    Train train = db.getTrain(username);
-                    TrainStation trainStation = db.getTrainStation(trainStationId);
-                    boolean isSend = false;
-
-                    int eta = 0;
-                    Integer realETA = Server.getInstance().getTravelController().getETA(username);
-                    if(realETA != null) eta = realETA;
-                    if(eta == 0) {
-                        if (trainStation.getSizeOfPlatforms() >= train.getSize()) {
-                            if (db.getNbUsedPlatforms(trainStation.getId()) < trainStation.getNbOfPlatforms()) {
-                                isSend = db.sendTrainToNewStation(username, trainStation.getId());
-                            }
-                        }
+                    if(Server.getInstance().getTravelController().ctrlChangeStation(username, newTsLine)) {
+                        writer.println(OTrainProtocol.SUCCESS);
+                    } else {
+                        writer.println(OTrainProtocol.FAILURE);
                     }
-                    if(isSend) writer.println(OTrainProtocol.SUCCESS);
-                    else writer.println(OTrainProtocol.FAILURE);
                     writer.flush();
 
                 } else if(line.equals(OTrainProtocol.MINE)) {
@@ -98,14 +83,14 @@ ClientHandler implements Runnable {
                 username = reader.readLine();
                 String password = reader.readLine();
                 if(request.equals(OTrainProtocol.CONNECT)) {
-                    logged = db.checkLoggin(username, password);
+                    logged = db.checkLogin(username, password);
                     writer.println(logged ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
                     writer.flush();
                 } else if(request.equals(OTrainProtocol.SIGN_UP)) {
                     if(username == null || password == null || username.equals("")) {
                         signedUp = false;
                     } else {
-                        signedUp = db.insertUser(username, password);
+                        signedUp = db.insertPlayer(username, password);
                     }
                     writer.println(signedUp ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
                     writer.flush();

@@ -8,7 +8,6 @@ import com.google.gson.JsonPrimitive;
 import java.util.ArrayList;
 
 public class Train {
-    private Loco loco;
     private ArrayList<Wagon> wagons = new ArrayList<Wagon>();
     private TrainStation trainStation;
     private int trainStationETA;// 0 = arrived
@@ -17,8 +16,7 @@ public class Train {
 
     }
 
-    public Train(Loco l, ArrayList<Wagon> w, TrainStation ts, int eta) {
-        loco = l;
+    public Train(ArrayList<Wagon> w, TrainStation ts, int eta) {
         wagons = w;
         trainStation = ts;
         trainStationETA = eta;
@@ -26,7 +24,7 @@ public class Train {
     }
 
     public int getSize() {
-        return wagons.size() + 1;
+        return wagons.size();
     }
 
     public TrainStation getTrainStation() {
@@ -41,8 +39,7 @@ public class Train {
         Gson gson = new GsonBuilder().create();
 
         JsonObject train = new JsonObject();
-        train.add("loco", new JsonPrimitive("loco"));// TODO
-        train.add("wagons", new JsonPrimitive("wagons"));// TODO
+        train.add("wagons", new JsonPrimitive(Wagon.listToJSON(wagons)));
         train.add("trainStation", new JsonPrimitive(trainStation.toJSON()));
         train.add("trainStationETA", new JsonPrimitive(trainStationETA));
 
@@ -53,8 +50,7 @@ public class Train {
         Gson gson = new GsonBuilder().create();
 
         JsonObject train = gson.fromJson(from, JsonObject.class);
-        //loco = train.get("loco");
-        //wagons = train.get("wagons");
+        wagons = Wagon.listFromJSON(train.get("wagons").getAsString());
         if(trainStation == null) trainStation = new TrainStation();// to change
         trainStation.fromJSON(train.get("trainStation").getAsString());
         trainStationETA = train.get("trainStationETA").getAsInt();

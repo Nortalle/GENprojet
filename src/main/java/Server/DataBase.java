@@ -1,6 +1,7 @@
 package Server;
 
 import Game.*;
+import Utils.WagonStats;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class DataBase {
      * @param password password
      * @return if user has been inserted (false if username already is data base)
      */
-    public boolean insertUser(String username, String password) {
+    public boolean insertPlayer(String username, String password) {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Utilisateur VALUES(?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
@@ -51,13 +52,15 @@ public class DataBase {
             if(status == 0) return false;
 
             //DEFAULT LOCO + WAGONS//
-            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,'Loco');", Statement.RETURN_GENERATED_KEYS);
+            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
+            ps.setObject(2, WagonStats.LOCO_ID);
             status = ps.executeUpdate();
             if(status == 0) return false;
 
-            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,'Drill');", Statement.RETURN_GENERATED_KEYS);
+            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
+            ps.setObject(2, WagonStats.DRILL_ID);
             status = ps.executeUpdate();
             if(status == 0) return false;
             // //
@@ -70,27 +73,13 @@ public class DataBase {
     }
 
     /**
-     * @return if all users were delete
+     * @param username username
+     * @return if user was delete
      */
     public boolean deleteUser(String username) {
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Utilisateur WHERE nomUtilisateur=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
-            int status = ps.executeUpdate();
-            if(status == 0) return true;
-            else return false;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
-     * @return if all users were delete
-     */
-    public boolean deleteAllUsers() {
-        try {
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM Utilisateur;", Statement.RETURN_GENERATED_KEYS);
             int status = ps.executeUpdate();
             if(status == 0) return true;
             else return false;
@@ -123,7 +112,7 @@ public class DataBase {
      * @param password password
      * @return if login was successful
      */
-    public boolean checkLoggin(String username, String password) {
+    public boolean checkLogin(String username, String password) {
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT motDePasse FROM Utilisateur WHERE nomUtilisateur=?", Statement.RETURN_GENERATED_KEYS);
@@ -200,7 +189,7 @@ public class DataBase {
 
             Integer realETA = Server.getInstance().getTravelController().getETA(username);
             if(realETA != null) eta = realETA;
-            train = new Train(new Loco(), new ArrayList<Wagon>(), getTrainStation(currentTs), eta);// TODO
+            train = new Train(getAllWagons(username), getTrainStation(currentTs), eta);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -208,16 +197,16 @@ public class DataBase {
         return train;
     }
 
-    // WAGOON REQUESTS
+    // WAGON REQUESTS
 
     /**
      * @param username the player owner of the train
-     * @param weight the weight of the wagoon
-     * @param level the level of the wagoon
-     * @param type the type of the wagoon
-     * @return true if the wagoon has been created, else false
+     * @param weight the weight of the wagon
+     * @param level the level of the wagon
+     * @param type the type of the wagon
+     * @return true if the wagon has been created, else false
      */
-    public boolean addWagoon(String username, int weight, int level, String type){
+    public boolean addWagon(String username, int weight, int level, String type){
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Utilisateur VALUES(?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
@@ -237,10 +226,10 @@ public class DataBase {
     /**
      *
      * @param username the player owner of the train
-     * @param type type of the wagoons that want to be get
-     * @return a list containing all the owner's wagoons of this type
+     * @param type type of the wagons that want to be get
+     * @return a list containing all the owner's wagons of this type
      */
-    public ArrayList<Wagon> getWagoonsOfType(String username, String type){
+    public ArrayList<Wagon> getWagonsOfType(String username, String type){
         ArrayList<Wagon> result = new ArrayList<Wagon>();
         try {
             ResultSet resultSet;
@@ -269,9 +258,9 @@ public class DataBase {
     /**
      *
      * @param username player owner of the train
-     * @return the liste of all the wagoons of the train
+     * @return the liste of all the wagons of the train
      */
-    public ArrayList<Wagon> getAllWagoons(String username){
+    public ArrayList<Wagon> getAllWagons(String username){
         ArrayList<Wagon> result = new ArrayList<Wagon>();
         try {
             ResultSet resultSet;
@@ -280,15 +269,23 @@ public class DataBase {
             resultSet = ps.executeQuery();
             while(resultSet.next()) {
                 int id = resultSet.getInt("id");
-                String owner = resultSet.getString("proprietaire");
-                String type = resultSet.getString("type");
                 int weight = resultSet.getInt("poids");
                 int level = resultSet.getInt("niveau");
-                /*
-                Wagon wagon = new Wagon(id, owner, type, weight, level);
-                result.add(wagon);
-                */
+                int typeID = resultSet.getInt("typeID");
 
+                Wagon wagon;
+                switch(typeID) {
+                    case WagonStats.DRILL_ID:
+                    case WagonStats.SAW_ID:
+                    case WagonStats.PUMP_ID:
+                        wagon = new MiningWagon(id, weight, level, typeID, null);// get currentMine with Controller
+                        break;
+                    default:
+                        wagon = new Wagon(id, weight, level, typeID);
+                        break;
+                }
+
+                result.add(wagon);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -324,14 +321,15 @@ public class DataBase {
     }
 
     /**
-     * @param newTsLine the id of the station
+     * @param tsId the id of the station
      * @return the station corresponding to the id
      */
-    public TrainStation getTrainStation(int newTsLine){
+    public TrainStation getTrainStation(int tsId){
         TrainStation trainStation = null;
         try {
             ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE `id`= " + newTsLine + ";", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE `id`=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, tsId);
             resultSet = ps.executeQuery();
             if(!resultSet.next()){return null;}
             int id = resultSet.getInt("id");
@@ -339,7 +337,7 @@ public class DataBase {
             int posY = resultSet.getInt("posY");
             int nbOfPlatforms = resultSet.getInt("nbrQuai");
             int sizeOfPlatforms = resultSet.getInt("tailleQuai");
-            ArrayList<Mine> mines = getAllMinesOfStation(id);
+            ArrayList<Mine> mines = getAllMinesOfStation(tsId);
             // TODO
             if(mines == null) mines = new ArrayList<Mine>();
 
@@ -425,6 +423,24 @@ public class DataBase {
         return false;
     }
 
+
+    /**
+     * @param id id of station
+     * @return if station was delete
+     */
+    public boolean deleteTrainStation(int id) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM Gare WHERE id=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, id);
+            int status = ps.executeUpdate();
+            if(status == 0) return true;
+            else return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * @param x position x where we want to create a station
      * @param y position y where we want to create a station
@@ -468,9 +484,6 @@ public class DataBase {
     public int calculateTravelTime(int station1, int station2) {
         TrainStation ts1 = getTrainStation(station1);
         TrainStation ts2 = getTrainStation(station2);
-
-        System.out.println(station1 + " ****" + station2);
-        System.out.println(ts2.getPosX() + " " + ts1.getPosX() + " : " + ts2.getPosY() + " " + ts1.getPosY());
         return Math.abs(ts2.getPosX() - ts1.getPosX()) + Math.abs(ts2.getPosY() - ts1.getPosY());
     }
 
@@ -485,15 +498,15 @@ public class DataBase {
             if(ts == null) return false;
             int currentTsId = getTrain(username).getTrainStation().getId();
             if(ts.getId() == currentTsId) return false;
-            //A modifier pour donner le vrai temps de trajet initial (pour le moment toujours à 100)
-            int defaultETA = calculateTravelTime(currentTsId, newTsId);
+            //A modifier pour donner le vrai temps de trajet initial
+            int eta = calculateTravelTime(currentTsId, newTsId);
             PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=?, `tempsArriveeEstime`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, newTsId);
-            ps.setObject(2, defaultETA);
+            ps.setObject(2, eta);
             ps.setObject(3, username);
             ps.executeUpdate();
 
-            Server.getInstance().getTravelController().addTrain(username, defaultETA);
+            Server.getInstance().getTravelController().addTrain(username, eta);
             return true;
         }catch (SQLException e) {
             e.printStackTrace();
@@ -552,4 +565,29 @@ public class DataBase {
         return result;
     }
 
+
+    /**
+     * @return the list of all the mines
+     */
+    public ArrayList<Mine> getAllMines(){
+        ArrayList<Mine> result = new ArrayList<Mine>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Mine");
+            resultSet = ps.executeQuery();
+            while(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String type = resultSet.getString("type");
+                int qteRessources = resultSet.getInt("qteRessources");
+                int emplacement = resultSet.getInt("emplacement");
+
+                Mine mine = new Mine(id, type, qteRessources, emplacement);
+                result.add(mine);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

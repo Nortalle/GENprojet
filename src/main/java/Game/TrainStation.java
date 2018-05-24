@@ -14,6 +14,10 @@ public class TrainStation {
 
     public TrainStation() {}
 
+    public TrainStation(String json) {
+        fromJSON(json);
+    }
+
     public TrainStation(int id, int x, int y, int nbPlat, int sizePlat, ArrayList<Mine> m) {
         this.id = id;
         posX = x;
@@ -48,8 +52,7 @@ public class TrainStation {
         posY = trainStation.get("posY").getAsInt();
         nbOfPlatforms = trainStation.get("nbOfPlatforms").getAsInt();
         sizeOfPlatforms = trainStation.get("sizeOfPlatforms").getAsInt();
-
-        // mines ???
+        mines = Mine.listFromJSON(trainStation.get("mines").getAsString());
     }
 
     public static String listToJSON(ArrayList<TrainStation> trainStations) {
@@ -66,11 +69,7 @@ public class TrainStation {
         Gson jsonEngine = new GsonBuilder().create();
 
         ArrayList<String> jTrainsStation = jsonEngine.fromJson(from, ArrayList.class);
-        for(String s : jTrainsStation) {
-            TrainStation ts = new TrainStation();//bad ?
-            ts.fromJSON(s);
-            trainStations.add(ts);
-        }
+        for(String s : jTrainsStation) trainStations.add(new TrainStation(s));
 
         return trainStations;
     }
@@ -93,6 +92,10 @@ public class TrainStation {
 
     public int getSizeOfPlatforms() {
         return sizeOfPlatforms;
+    }
+
+    public ArrayList<Mine> getMines() {
+        return mines;
     }
 
     @Override

@@ -46,7 +46,7 @@ public class Client {
             socket.close();
             reader.close();
             writer.close();
-            setFrameContent(new LoginForm(this).getPanel_main());
+            setFrameContent(new LoginForm().getPanel_main());
             connectServer();
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,7 +56,7 @@ public class Client {
     private void startingFrame() {
         frame = new JFrame("OTrain");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setFrameContent(new LoginForm(this).getPanel_main());
+        setFrameContent(new LoginForm().getPanel_main());
         frame.setVisible(true);
 
         connectServer();

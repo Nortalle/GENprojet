@@ -6,14 +6,16 @@ import java.util.ArrayList;
 
 public class Mine {
     private int id;
-    private String resource;
+    private String resource = "unknown";// change to ID ?
+
+
     private int amount;
     private int place;
 
     public Mine() {}
 
-    public Mine(String r) {
-        resource = r;
+    public Mine(String json) {
+        fromJSON(json);
     }
 
     public Mine(int i, String r, int a, int p) {
@@ -31,7 +33,10 @@ public class Mine {
         Gson jsonEngine = new GsonBuilder().create();
 
         JsonObject mine = new JsonObject();
+        mine.add("id", new JsonPrimitive(id));
         mine.add("resource", new JsonPrimitive(resource));
+        mine.add("amount", new JsonPrimitive(amount));
+        mine.add("place", new JsonPrimitive(place));
 
         return jsonEngine.toJson(mine);
     }
@@ -39,9 +44,11 @@ public class Mine {
     public void fromJSON(String from) {
         Gson jsonEngine = new GsonBuilder().create();
 
-        JsonObject trainStation = jsonEngine.fromJson(from, JsonObject.class);
-        resource = trainStation.get("resource").getAsString();
-
+        JsonObject mine = jsonEngine.fromJson(from, JsonObject.class);
+        id = mine.get("id").getAsInt();
+        resource = mine.get("resource").getAsString();
+        amount = mine.get("amount").getAsInt();
+        place = mine.get("place").getAsInt();
     }
 
     public static String listToJSON(ArrayList<Mine> mines) {
@@ -58,12 +65,24 @@ public class Mine {
         Gson jsonEngine = new GsonBuilder().create();
 
         ArrayList<String> jMines = jsonEngine.fromJson(from, ArrayList.class);
-        for(String s : jMines) {
-            Mine m = new Mine();//bad ?
-            m.fromJSON(s);
-            mines.add(m);
-        }
+        for(String s : jMines) mines.add(new Mine(s));
 
         return mines;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public int getPlace() {
+        return place;
+    }
+
+    public void setAmount(int new_amount) {
+        this.amount = new_amount;
     }
 }
