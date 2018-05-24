@@ -5,27 +5,34 @@ import Game.TrainStation;
 import Server.Server;
 import Server.DataBase;
 
+import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Travel implements Runnable {
+public class Travel {
     private HashMap<String, Integer> map = new HashMap<String, Integer>();// username, time remaining
+    private final int INTERVAL_MS = 1000;
+    private long start;
 
-    public void run() {
-        long start = System.currentTimeMillis();
-        while(true) {
-            long diff = System.currentTimeMillis() - start;
-            while(diff < 1000) {
-                diff = System.currentTimeMillis() - start;
-            }
-            start = System.currentTimeMillis();
+    private Timer timer ;
+
+    public Travel() {
+
+        start = System.currentTimeMillis();
+        ActionListener al = evt -> {
+
             Iterator it = map.entrySet().iterator();
             while(it.hasNext()) {
                 Map.Entry pair = (Map.Entry)it.next();
-                pair.setValue(Math.max((int)(((Integer) pair.getValue()) - (diff / 1000)), 0));// only seconds
+                pair.setValue(Math.max((int)(((Integer) pair.getValue()) - ((System.currentTimeMillis() - start) / 1000)), 0));// only seconds
+
+                start = System.currentTimeMillis();
             }
-        }
+        };
+        timer = new Timer(INTERVAL_MS, al);
     }
 
     public void addTrain(String username, int ETA) {

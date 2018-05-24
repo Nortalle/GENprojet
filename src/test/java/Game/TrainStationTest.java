@@ -43,6 +43,7 @@ public class TrainStationTest {
         stations.add(new TrainStation());
         stations.add(new TrainStation());
         String json = TrainStation.listToJSON(stations);
+        System.out.println(stations.size());
         assertEquals(stations.size(), TrainStation.listFromJSON(json).size());
     }
 }

@@ -58,13 +58,13 @@ public class MineController implements Runnable {
 
     // TODO
     public boolean tryMine(String username, String wagonLine, String mineLine) {
-        DataBase db = Server.getInstance().getDataBase();
-        //MiningWagon wagon = db.getWagon(Integer.valueOf(wagonLine));
+        /*DataBase db = Server.getInstance().getDataBase();
+        MiningWagon wagon = db.getWagon(Integer.valueOf(wagonLine));
         Mine mine = db.getMine(Integer.valueOf(mineLine));
         Train train = db.getTrain(username);
         if(train.getTrainStationETA() > 0) return false;//if arrived
         if(train.getTrainStation().getId() != mine.getPlace()) return false;//if mine is at curr station of train
-        //wagon.setCurrentMine(mine);
+        wagon.setCurrentMine(mine);*/
         return true;
     }
 
