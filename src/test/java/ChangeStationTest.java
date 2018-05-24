@@ -29,6 +29,7 @@ public class ChangeStationTest {
     @BeforeEach
     public  void setUpBeforeEach(){
         System.out.println("---");
+        Server.getInstance().getTravelController().removeTrain(username);
         client = new Client();
         client.connectServer();
         dataBase.deleteUser(username);
@@ -50,6 +51,7 @@ public class ChangeStationTest {
     public void changeStation() {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         String line = client.changeStation(stationId);
+        System.out.println(line);
         client.updateTrainStatus();
         assertEquals(dataBase.getTrainStation(stationId).toString(), client.getTrain().getTrainStation().toString());
     }

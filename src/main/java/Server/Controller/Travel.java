@@ -13,24 +13,19 @@ import java.util.*;
 public class Travel {
     private HashMap<String, Integer> map = new HashMap<String, Integer>();// username, time remaining
     private final int INTERVAL_MS = 1000;
-    private long start;
 
     private Timer timer ;
 
     public Travel() {
-
-
-        start = System.currentTimeMillis();
-
         new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Iterator it = map.entrySet().iterator();
                 while(it.hasNext()) {
                     Map.Entry pair = (Map.Entry)it.next();
-                    pair.setValue(Math.max((int)(((Integer) pair.getValue()) - ((System.currentTimeMillis() - start) / 1000)), 0));// only seconds
-
-                    start = System.currentTimeMillis();
+                    //pair.setValue(Math.max((int)(((Integer) pair.getValue()) - ((System.currentTimeMillis() - start) / 1000)), 0));// only seconds
+                    int newValue = (Integer) pair.getValue() - 1;
+                    pair.setValue(Math.max(newValue, 0));// only seconds
                 }
             }
         }, INTERVAL_MS, INTERVAL_MS);
@@ -39,6 +34,12 @@ public class Travel {
     public void addTrain(String username, int ETA) {
         map.put(username, ETA);
     }
+
+
+    public void removeTrain(String username) {
+        map.remove(username);
+    }
+
 
     public Integer getETA(String username) {
         return map.get(username);
@@ -55,10 +56,11 @@ public class Travel {
         if(realETA != null) eta = realETA;
         if(eta == 0) {
             if(newTrainStation.getSizeOfPlatforms() >= train.getSize()) {
-                if(db.getNbUsedPlatforms(newTsId) < newTrainStation.getNbOfPlatforms())
+                if(db.getNbUsedPlatforms(newTsId) < newTrainStation.getNbOfPlatforms()){
                     if(db.sendTrainToNewStation(username, newTrainStation.getId())) {
                         return true;
                     }
+                }
             }
         }
         return false;
