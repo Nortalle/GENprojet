@@ -518,15 +518,15 @@ public class DataBase {
 
     /**
      * @param emplacement station where the mine will be added
-     * @param qteRessources quantity of ressources of the mine
+     * @param qteResources quantity of ressources of the mine
      * @param type type of the mine
      * @return true if the mine has been added, else false
      */
-    public boolean addMine(int emplacement, int qteRessources, String type){
+    public boolean addMine(int emplacement, int qteResources, String type){
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Mine VALUES(?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Mine VALUES(default,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, type);
-            ps.setObject(2, qteRessources);
+            ps.setObject(2, qteResources);
             ps.setObject(3, emplacement);
             int status = ps.executeUpdate();
             if(status != 0){
