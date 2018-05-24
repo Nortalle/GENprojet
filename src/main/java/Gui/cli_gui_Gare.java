@@ -99,10 +99,19 @@ public class cli_gui_Gare {
         TrainStation ts = (TrainStation) select_station.getSelectedItem();
 
         if(ts != null){
-            for(Mine m : ts.getMines()){
+            panel_liste_mines.removeAll();
+            int i = 0;
+            panel_liste_mines.setLayout(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            for(Mine m : ts.getMines()) {
+
                 JLabel label = new JLabel(m.toString());
-                panel_liste_mines.setLayout(new FlowLayout());
-                panel_liste_mines.add(label);
+
+                gbc.fill = GridBagConstraints.HORIZONTAL;
+                gbc.gridx = 0;
+                gbc.gridy = i++;
+                panel_liste_mines.add(label,gbc);
+
             }
         }
     }

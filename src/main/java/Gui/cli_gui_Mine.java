@@ -67,6 +67,7 @@ public class cli_gui_Mine {
         Train train = Client.getInstance().getTrain();
         //String listOfMines = "<html>";
         comboBox1.removeAllItems();
+        availableMinesPanel.removeAll();
         int i = 0;
         availableMinesPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -76,7 +77,7 @@ public class cli_gui_Mine {
 
             gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.gridx = 0;
-            gbc.gridy = i;
+            gbc.gridy = i++;
             availableMinesPanel.add(label,gbc);
             //listOfMines += m + "<br/>";
             comboBox1.addItem(m);
