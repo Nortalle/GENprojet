@@ -3,7 +3,9 @@ package Server.Controller;
 import Game.Mine;
 import Game.MiningWagon;
 import Game.Resources;
+import Game.Train;
 import Server.Server;
+import Server.DataBase;
 import Utils.WagonStats;
 
 import java.util.ArrayList;
@@ -54,7 +56,19 @@ public class MineController implements Runnable {
         }
     }
 
-    public void addWagon(MiningWagon wagon){
+    // TODO
+    public boolean tryMine(String username, String wagonLine, String mineLine) {
+        DataBase db = Server.getInstance().getDataBase();
+        MiningWagon wagon = db.getWagon(Integer.valueOf(wagonLine));
+        Mine mine = db.getMine(Integer.valueOf(mineLine));
+        Train train = db.getTrain(username);
+        if(train.getTrainStationETA() > 0) return false;//if arrived
+        if(train.getTrainStation().getId() != mine.getPlace()) return false;//if mine is at curr station of train
+        wagon.setCurrentMine(mine);
+        return true;
+    }
+
+    public void addWagon(String username, MiningWagon wagon){
         wagons.add(wagon);
         ETMs.add((long)WagonStats.getMiningTime(wagon.getTypeID(), wagon.getLevel()));
     }
