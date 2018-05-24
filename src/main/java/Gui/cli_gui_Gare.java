@@ -81,7 +81,7 @@ public class cli_gui_Gare {
         label_stationName.setText(name);
         label_stationCoords.setText(x + ";" + y);
 
-        // temp
+        // TODO
         int totalTime = 20;// hard coded
         progressBar1.setMaximum(totalTime);
         Client.getInstance().updateTrainStatus();

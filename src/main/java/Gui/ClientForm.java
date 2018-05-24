@@ -8,9 +8,7 @@ import Client.*;
 import Game.Resources;
 
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -45,9 +43,9 @@ public class ClientForm {
     private JLabel gold_ore_i;
     private JLabel scrum_i;
     private JPanel RessourcesPanel;
-    private cli_gui_craft panCraft;
-
-    private Client client;
+    private cli_gui_craft craftPanel;
+    private JButton updateButton;
+    private cli_gui_Mine minePanel;
 
     public ClientForm() {
         updateResources();
@@ -57,7 +55,14 @@ public class ClientForm {
 
         tabs.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                panCraft.update();
+                //panCraft.update();
+            }
+        });
+        updateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Client.getInstance().updateTrainStatus();
+                //craftPanel.update();
+                //minePanel.update();
             }
         });
     }

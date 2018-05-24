@@ -7,8 +7,6 @@ import java.util.ArrayList;
 public class Mine {
     private int id;
     private String resource = "unknown";// change to ID ?
-
-
     private int amount;
     private int place;
 
@@ -84,5 +82,10 @@ public class Mine {
 
     public void setAmount(int new_amount) {
         this.amount = new_amount;
+    }
+
+    @Override
+    public String toString() {
+        return id + " " + resource + " : " + amount;
     }
 }
