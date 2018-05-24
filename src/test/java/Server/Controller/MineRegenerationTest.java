@@ -70,8 +70,5 @@ class MineRegenerationTest {
         Server.getInstance().getDataBase().addMine(1, 550, 4);
         Server.getInstance().getDataBase().addMine(1, 780, 5);
 */
-
-
-
     }
 }
