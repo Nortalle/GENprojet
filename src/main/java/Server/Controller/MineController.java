@@ -10,8 +10,8 @@ import java.util.TimerTask;
 
 public class MineController {
 
-    private ArrayList<WagonMining> wagonMining = new ArrayList<WagonMining>();
-    private ArrayList<Long> ETMs = new ArrayList<Long>();
+    private ArrayList<WagonMining> wagonMining = new ArrayList<>();
+    private ArrayList<Long> ETMs = new ArrayList<>();
     private long start;
 
     private final int INTERVAL_MS = 1000;
@@ -24,13 +24,15 @@ public class MineController {
             @Override
             public void run() {
                 for(int i = 0; i < wagonMining.size(); ++i) {
-                    WagonMining wagon = wagonMining.get(i);
-                    String username = Server.getInstance().getDataBase().getUsernameByWagonId(wagon.getWagon().getId());
+                    WagonMining wm = wagonMining.get(i);
+                    String username = Server.getInstance().getDataBase().getUsernameByWagonId(wm.getWagon().getId());
                     long ETM = ETMs.get(i);
                     ETMs.set(i, --ETM);
                     if(ETM == 0) {
-                        ETMs.set(i, (long)WagonStats.getMiningTime(wagon.getWagon()));
+                        ETMs.set(i, (long)WagonStats.getMiningTime(wm.getWagon()));
                         Resources r = new Resources(Server.getInstance().getDataBase().getPlayerResources(username));
+                        int newRes[] = r.toArray();
+                        newRes[wm.getCurrentMine().getResource()]++;
                         Server.getInstance().getDataBase().setPlayerResources(username, r.toArray());
                     }
                 }
