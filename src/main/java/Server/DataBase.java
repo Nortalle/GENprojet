@@ -304,18 +304,7 @@ public class DataBase {
                 int level = resultSet.getInt("niveau");
                 int typeID = resultSet.getInt("typeID");
 
-                Wagon wagon;
-                switch(typeID) {
-                    case WagonStats.DRILL_ID:
-                    case WagonStats.SAW_ID:
-                    case WagonStats.PUMP_ID:
-                        wagon = new WagonMining(id, weight, level, typeID, null);// get currentMine with Controller
-                        break;
-                    default:
-                        wagon = new Wagon(id, weight, level, typeID);
-                        break;
-                }
-
+                Wagon wagon = new Wagon(id, weight, level, typeID);
                 result.add(wagon);
             }
         } catch (SQLException e) {

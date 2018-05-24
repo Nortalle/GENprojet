@@ -35,39 +35,40 @@ public class MineController implements Runnable {
                     Server.getInstance().getDataBase().setPlayerResources(username, r.toArray());
                 }
             }
-
-            //Minage par secondes
-            for(WagonMining wagon : wagonMining){
-                Mine mine = wagon.getCurrentMine();
-
-
-
-            }
-
-            //Minage par niveau de wagon, avec des interval différents
-            for(int i = 0; i < wagonMining.size(); ++i){
-                WagonMining wagon = wagonMining.get(i);
-                long ETM = ETMs.get(i);
-            }
         }
     }
 
-    // TODO
     public boolean tryMine(String username, String wagonLine, String mineLine) {
         DataBase db = Server.getInstance().getDataBase();
         Wagon wagon = db.getWagon(Integer.valueOf(wagonLine));
         Mine mine = db.getMine(Integer.valueOf(mineLine));
         Train train = db.getTrain(username);
         if(wagon == null || mine == null) return false;//if wagon and mine exist
+        if(wagon.getTypeID() == WagonStats.DRILL_ID) return false;//if wagon can mine
         if(train.getTrainStationETA() > 0) return false;//if train is arrived
         if(train.getTrainStation().getId() != mine.getPlace()) return false;//if mine is at curr station of train
         addWagon(new WagonMining(wagon, mine));
         return true;
     }
 
-    public void addWagon(WagonMining wagonMining){
-        this.wagonMining.add(wagonMining);
-        ETMs.add((long)WagonStats.getMiningTime(wagonMining.getWagon()));
+    public void addWagon(WagonMining wm){
+        boolean found = false;
+        int i;
+        for(i = 0; i < wagonMining.size(); i++) {
+            if(wagonMining.get(i).getWagon().getId() == wm.getWagon().getId()) {
+                found = true;
+                break;
+            }
+        }
+
+        if(found) {
+            wagonMining.set(i,wm);
+            ETMs.set(i, (long)WagonStats.getMiningTime(wm.getWagon()));
+        } else {
+            wagonMining.add(wm);
+            ETMs.add((long)WagonStats.getMiningTime(wm.getWagon()));
+        }
+
     }
 
     public ArrayList<WagonMining> getPlayerWagonMining(String username) {
