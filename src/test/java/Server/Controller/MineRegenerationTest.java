@@ -61,14 +61,15 @@ class MineRegenerationTest {
     }
 
     @Test
-    void test() {
+    void ajouteDesMines() {
+        /*
         Server.getInstance().init();
 
         Server.getInstance().getDataBase().addMine(1, 50, 1);
         Server.getInstance().getDataBase().addMine(1, 50, 4);
         Server.getInstance().getDataBase().addMine(1, 550, 4);
         Server.getInstance().getDataBase().addMine(1, 780, 5);
-
+*/
 
 
 

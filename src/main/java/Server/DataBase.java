@@ -659,4 +659,23 @@ public class DataBase {
         return mine;
     }
 
+    /**
+     * Mets à jour la mine donnée avec la quantité donnée
+     *
+     * @param id        : mine à mettre à jour
+     * @param amount    : quantité à mettre à jour
+     */
+    public void setMineAmount(int id, int amount){
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE `id`=?", Statement.RETURN_GENERATED_KEYS);
+
+            ps.setObject(1, amount);
+            ps.setObject(2, id);
+
+            ps.executeUpdate();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
