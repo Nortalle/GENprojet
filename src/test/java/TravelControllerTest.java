@@ -11,7 +11,7 @@ public class TravelControllerTest {
     @BeforeAll
     public static void setUpBeforeAll() {
         travel = new Travel();
-        new Thread(travel).start();
+        //new Thread(travel).start(); C'est n'est plus un Thread
     }
 
     @BeforeEach

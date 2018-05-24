@@ -324,6 +324,27 @@ public class DataBase {
         return result;
     }
 
+    public Wagon getWagon(int id){
+        Wagon wagon = null;
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `id`=?");
+            ps.setObject(1, id);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                int idWagon = resultSet.getInt("id");
+                int weight = resultSet.getInt("poids");
+                int level = resultSet.getInt("niveau");
+                int typeID = resultSet.getInt("type");
+
+                wagon = new Wagon(id, weight, level, typeID);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     // STATION REQUESTS
 
     /**
@@ -547,6 +568,8 @@ public class DataBase {
 
     // MINE REQUESTS
 
+
+
     /**
      * @param emplacement station where the mine will be added
      * @param qteResources quantity of ressources of the mine
@@ -625,4 +648,26 @@ public class DataBase {
         }
         return result;
     }
+
+    public Mine getMine(int id){
+        Mine mine = null;
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Mine WHERE `id`=?");
+            ps.setObject(1, id);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                int idMine = resultSet.getInt("id");
+                String type = resultSet.getString("type");
+                int qteRessources = resultSet.getInt("qteRessources");
+                int emplacement = resultSet.getInt("emplacement");
+
+                mine = new Mine(id, type, qteRessources, emplacement);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return mine;
+    }
+
 }
