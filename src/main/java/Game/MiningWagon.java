@@ -35,8 +35,8 @@ public class MiningWagon extends Wagon {
     public String toJSON() {
         Gson jsonEngine = new GsonBuilder().create();
 
-        JsonObject miningWagon = new JsonObject();
-        miningWagon.add("wagon", new JsonPrimitive(super.toJSON()));
+        JsonObject miningWagon = jsonEngine.fromJson(super.toJSON(), JsonObject.class);
+        if(currentMine == null) currentMine = new Mine(-1, "", -1, -1);// TODO
         miningWagon.add("currentMine", new JsonPrimitive(currentMine.toJSON()));
 
         return jsonEngine.toJson(miningWagon);
@@ -46,8 +46,8 @@ public class MiningWagon extends Wagon {
     public void fromJSON(String from) {
         Gson jsonEngine = new GsonBuilder().create();
 
+        super.fromJSON(from);
         JsonObject miningWagon = jsonEngine.fromJson(from, JsonObject.class);
-        super.fromJSON(miningWagon.get("wagon").getAsString());
         if(currentMine == null) currentMine = new Mine();// can we do better ?
         currentMine.fromJSON(miningWagon.get("currentMine").getAsString());
     }

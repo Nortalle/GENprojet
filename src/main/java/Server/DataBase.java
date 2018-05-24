@@ -1,6 +1,7 @@
 package Server;
 
 import Game.*;
+import Utils.WagonStats;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -51,13 +52,15 @@ public class DataBase {
             if(status == 0) return false;
 
             //DEFAULT LOCO + WAGONS//
-            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,'Loco');", Statement.RETURN_GENERATED_KEYS);
+            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
+            ps.setObject(2, WagonStats.LOCO_ID);
             status = ps.executeUpdate();
             if(status == 0) return false;
 
-            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,'Drill');", Statement.RETURN_GENERATED_KEYS);
+            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
+            ps.setObject(2, WagonStats.DRILL_ID);
             status = ps.executeUpdate();
             if(status == 0) return false;
             // //
@@ -268,10 +271,21 @@ public class DataBase {
                 int id = resultSet.getInt("id");
                 int weight = resultSet.getInt("poids");
                 int level = resultSet.getInt("niveau");
+                int typeID = resultSet.getInt("typeID");
 
-                Wagon wagon = new Wagon(id, weight, level, 0);
+                Wagon wagon;
+                switch(typeID) {
+                    case WagonStats.DRILL_ID:
+                    case WagonStats.SAW_ID:
+                    case WagonStats.PUMP_ID:
+                        wagon = new MiningWagon(id, weight, level, typeID, null);// get currentMine with Controller
+                        break;
+                    default:
+                        wagon = new Wagon(id, weight, level, typeID);
+                        break;
+                }
+
                 result.add(wagon);
-
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `Wagon` (
   `proprietaire` VARCHAR(45) NOT NULL,
   `poids` INT NOT NULL DEFAULT 0,
   `niveau` INT NOT NULL DEFAULT 0,
-  `type` VARCHAR(45) NOT NULL,
+  `typeID` INT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   CONSTRAINT `fk_train_wagon`
