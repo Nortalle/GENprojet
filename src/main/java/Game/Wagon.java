@@ -77,4 +77,8 @@ public class Wagon {
     public int getTypeID() {
         return typeID;
     }
+
+    public int getLevel() {
+        return level;
+    }
 }

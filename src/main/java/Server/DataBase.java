@@ -148,6 +148,37 @@ public class DataBase {
         return resources;
     }
 
+    public String getUsernameByWagonId(int wagonId) {
+        String result = "";
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT proprietaire FROM Wagon WHERE id=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, wagonId);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                result = resultSet.getString(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public boolean setPlayerResources(String username, int resources[]){
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE RessourcesParJoueur SET qteScrum=?, qteEau=?, qteBois=?, qteCharbon=?, qtePetrol=?, qteFer=?, qteCuivre=?, qteAcier=?, qteOr=? WHERE `nomJoueur`=?", Statement.RETURN_GENERATED_KEYS);
+            for(int i = 0; i < resources.length; i++) {
+                ps.setObject(i + 1, resources[i]);
+            }
+            ps.setObject(resources.length + 1, username);
+            ps.executeUpdate();
+            return true;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     // TRAIN REQUESTS
 
     /**

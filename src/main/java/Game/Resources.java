@@ -205,4 +205,9 @@ public class Resources {
         acier = all;
         or = all;
     }
+
+    public int[] toArray() {
+        int array[] = {scrum, eau, bois, chardon, petrol, fer, cuivre, acier, or};
+        return array;
+    }
 }
