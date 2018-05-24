@@ -43,6 +43,9 @@ public class MineRegeneration {
                         }
 
                         mine.setAmount(current_amount);
+
+                        //met à jour la base de donnée en même temps, ce n'est pas ce qu'on veut
+                        //Server.getInstance().getDataBase().setMineAmount(mine.getId(), current_amount);
                     }
                 }
             }

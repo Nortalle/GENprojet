@@ -6,36 +6,36 @@ import Server.DataBase;
 import Utils.WagonStats;
 
 import java.util.ArrayList;
+import java.util.TimerTask;
 
-public class MineController implements Runnable {
+public class MineController {
 
     private ArrayList<WagonMining> wagonMining = new ArrayList<WagonMining>();
     private ArrayList<Long> ETMs = new ArrayList<Long>();
+    private long start;
 
     private final int INTERVAL_MS = 1000;
 
-    public void run() {
 
-        long start;
-        long diff;
-        while (true) {
-            start = System.currentTimeMillis();
-            do {
-                diff = System.currentTimeMillis() - start;
-            } while (diff < INTERVAL_MS);
+    public MineController() {
+        start = System.currentTimeMillis();
 
-            for(int i = 0; i < wagonMining.size(); ++i) {
-                WagonMining wagon = wagonMining.get(i);
-                String username = Server.getInstance().getDataBase().getUsernameByWagonId(wagon.getWagon().getId());
-                long ETM = ETMs.get(i);
-                ETMs.set(i, --ETM);
-                if(ETM == 0) {
-                    ETMs.set(i, (long)WagonStats.getMiningTime(wagon.getWagon()));
-                    Resources r = new Resources(Server.getInstance().getDataBase().getPlayerResources(username));
-                    Server.getInstance().getDataBase().setPlayerResources(username, r.toArray());
+        new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                for(int i = 0; i < wagonMining.size(); ++i) {
+                    WagonMining wagon = wagonMining.get(i);
+                    String username = Server.getInstance().getDataBase().getUsernameByWagonId(wagon.getWagon().getId());
+                    long ETM = ETMs.get(i);
+                    ETMs.set(i, --ETM);
+                    if(ETM == 0) {
+                        ETMs.set(i, (long)WagonStats.getMiningTime(wagon.getWagon()));
+                        Resources r = new Resources(Server.getInstance().getDataBase().getPlayerResources(username));
+                        Server.getInstance().getDataBase().setPlayerResources(username, r.toArray());
+                    }
                 }
             }
-        }
+        }, INTERVAL_MS, INTERVAL_MS);
     }
 
     public boolean tryMine(String username, String wagonLine, String mineLine) {

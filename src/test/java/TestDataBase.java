@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestDataBase {
@@ -67,5 +69,17 @@ public class TestDataBase {
         dataBase.addMine(stationId, 0, 2);
         TrainStation tsNext = dataBase.getTrainStation(stationId);
         assertEquals(tsPrev.getMines().size() + 1, tsNext.getMines().size());
+    }
+
+
+    @Test
+    public void setMineAmount(){
+
+        ArrayList<Mine> mines = dataBase.getAllMines();
+        int id = mines.get(0).getId();
+
+        dataBase.setMineAmount(id,467);
+
+        assertEquals(467, dataBase.getMine(id).getAmount());
     }
 }
