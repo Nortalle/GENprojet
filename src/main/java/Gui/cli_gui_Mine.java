@@ -11,6 +11,7 @@ import Utils.WagonStats;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -20,7 +21,6 @@ public class cli_gui_Mine {
     private JButton startMiningButton;
     private JPanel panel1;
     private JPanel availableMinesPanel;
-    private JLabel availableMineLabel;
 
     public cli_gui_Mine() {
 
@@ -65,12 +65,16 @@ public class cli_gui_Mine {
 
     public void update(){
         Train train = Client.getInstance().getTrain();
-        String listOfMines = "<html>";
+        //String listOfMines = "<html>";
         comboBox1.removeAllItems();
         for(Mine m : train.getTrainStation().getMines()) {
-            listOfMines += m + "<br/>";
+
+            JLabel label = new JLabel(m.toString());
+            availableMinesPanel.setLayout(new FlowLayout());
+            availableMinesPanel.add(label);
+            //listOfMines += m + "<br/>";
             comboBox1.addItem(m);
         }
-        availableMineLabel.setText(listOfMines + "</html>");
+        //availableMineLabel.setText(listOfMines + "</html>");
     }
 }
