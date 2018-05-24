@@ -60,7 +60,9 @@ public class Wagon {
         Gson jsonEngine = new GsonBuilder().create();
 
         ArrayList<String> jWagons = jsonEngine.fromJson(from, ArrayList.class);
-        for(String s : jWagons) wagons.add(new Wagon(s));// need to detect sub class
+        for(String s : jWagons) {
+            wagons.add(new Wagon(s));// need to detect sub class
+        }
 
         return wagons;
     }
@@ -76,5 +78,9 @@ public class Wagon {
 
     public int getTypeID() {
         return typeID;
+    }
+
+    public int getLevel() {
+        return level;
     }
 }

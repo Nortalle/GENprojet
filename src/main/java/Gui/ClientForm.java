@@ -63,6 +63,7 @@ public class ClientForm {
                 Client.getInstance().updateTrainStatus();
                 //craftPanel.update();
                 minePanel.update();
+                updateResources();
                 // TODO
             }
         });
