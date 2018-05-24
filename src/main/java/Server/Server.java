@@ -33,7 +33,6 @@ public class Server {
         travelController = new Travel();
         regenerationController = new MineRegeneration();
         mineController = new MineController();
-        new Thread(mineController).start();
     }
 
     public void startServer() {

@@ -1,10 +1,12 @@
 package Server.Controller;
 
 import Game.Mine;
+import Server.Server;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,4 +60,17 @@ class MineRegenerationTest {
         assertEquals(51, mines.get(4).getAmount());
     }
 
+    @Test
+    void test() {
+        Server.getInstance().init();
+
+        Server.getInstance().getDataBase().addMine(1, 50, 1);
+        Server.getInstance().getDataBase().addMine(1, 50, 4);
+        Server.getInstance().getDataBase().addMine(1, 550, 4);
+        Server.getInstance().getDataBase().addMine(1, 780, 5);
+
+
+
+
+    }
 }
