@@ -24,9 +24,9 @@ public class MinesTest {
         int id = 0;
         int amount = 0;
         int placeId = 0;
-        String s1 = "s1";
-        String s2 = "s2";
-        String s3 = "s3";
+        int s1 = 1;
+        int s2 = 2;
+        int s3 = 3;
         ArrayList<Mine> mines = new ArrayList<Mine>();
         mines.add(new Mine(id, s1, amount, placeId));
         mines.add(new Mine(id, s2, amount, placeId));

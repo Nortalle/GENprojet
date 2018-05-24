@@ -16,10 +16,10 @@ class MineRegenerationTest {
     @BeforeAll
     public static void setUpBeforeAll() {
 
-        Mine mine1 = new Mine(1, "eau", 30, 1);
-        Mine mine2 = new Mine(2, "fer", 1000, 1);
-        Mine mine3 = new Mine(3, "cuir", 900, 1);
-        Mine mine4 = new Mine(4, "or", 0, 1);
+        Mine mine1 = new Mine(1, 1, 30, 1);
+        Mine mine2 = new Mine(2, 2, 1000, 1);
+        Mine mine3 = new Mine(3, 3, 900, 1);
+        Mine mine4 = new Mine(4, 4, 0, 1);
 
         mines.add(mine1);
         mines.add(mine2);
@@ -48,15 +48,15 @@ class MineRegenerationTest {
         assertEquals(901, mines.get(2).getAmount());
         assertEquals(1, mines.get(3).getAmount());
 
-        Mine mine5 = new Mine(5, "or", 50, 1);
+        Mine mine5 = new Mine(5, 5, 50, 1);
         mines.add(mine5);
 
         start = System.currentTimeMillis();
-        while(System.currentTimeMillis() - start < 2500){
+        while(System.currentTimeMillis() - start < 1500){
 
         }
 
-        assertEquals(52, mines.get(4).getAmount());
+        assertEquals(51, mines.get(4).getAmount());
     }
 
 }

@@ -64,7 +64,7 @@ public class TestDataBase {
         dataBase.insertTrainStation(x, y, 10, 10);
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         TrainStation tsPrev = dataBase.getTrainStation(stationId);
-        dataBase.addMine(stationId, 0, "thing");
+        dataBase.addMine(stationId, 0, 2);
         TrainStation tsNext = dataBase.getTrainStation(stationId);
         assertEquals(tsPrev.getMines().size() + 1, tsNext.getMines().size());
     }

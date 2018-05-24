@@ -49,7 +49,7 @@ public class WagonMining  {
 
         JsonObject miningWagon = jsonEngine.fromJson(from, JsonObject.class);
         if(wagon == null) wagon = new Wagon();// can we do better ?
-        currentMine.fromJSON(miningWagon.get("wagon").getAsString());
+        wagon.fromJSON(miningWagon.get("wagon").getAsString());
         if(currentMine == null) currentMine = new Mine();// can we do better ?
         currentMine.fromJSON(miningWagon.get("currentMine").getAsString());
     }
