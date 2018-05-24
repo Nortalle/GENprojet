@@ -29,7 +29,7 @@ public class Server {
         dataBase = new DataBase();
         dataBase.insertTrainStation(0, 0, 30, 30);// make sure the starting station exist
         travelController = new Travel();
-        new Thread(travelController).start();
+        //new Thread(travelController).start(); Ce n'est plus un thread.
         regenerationController = new MineRegeneration();
         new Thread(regenerationController).start();
     }
