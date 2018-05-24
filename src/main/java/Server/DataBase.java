@@ -576,7 +576,7 @@ public class DataBase {
      * @param type type of the mine
      * @return true if the mine has been added, else false
      */
-    public boolean addMine(int emplacement, int qteResources, String type){
+    public boolean addMine(int emplacement, int qteResources, int type){
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Mine VALUES(default,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, type);
@@ -609,7 +609,7 @@ public class DataBase {
             resultSet = ps.executeQuery();
             while(resultSet.next()) {
                 int id = resultSet.getInt("id");
-                String type = resultSet.getString("type");
+                int type = resultSet.getInt("type");
                 int qteRessources = resultSet.getInt("qteRessources");
                 int emplacement = resultSet.getInt("emplacement");
 
@@ -635,7 +635,7 @@ public class DataBase {
             resultSet = ps.executeQuery();
             while(resultSet.next()) {
                 int id = resultSet.getInt("id");
-                String type = resultSet.getString("type");
+                int type = resultSet.getInt("type");
                 int qteRessources = resultSet.getInt("qteRessources");
                 int emplacement = resultSet.getInt("emplacement");
 
@@ -658,7 +658,7 @@ public class DataBase {
             resultSet = ps.executeQuery();
             if(resultSet.next()) {
                 int idMine = resultSet.getInt("id");
-                String type = resultSet.getString("type");
+                int type = resultSet.getInt("type");
                 int qteRessources = resultSet.getInt("qteRessources");
                 int emplacement = resultSet.getInt("emplacement");
 

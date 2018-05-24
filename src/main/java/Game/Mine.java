@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Mine {
     private int id;
-    private String resource = "unknown";// change to ID ?
+    private int resource = 0;// change to ID ?
     private int amount;
     private int place;
 
@@ -16,14 +16,14 @@ public class Mine {
         fromJSON(json);
     }
 
-    public Mine(int i, String r, int a, int p) {
+    public Mine(int i, int r, int a, int p) {
         id = i;
         resource = r;
         amount = a;
         place = p;
     }
 
-    public String getResource() {
+    public int getResource() {
         return resource;
     }
 
@@ -44,7 +44,7 @@ public class Mine {
 
         JsonObject mine = jsonEngine.fromJson(from, JsonObject.class);
         id = mine.get("id").getAsInt();
-        resource = mine.get("resource").getAsString();
+        resource = mine.get("resource").getAsInt();
         amount = mine.get("amount").getAsInt();
         place = mine.get("place").getAsInt();
     }
