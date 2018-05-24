@@ -49,7 +49,7 @@ public class MineRegeneration {
                     }
                 }
                 //met à jour les mines de la base de donnée chaque seconde
-                updateDB();
+                //updateDB();
             }
         }, INTERVAL_MS, INTERVAL_MS);
     }
