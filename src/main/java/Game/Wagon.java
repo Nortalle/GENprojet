@@ -49,27 +49,20 @@ public class Wagon {
     public static String listToJSON(ArrayList<Wagon> wagons) {
         Gson jsonEngine = new GsonBuilder().create();
 
-        System.out.println(wagons.get(0));
-
-        return jsonEngine.toJson(wagons);/*
-
         JsonArray list = new JsonArray();
         for(Wagon w : wagons) list.add(new JsonPrimitive(w.toJSON()));
 
-        return jsonEngine.toJson(list);*/
+        return jsonEngine.toJson(list);
     }
 
     public static ArrayList<Wagon> listFromJSON(String from) {
-        //ArrayList<Wagon> wagons = new ArrayList<Wagon>();
+        ArrayList<Wagon> wagons = new ArrayList<>();
         Gson jsonEngine = new GsonBuilder().create();
-        ArrayList<Wagon> wagons = jsonEngine.fromJson(from, ArrayList.class);
 
-        //for(Wagon w : wagons) System.out.println(w.getClass() + " " + w);
-
-        /*ArrayList<String> jWagons = jsonEngine.fromJson(from, ArrayList.class);
+        ArrayList<String> jWagons = jsonEngine.fromJson(from, ArrayList.class);
         for(String s : jWagons) {
-            wagons.add(new Wagon(s));// need to detect sub class
-        }*/
+            wagons.add(new Wagon(s));
+        }
 
         return wagons;
     }
