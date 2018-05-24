@@ -1,13 +1,14 @@
 package Gui;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import Client.*;
 import Game.Resources;
 
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -42,20 +43,34 @@ public class ClientForm {
     private JLabel gold_ore_i;
     private JLabel scrum_i;
     private JPanel RessourcesPanel;
+    private cli_gui_craft craftPanel;
+    private JButton updateButton;
+    private cli_gui_Mine minePanel;
 
-    private Client client;
-
-    public ClientForm(Client client) {
-        this.client = client;
+    public ClientForm() {
         updateResources();
 
         LOG.log("Ouverture de ce que le client va voir");
 
 
+        tabs.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                //panCraft.update();
+            }
+        });
+        updateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Client.getInstance().updateTrainStatus();
+                //craftPanel.update();
+                minePanel.update();
+                updateResources();
+                // TODO
+            }
+        });
     }
 
     private void updateResources(){
-        String answer = client.getResources();
+        String answer = Client.getInstance().getResources();
         Resources resources = new Resources(answer);
         scrum_i.setText(Integer.toString(resources.getScrum()));
         eau_i.setText(Integer.toString(resources.getEau()));

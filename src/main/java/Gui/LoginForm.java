@@ -19,8 +19,8 @@ public class LoginForm {
 
     private Client client;
 
-    public LoginForm(Client c) {
-        client = c;
+    public LoginForm() {
+        client = Client.getInstance();
         //client.connectServer();
 
         button_sign_up.addActionListener(new ActionListener() {
@@ -49,7 +49,7 @@ public class LoginForm {
                     label_info.setForeground(Color.GREEN);
                     label_info.setText("You are logged");
                     //
-                    client.setFrameContent(new ClientForm(client).getPanel_main());
+                    client.setFrameContent(new ClientForm().getPanel_main());
                 }
                 else if(answer.equals(OTrainProtocol.FAILURE)) {
                     label_info.setForeground(Color.RED);

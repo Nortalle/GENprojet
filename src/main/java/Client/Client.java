@@ -46,7 +46,7 @@ public class Client {
             socket.close();
             reader.close();
             writer.close();
-            setFrameContent(new LoginForm(this).getPanel_main());
+            setFrameContent(new LoginForm().getPanel_main());
             connectServer();
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,7 +56,7 @@ public class Client {
     private void startingFrame() {
         frame = new JFrame("OTrain");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setFrameContent(new LoginForm(this).getPanel_main());
+        setFrameContent(new LoginForm().getPanel_main());
         frame.setVisible(true);
 
         connectServer();
@@ -155,6 +155,21 @@ public class Client {
     public String changeStation(int stationId) {
         writer.println(OTrainProtocol.GO_TO);
         writer.println(stationId);
+        writer.flush();
+        String answer = "ERROR";
+        try {
+            answer = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return answer;
+    }
+
+    public String startMining(int wagonId, int mineId) {
+        writer.println(OTrainProtocol.MINE);
+        writer.println(wagonId);
+        writer.println(mineId);
         writer.flush();
         String answer = "ERROR";
         try {

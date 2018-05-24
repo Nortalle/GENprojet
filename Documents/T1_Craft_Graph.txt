@@ -1,0 +1,26 @@
+http://www.webgraphviz.com/
+
+digraph Craft {
+  "Iron Ore" -> "Iron Ingot"
+  "Coper Ore" -> "Copper Ingot"
+  "Oil" -> "Petrol Barrel"
+  "Petrol Barrel" -> "Plastic Sheet"
+  "Copper Ingot" -> "Copper Cable"
+  "Copper Cable" -> "Processor"
+  "Plastic Sheet" -> "Processor"
+  "Iron Ingot" -> "Steel Ingot"
+  "Charcoal" -> "Steel Ingot"
+  "Copper Ingot" -> "Rivet"
+  "Iron Ingot" -> "Iron Plate"
+  "Gold Ore" -> "Gold Ingot"
+  "Gold Ingot" -> "Gold Sheet"
+  "Gold Sheet" -> "Processor"
+  "Wood" -> "Charcoal"
+  "Steel Ingot" -> "Robotic Arm"
+  "Copper Cable" -> "Robotic Arm"
+  "Rivet" -> "Robotic Arm"
+  "Wood" -> "Plank"
+  "Plank" -> "Wooden Crate"
+  "Iron Ingot" -> "Nails"
+  "Nails" -> "Wooden Crate"
+}

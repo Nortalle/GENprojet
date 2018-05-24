@@ -1,3 +1,5 @@
+import Game.Mine;
+import Game.TrainStation;
 import Server.DataBase;
 import Server.Server;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,44 +21,51 @@ public class TestDataBase {
     @BeforeEach
     public  void setUpBeforeEach(){
         System.out.println("---");
-        dataBase.deleteAllUsers();
+        dataBase.deleteUser(username);
         Server.getInstance().init();
     }
 
     @Test
     public void insertNewUser(){
-        assertTrue(dataBase.insertUser(username, password));
+        assertTrue(dataBase.insertPlayer(username, password));
     }
 
     @Test
-    public void insertGetAllUsers(){
-        dataBase.insertUser(username, password);
-        assertEquals(username, dataBase.getAllUsers().get(0));
-    }
-
-    @Test
-    public void insertNumberOfUsers(){
+    public void numberOfUsersAfterInsert(){
         int nbUsers = dataBase.getAllUsers().size();
-        if(dataBase.insertUser(username, password)) assertEquals(nbUsers + 1, dataBase.getAllUsers().size());
+        if(dataBase.insertPlayer(username, password)) assertEquals(nbUsers + 1, dataBase.getAllUsers().size());
         else assertEquals(nbUsers, dataBase.getAllUsers().size());
     }
 
     @Test
     public void failInsertAlreadyExitingUser(){
-        dataBase.insertUser(username, password);
-        assertFalse(dataBase.insertUser(username, password));
+        dataBase.insertPlayer(username, password);
+        assertFalse(dataBase.insertPlayer(username, password));
     }
 
     @Test
     public void insertNewUserAlsoInsertNewResourcesPerUser(){
-        dataBase.insertUser(username, password);
+        dataBase.insertPlayer(username, password);
         assertTrue(dataBase.getPlayerResources(username)[0] > -1);
     }
 
     @Test
-    public void deleteUserAlsoDeleteResourcesPerUser(){
-        dataBase.insertUser(username, password);
+    public void deleteUserAlsoDeleteResourcesPerUser() {
+        dataBase.insertPlayer(username, password);
         dataBase.deleteUser(username);
         assertTrue(dataBase.getPlayerResources(username)[0] == -1);
+    }
+
+    @Test
+    public void addMineToStation() {
+        int x = -10;
+        int y = -10;
+        dataBase.deleteTrainStation(dataBase.getTrainStationIdByPos(y, y));
+        dataBase.insertTrainStation(x, y, 10, 10);
+        int stationId = dataBase.getTrainStationIdByPos(x, y);
+        TrainStation tsPrev = dataBase.getTrainStation(stationId);
+        dataBase.addMine(stationId, 0, "thing");
+        TrainStation tsNext = dataBase.getTrainStation(stationId);
+        assertEquals(tsPrev.getMines().size() + 1, tsNext.getMines().size());
     }
 }
