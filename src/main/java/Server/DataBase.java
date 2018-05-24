@@ -530,6 +530,10 @@ public class DataBase {
             ps.setObject(3, emplacement);
             int status = ps.executeUpdate();
             if(status != 0){
+                ResultSet resultSet = ps.getGeneratedKeys();
+                resultSet.next();
+                // need tests
+                Server.getInstance().getRegenerationController().addMine(new Mine(resultSet.getInt(1), type, qteResources, emplacement));
                 return true;
             }
         } catch (SQLException e) {

@@ -50,14 +50,14 @@ public class TestDataBase {
     }
 
     @Test
-    public void deleteUserAlsoDeleteResourcesPerUser(){
+    public void deleteUserAlsoDeleteResourcesPerUser() {
         dataBase.insertPlayer(username, password);
         dataBase.deleteUser(username);
         assertTrue(dataBase.getPlayerResources(username)[0] == -1);
     }
 
     @Test
-    public void addMineToStation(){
+    public void addMineToStation() {
         int x = -10;
         int y = -10;
         dataBase.deleteTrainStation(dataBase.getTrainStationIdByPos(y, y));
