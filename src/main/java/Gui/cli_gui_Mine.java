@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class cli_gui_Mine {
+public class cli_gui_Mine implements Updatable{
     private JComboBox select_mine;
     private JButton startMiningButton;
     private JPanel panel1;
@@ -26,11 +26,11 @@ public class cli_gui_Mine {
 
     public cli_gui_Mine() {
 
-        update();
+        Update();
 
         select_mine.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                update();
+                Update();
             }
 
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
@@ -58,7 +58,8 @@ public class cli_gui_Mine {
         });
     }
 
-    public void update(){
+    @Override
+    public void Update(){
 
         // réupération et maj de la liste des mines
         Train train = Client.getInstance().getTrain();

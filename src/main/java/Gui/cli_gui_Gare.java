@@ -1,6 +1,7 @@
 package Gui;
 
 import Client.Client;
+import Client.Updatable;
 import Game.Mine;
 import Game.Train;
 import Game.TrainStation;
@@ -13,7 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class cli_gui_Gare {
+public class cli_gui_Gare implements Updatable{
     private JPanel panel_main;
     private JLabel label_stationName;
     private JLabel label_stationCoords;

@@ -74,7 +74,9 @@ public class MineController {
 
     public ArrayList<WagonMining> getPlayerWagonMining(String username) {
         ArrayList<WagonMining> result = new ArrayList<>();
+        //TODO UPDATER LA MINE ET LE WAGON AVANT DE L'ENVOYER
         for(WagonMining wm : wagonMining) {
+
             if(Server.getInstance().getDataBase().getUsernameByWagonId(wm.getWagon().getId()).equals(username)) {
                 result.add(wm);
             }
