@@ -112,7 +112,6 @@ CREATE TABLE IF NOT EXISTS `Train` (
   `proprietaire` VARCHAR(45) NOT NULL,
   `nom` VARCHAR(45), 
   `gareActuelle` INT NOT NULL, 
-  `tempsArriveeEstime` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`proprietaire`),
   UNIQUE INDEX `proprietaire_UNIQUE` (`proprietaire` ASC),
   CONSTRAINT `fk_joueur_train`

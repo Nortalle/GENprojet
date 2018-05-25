@@ -45,7 +45,7 @@ public class DataBase {
             status = ps.executeUpdate();
             if(status == 0) return false;
 
-            ps = connection.prepareStatement("INSERT INTO Train VALUES(?,'Tom',?,0);", Statement.RETURN_GENERATED_KEYS);
+            ps = connection.prepareStatement("INSERT INTO Train VALUES(?,'Tom',?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             ps.setObject(2, getStartingStationId());
             status = ps.executeUpdate();
@@ -218,8 +218,8 @@ public class DataBase {
             int currentTs = resultSet.getInt("gareActuelle");
             //int eta = resultSet.getInt("tempsArriveeEstime");
 
-            int eta = Server.getInstance().getTravelController().getETA(username);
-            train = new Train(getAllWagons(username), getTrainStation(currentTs), eta);
+            int eta[] = Server.getInstance().getTravelController().getETA(username);
+            train = new Train(getAllWagons(username), getTrainStation(currentTs), eta[0], eta[1]);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -543,10 +543,11 @@ public class DataBase {
             if(ts.getId() == currentTsId) return false;
             //A modifier pour donner le vrai temps de trajet initial
             int eta = calculateTravelTime(currentTsId, newTsId);
-            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=?, `tempsArriveeEstime`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
+            eta /= 4;
+
+            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, newTsId);
-            ps.setObject(2, eta);
-            ps.setObject(3, username);
+            ps.setObject(2, username);
             ps.executeUpdate();
 
             Server.getInstance().getTravelController().addTrain(username, eta);

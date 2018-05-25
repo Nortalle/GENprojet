@@ -3,6 +3,7 @@ package Gui;
 import Client.Client;
 import Client.Updatable;
 import Game.Mine;
+import Game.Train;
 import Game.TrainStation;
 import Utils.JsonUtility;
 import Utils.OTrainProtocol;
@@ -106,11 +107,12 @@ public class cli_gui_Gare implements Updatable{
         label_stationName.setText(name);
         label_stationCoords.setText(x + ";" + y);
 
-        // TODO
-        int totalTime = 20;// hard coded
+        Train train = Client.getInstance().getTrain();
+        int totalTime = train.getTrainStationTotalETA();// hard coded
         progressBar1.setMaximum(totalTime);
         //Client.getInstance().updateTrainStatus();
-        progressBar1.setValue(totalTime - Client.getInstance().getTrain().getTrainStationETA());
+        progressBar1.setValue(totalTime - train.getTrainStationETA());
+        progressBar1.setString((train.getTrainStationETA() == totalTime) ? "At Station" : "On the move");
 
     }
 
