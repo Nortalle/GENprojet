@@ -1,6 +1,7 @@
 package Game;
 
 
+import Utils.JsonUtility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -58,22 +59,24 @@ public class Resources {
         or = resources[8];
     }
 
+    public Resources(JsonObject json){
+        fromJson(json);
+    }
+
     /**
      * constructor which init all the resources with the given json
      *
      * @param json : json of the resources
      */
     public Resources(String json){
-        fromJSON(json);
+        fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
     /**
      *
      * @return the resources Jsonified
      */
-    public String toJSON(){
-        Gson jsonEngine = new GsonBuilder().create();
-
+    public JsonObject toJSON(){
         JsonObject resources = new JsonObject();
         resources.add("scrum", new JsonPrimitive(scrum));
         resources.add("eau", new JsonPrimitive(eau));
@@ -85,7 +88,7 @@ public class Resources {
         resources.add("acier", new JsonPrimitive(acier));
         resources.add("or", new JsonPrimitive(or));
 
-        return jsonEngine.toJson(resources);
+        return resources;
     }
 
     /**
@@ -101,20 +104,16 @@ public class Resources {
      *
      * @param from : Json to sets the object
      */
-    public void fromJSON(String from){
-        Gson jsonEngine = new GsonBuilder().create();
-
-        JsonObject resources = jsonEngine.fromJson(from, JsonObject.class);
-
-        scrum = resources.get("scrum").getAsInt();
-        eau = resources.get("eau").getAsInt();
-        bois = resources.get("bois").getAsInt();
-        chardon = resources.get("chardon").getAsInt();
-        petrol = resources.get("petrol").getAsInt();
-        fer = resources.get("fer").getAsInt();
-        cuivre = resources.get("cuivre").getAsInt();
-        acier = resources.get("acier").getAsInt();
-        or = resources.get("or").getAsInt();
+    public void fromJson(JsonObject from){
+        scrum = from.get("scrum").getAsInt();
+        eau = from.get("eau").getAsInt();
+        bois = from.get("bois").getAsInt();
+        chardon = from.get("chardon").getAsInt();
+        petrol = from.get("petrol").getAsInt();
+        fer = from.get("fer").getAsInt();
+        cuivre = from.get("cuivre").getAsInt();
+        acier = from.get("acier").getAsInt();
+        or = from.get("or").getAsInt();
     }
 
 

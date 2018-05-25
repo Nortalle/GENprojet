@@ -2,7 +2,9 @@ import Client.Client;
 import Game.TrainStation;
 import Server.Server;
 import Server.DataBase;
+import Utils.JsonUtility;
 import Utils.OTrainProtocol;
+import com.google.gson.JsonArray;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +45,7 @@ public class ChangeStationTest {
         String line = client.getStations();
         int nbStation = dataBase.getAllTrainStations().size();
         if(nbStation < 1) fail("No stations, insert one or more");
-        assertEquals(nbStation, TrainStation.listFromJSON(line).size());
+        assertEquals(nbStation, TrainStation.listFromJson((JsonArray) JsonUtility.fromJson(line)).size());
 
     }
 
@@ -52,7 +54,7 @@ public class ChangeStationTest {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         String line = client.changeStation(stationId);
         System.out.println(line);
-        client.updateTrainStatus();
+        //client.updateTrainStatus();
         assertEquals(dataBase.getTrainStation(stationId).toString(), client.getTrain().getTrainStation().toString());
     }
 
@@ -83,7 +85,7 @@ public class ChangeStationTest {
     public void changeStationTakeTime() {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         String line = client.changeStation(stationId);
-        client.updateTrainStatus();
+        //client.updateTrainStatus();
         assertTrue(client.getTrain().getTrainStationETA() > 0);
     }
 
@@ -91,13 +93,13 @@ public class ChangeStationTest {
     public void changeStationETAChange() {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         String line = client.changeStation(stationId);
-        client.updateTrainStatus();
+        //client.updateTrainStatus();
         int firstETA = client.getTrain().getTrainStationETA();
 
         long start = System.currentTimeMillis();
         while(System.currentTimeMillis() - start < 1200);
 
-        client.updateTrainStatus();
+        //client.updateTrainStatus();
         int secondETA = client.getTrain().getTrainStationETA();
         System.out.println(firstETA + " -> " + secondETA);
         assertTrue(firstETA > client.getTrain().getTrainStationETA());

@@ -1,5 +1,6 @@
 package Game;
 
+import Utils.JsonUtility;
 import com.google.gson.*;
 
 import java.util.ArrayList;
@@ -10,8 +11,12 @@ public class WagonMining  {
 
     public WagonMining() {}
 
+    public WagonMining(JsonObject json) {
+        fromJson(json);
+    }
+
     public WagonMining(String json) {
-        fromJSON(json);
+        fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
     public WagonMining(Wagon wagon, Mine currentMine) {
@@ -31,43 +36,33 @@ public class WagonMining  {
         return currentMine != null;
     }
 
-    public String toJSON() {
-        Gson jsonEngine = new GsonBuilder().create();
-
+    public JsonObject toJson() {
         JsonObject miningWagon = new JsonObject();
         if(currentMine == null) wagon = new Wagon();
-        miningWagon.add("wagon", new JsonPrimitive(wagon.toJSON()));
+        miningWagon.add("wagon", wagon.toJson());
         if(currentMine == null) currentMine = new Mine();
-        miningWagon.add("currentMine", new JsonPrimitive(currentMine.toJSON()));
+        miningWagon.add("currentMine", currentMine.toJson());
 
-        return jsonEngine.toJson(miningWagon);
+        return miningWagon;
     }
 
-    public void fromJSON(String from) {
-        Gson jsonEngine = new GsonBuilder().create();
-
-        JsonObject miningWagon = jsonEngine.fromJson(from, JsonObject.class);
+    public void fromJson(JsonObject from) {
         if(wagon == null) wagon = new Wagon();// can we do better ?
-        wagon.fromJSON(miningWagon.get("wagon").getAsString());
+        wagon.fromJson((JsonObject) from.get("wagon"));
         if(currentMine == null) currentMine = new Mine();// can we do better ?
-        currentMine.fromJSON(miningWagon.get("currentMine").getAsString());
+        currentMine.fromJson((JsonObject) from.get("currentMine"));
     }
 
-    public static String listToJSON(ArrayList<WagonMining> wagonMining) {
-        Gson jsonEngine = new GsonBuilder().create();
-
+    public static JsonArray listToJson(ArrayList<WagonMining> wagonMining) {
         JsonArray list = new JsonArray();
-        for(WagonMining wm : wagonMining) list.add(new JsonPrimitive(wm.toJSON()));
+        for(WagonMining wm : wagonMining) list.add(wm.toJson());
 
-        return jsonEngine.toJson(list);
+        return list;
     }
 
-    public static ArrayList<WagonMining> listFromJSON(String from) {
+    public static ArrayList<WagonMining> listFromJson(JsonArray from) {
         ArrayList<WagonMining> trainStations = new ArrayList<>();
-        Gson jsonEngine = new GsonBuilder().create();
-
-        ArrayList<String> jTrainsStation = jsonEngine.fromJson(from, ArrayList.class);
-        for(String s : jTrainsStation) trainStations.add(new WagonMining(s));
+        for(JsonElement j : from) trainStations.add(new WagonMining((JsonObject) j));
 
         return trainStations;
     }

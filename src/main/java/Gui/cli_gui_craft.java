@@ -1,12 +1,13 @@
 package Gui;
 
+import Client.Updatable;
 import Utils.Cost;
 import Utils.Reciept;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class cli_gui_craft {
+public class cli_gui_craft implements Updatable {
     private JPanel panel1;
     private JTextField quantity_text_field;
     private JComboBox recieptDropdown;
@@ -49,5 +50,8 @@ public class cli_gui_craft {
     }
 
 
+    @Override
+    public void Update() {
 
+    }
 }

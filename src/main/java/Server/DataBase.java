@@ -45,7 +45,7 @@ public class DataBase {
             status = ps.executeUpdate();
             if(status == 0) return false;
 
-            ps = connection.prepareStatement("INSERT INTO Train VALUES(?,'Tom',?,0);", Statement.RETURN_GENERATED_KEYS);
+            ps = connection.prepareStatement("INSERT INTO Train VALUES(?,'Tom',?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             ps.setObject(2, getStartingStationId());
             status = ps.executeUpdate();
@@ -218,8 +218,8 @@ public class DataBase {
             int currentTs = resultSet.getInt("gareActuelle");
             //int eta = resultSet.getInt("tempsArriveeEstime");
 
-            int eta = Server.getInstance().getTravelController().getETA(username);
-            train = new Train(getAllWagons(username), getTrainStation(currentTs), eta);
+            int eta[] = Server.getInstance().getTravelController().getETA(username);
+            train = new Train(getAllWagons(username), getTrainStation(currentTs), eta[0], eta[1]);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -329,6 +329,28 @@ public class DataBase {
                 int typeID = resultSet.getInt("typeID");
 
                 wagon = new Wagon(id, weight, level, typeID);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return wagon;
+    }
+
+    public Wagon getPlayerLoco(String username){
+        Wagon wagon = null;
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=? AND `typeID`=?");
+            ps.setObject(1, username);
+            ps.setObject(2, WagonStats.LOCO_ID);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                int idWagon = resultSet.getInt("id");
+                int weight = resultSet.getInt("poids");
+                int level = resultSet.getInt("niveau");
+                int typeID = resultSet.getInt("typeID");
+
+                wagon = new Wagon(idWagon, weight, level, typeID);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -543,10 +565,13 @@ public class DataBase {
             if(ts.getId() == currentTsId) return false;
             //A modifier pour donner le vrai temps de trajet initial
             int eta = calculateTravelTime(currentTsId, newTsId);
-            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=?, `tempsArriveeEstime`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
+            Wagon loco = getPlayerLoco(username);
+            if(loco == null) return false;
+            eta = Math.max(1, eta / WagonStats.LOCO_SPEED[loco.getLevel()]);
+
+            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, newTsId);
-            ps.setObject(2, eta);
-            ps.setObject(3, username);
+            ps.setObject(2, username);
             ps.executeUpdate();
 
             Server.getInstance().getTravelController().addTrain(username, eta);
@@ -697,7 +722,7 @@ public class DataBase {
         try {
 
             int current_amount = getMine(id).getAmount();
-            if(current_amount == MAX || current_amount == 0) return false;
+            if(current_amount == MAX || current_amount == 0) return false;// maybe not good, maybe return the mine
             current_amount += changeAmount;
             if(current_amount > MAX) current_amount = MAX;
             if(current_amount < 0) current_amount = 0;

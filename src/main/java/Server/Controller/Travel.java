@@ -11,28 +11,29 @@ import java.awt.event.ActionListener;
 import java.util.*;
 
 public class Travel {
-    private HashMap<String, Integer> map = new HashMap<String, Integer>();// username, time remaining
+    private HashMap<String, int[]> map = new HashMap<>();// username, {time remaining, total time}
     private final int INTERVAL_MS = 1000;
-
-    private Timer timer ;
 
     public Travel() {
         new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                ArrayList<String> toRemove = new ArrayList<>();
                 Iterator it = map.entrySet().iterator();
                 while(it.hasNext()) {
                     Map.Entry pair = (Map.Entry)it.next();
-                    //pair.setValue(Math.max((int)(((Integer) pair.getValue()) - ((System.currentTimeMillis() - start) / 1000)), 0));// only seconds
-                    int newValue = (Integer) pair.getValue() - 1;
-                    pair.setValue(Math.max(newValue, 0));// only seconds
+                    int newValue[] = (int[]) pair.getValue();
+                    if(--newValue[0] == 0) toRemove.add((String) pair.getKey());
+                    pair.setValue(newValue);
                 }
+                for(String s : toRemove) map.remove(s);
             }
         }, INTERVAL_MS, INTERVAL_MS);
     }
 
     public void addTrain(String username, int ETA) {
-        map.put(username, ETA);
+        int[] eta = {ETA, ETA};
+        map.put(username, eta);
     }
 
 
@@ -41,10 +42,9 @@ public class Travel {
     }
 
 
-    public int getETA(String username) {
-        int eta = 0;
-        Integer storedETA = map.get(username);
-        if(storedETA != null) eta = storedETA;
+    public int[] getETA(String username) {
+        int[] eta = {0, 0};
+        if(map.containsKey(username)) eta = map.get(username);
         return eta;
     }
 
@@ -54,7 +54,7 @@ public class Travel {
         Train train = db.getTrain(username);
         TrainStation newTrainStation = db.getTrainStation(newTsId);
 
-        if(getETA(username) == 0) {
+        if(getETA(username)[0] == 0) {
             if(newTrainStation.getSizeOfPlatforms() >= train.getSize()) {
                 if(db.getNbUsedPlatforms(newTsId) < newTrainStation.getNbOfPlatforms()){
                     if(db.sendTrainToNewStation(username, newTrainStation.getId())) {

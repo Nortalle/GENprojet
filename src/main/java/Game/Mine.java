@@ -1,5 +1,6 @@
 package Game;
 
+import Utils.JsonUtility;
 import Utils.Ressource;
 import com.google.gson.*;
 
@@ -13,8 +14,12 @@ public class Mine {
 
     public Mine() {}
 
+    public Mine(JsonObject json) {
+        fromJson(json);
+    }
+
     public Mine(String json) {
-        fromJSON(json);
+        fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
     public Mine(int i, int r, int a, int p) {
@@ -28,43 +33,33 @@ public class Mine {
         return resource;
     }
 
-    public String toJSON() {
-        Gson jsonEngine = new GsonBuilder().create();
-
+    public JsonObject toJson() {
         JsonObject mine = new JsonObject();
         mine.add("id", new JsonPrimitive(id));
         mine.add("resource", new JsonPrimitive(resource));
         mine.add("amount", new JsonPrimitive(amount));
         mine.add("place", new JsonPrimitive(place));
 
-        return jsonEngine.toJson(mine);
+        return mine;
     }
 
-    public void fromJSON(String from) {
-        Gson jsonEngine = new GsonBuilder().create();
-
-        JsonObject mine = jsonEngine.fromJson(from, JsonObject.class);
-        id = mine.get("id").getAsInt();
-        resource = mine.get("resource").getAsInt();
-        amount = mine.get("amount").getAsInt();
-        place = mine.get("place").getAsInt();
+    public void fromJson(JsonObject from) {
+        id = from.get("id").getAsInt();
+        resource = from.get("resource").getAsInt();
+        amount = from.get("amount").getAsInt();
+        place = from.get("place").getAsInt();
     }
 
-    public static String listToJSON(ArrayList<Mine> mines) {
-        Gson jsonEngine = new GsonBuilder().create();
-
+    public static JsonArray listToJson(ArrayList<Mine> mines) {
         JsonArray list = new JsonArray();
-        for(Mine m : mines) list.add(new JsonPrimitive(m.toJSON()));
+        for(Mine m : mines) list.add(m.toJson());
 
-        return jsonEngine.toJson(list);
+        return list;
     }
 
-    public static ArrayList<Mine> listFromJSON(String from) {
+    public static ArrayList<Mine> listFromJson(JsonArray from) {
         ArrayList<Mine> mines = new ArrayList<>();
-        Gson jsonEngine = new GsonBuilder().create();
-
-        ArrayList<String> jMines = jsonEngine.fromJson(from, ArrayList.class);
-        for(String s : jMines) mines.add(new Mine(s));
+        for(JsonElement j : from) mines.add(new Mine((JsonObject) j));
 
         return mines;
     }

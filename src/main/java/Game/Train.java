@@ -1,7 +1,6 @@
 package Game;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -11,15 +10,15 @@ public class Train {
     private ArrayList<Wagon> wagons = new ArrayList<Wagon>();
     private TrainStation trainStation;
     private int trainStationETA;// 0 = arrived
+    private int trainStationTotalETA;
 
-    public Train() {
+    public Train() {}
 
-    }
-
-    public Train(ArrayList<Wagon> w, TrainStation ts, int eta) {
+    public Train(ArrayList<Wagon> w, TrainStation ts, int eta, int totETA) {
         wagons = w;
         trainStation = ts;
         trainStationETA = eta;
+        trainStationTotalETA = totETA;
 
     }
 
@@ -39,24 +38,25 @@ public class Train {
         return trainStationETA;
     }
 
-    public String toJSON() {
-        Gson gson = new GsonBuilder().create();
-
-        JsonObject train = new JsonObject();
-        train.add("wagons", new JsonPrimitive(Wagon.listToJSON(wagons)));
-        train.add("trainStation", new JsonPrimitive(trainStation.toJSON()));
-        train.add("trainStationETA", new JsonPrimitive(trainStationETA));
-
-        return gson.toJson(train);
+    public int getTrainStationTotalETA() {
+        return trainStationTotalETA;
     }
 
-    public void fromJSON(String from) {
-        Gson gson = new GsonBuilder().create();
+    public JsonObject toJson() {
+        JsonObject train = new JsonObject();
+        train.add("wagons", Wagon.listToJson(wagons));
+        train.add("trainStation", trainStation.toJson());
+        train.add("trainStationETA", new JsonPrimitive(trainStationETA));
+        train.add("trainStationTotalETA", new JsonPrimitive(trainStationTotalETA));
 
-        JsonObject train = gson.fromJson(from, JsonObject.class);
-        wagons = Wagon.listFromJSON(train.get("wagons").getAsString());
+        return train;
+    }
+
+    public void fromJson(JsonObject from) {
+        wagons = Wagon.listFromJson((JsonArray) from.get("wagons"));
         if(trainStation == null) trainStation = new TrainStation();// to change
-        trainStation.fromJSON(train.get("trainStation").getAsString());
-        trainStationETA = train.get("trainStationETA").getAsInt();
+        trainStation.fromJson((JsonObject) from.get("trainStation"));
+        trainStationETA = from.get("trainStationETA").getAsInt();
+        trainStationTotalETA = from.get("trainStationTotalETA").getAsInt();
     }
 }

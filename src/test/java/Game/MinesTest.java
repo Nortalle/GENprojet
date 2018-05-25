@@ -1,5 +1,7 @@
 package Game;
 
+import Utils.JsonUtility;
+import com.google.gson.JsonArray;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,12 +29,12 @@ public class MinesTest {
         int s1 = 1;
         int s2 = 2;
         int s3 = 3;
-        ArrayList<Mine> mines = new ArrayList<Mine>();
+        ArrayList<Mine> mines = new ArrayList<>();
         mines.add(new Mine(id, s1, amount, placeId));
         mines.add(new Mine(id, s2, amount, placeId));
         mines.add(new Mine(id, s3, amount, placeId));
-        String json = Mine.listToJSON(mines);
-        ArrayList<Mine> newMines = Mine.listFromJSON(json);
+        String json = JsonUtility.toJson(Mine.listToJson(mines));
+        ArrayList<Mine> newMines = Mine.listFromJson((JsonArray) JsonUtility.fromJson(json));
         for(Mine m : newMines) System.out.println("- " + m.getResource());
         assertEquals(mines.get(1).getResource(), newMines.get(1).getResource());
     }

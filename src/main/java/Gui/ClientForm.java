@@ -7,15 +7,9 @@ import javax.swing.event.ChangeListener;
 import Client.*;
 import Game.Resources;
 
-import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
-public class ClientForm {
-
-    private Logger LOG = Logger.getInstance();
-
+public class ClientForm implements Updatable{
     private JPanel panel_main;
 
     //Ressources
@@ -32,7 +26,6 @@ public class ClientForm {
 
     //Logs
     private JPanel Logs;
-    private JTextPane LoggerTestPane;
     private JLabel eau_i;
     private JLabel bois_i;
     private JLabel coal_i;
@@ -43,15 +36,15 @@ public class ClientForm {
     private JLabel gold_ore_i;
     private JLabel scrum_i;
     private JPanel RessourcesPanel;
-    private cli_gui_craft craftPanel;
     private JButton updateButton;
-    private cli_gui_Mine minePanel;
+    private cli_gui_Mine cli_gui_mine;
+    private cli_gui_Gare cli_gui_gare;
+    private Gui.cli_gui_craft cli_gui_craft;
+    private JTextArea logTextArea;
 
     public ClientForm() {
+        Client.setClientLogComponent(logTextArea);
         updateResources();
-
-        LOG.log("Ouverture de ce que le client va voir");
-
 
         tabs.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -60,11 +53,7 @@ public class ClientForm {
         });
         updateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Client.getInstance().updateTrainStatus();
-                //craftPanel.update();
-                minePanel.update();
-                updateResources();
-                // TODO
+                Update();
             }
         });
     }
@@ -84,7 +73,19 @@ public class ClientForm {
 
     }
 
+
+
+
     public JPanel getPanel_main() {
         return panel_main;
+    }
+
+    @Override
+    public void Update() {
+        //Client.getInstance().updateTrainStatus();
+        Client.getInstance().getTrain();
+        cli_gui_gare.Update();
+        cli_gui_mine.Update();
+        updateResources();
     }
 }

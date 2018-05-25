@@ -21,6 +21,8 @@ public class TravelControllerTest {
 
     @Test
     public void getNotExistingKey(){
-        assertEquals(0, travel.getETA("unknown"));
+        int eta[] = travel.getETA("unknown");
+        assertEquals(0, eta[0]);
+        assertEquals(0, eta[1]);
     }
 }

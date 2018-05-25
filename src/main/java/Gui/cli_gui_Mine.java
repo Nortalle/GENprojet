@@ -14,9 +14,8 @@ import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-public class cli_gui_Mine {
+public class cli_gui_Mine implements Updatable{
     private JComboBox select_mine;
     private JButton startMiningButton;
     private JPanel panel1;
@@ -26,11 +25,11 @@ public class cli_gui_Mine {
 
     public cli_gui_Mine() {
 
-        update();
+        Update();
 
         select_mine.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                update();
+                Update();
             }
 
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
@@ -43,7 +42,6 @@ public class cli_gui_Mine {
                 // TODO
                 Train train = Client.getInstance().getTrain();
                 System.out.println("Train state :" + train.getTrainStationETA());
-                if(train.getTrainStationETA() > 0) return;
                 Mine mine = (Mine) select_mine.getSelectedItem();
                 System.out.println("mine sélectionnée : " + mine);
                 Wagon wagon = (Wagon) select_wagon.getSelectedItem();
@@ -58,7 +56,8 @@ public class cli_gui_Mine {
         });
     }
 
-    public void update(){
+    @Override
+    public void Update(){
 
         // réupération et maj de la liste des mines
         Train train = Client.getInstance().getTrain();
@@ -82,7 +81,7 @@ public class cli_gui_Mine {
         // récupération de la liste des wagons qui sont entrain de miner
         currently_mining_panel.setLayout(new GridLayout(0,1));
         currently_mining_panel.removeAll();
-        Client.getInstance().updateWagonMinig();
+        Client.getInstance().updateWagonMining();
         for( WagonMining wm : Client.getInstance().getWagonMining()) {
             JLabel label = new JLabel(wm.getWagon() + " -> " + wm.getCurrentMine());
             currently_mining_panel.add(label);

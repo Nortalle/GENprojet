@@ -1,10 +1,13 @@
 package Gui;
 
 import Client.Client;
+import Client.Updatable;
 import Game.Mine;
 import Game.Train;
 import Game.TrainStation;
+import Utils.JsonUtility;
 import Utils.OTrainProtocol;
+import com.google.gson.JsonArray;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -13,7 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class cli_gui_Gare {
+public class cli_gui_Gare implements Updatable{
     private JPanel panel_main;
     private JLabel label_stationName;
     private JLabel label_stationCoords;
@@ -33,12 +36,12 @@ public class cli_gui_Gare {
     public cli_gui_Gare() {
 
         Update();
-        Client.getInstance().updateTrainStatus();
+        //Client.getInstance().updateTrainStatus();
         TrainStation ts = Client.getInstance().getTrain().getTrainStation();
         setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
 
         String line = Client.getInstance().getStations();
-        for(TrainStation station : TrainStation.listFromJSON(line)) select_station.addItem(station);
+        for(TrainStation station : TrainStation.listFromJson((JsonArray) JsonUtility.fromJson(line))) select_station.addItem(station);
 
         button_travel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -60,7 +63,7 @@ public class cli_gui_Gare {
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Client.getInstance().updateTrainStatus();
+                //Client.getInstance().updateTrainStatus();
                 TrainStation ts = Client.getInstance().getTrain().getTrainStation();
                 setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
             }
@@ -69,7 +72,7 @@ public class cli_gui_Gare {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 String line = Client.getInstance().getStations();
                 select_station.removeAllItems();
-                for(TrainStation ts : TrainStation.listFromJSON(line)) select_station.addItem(ts);
+                for(TrainStation ts : TrainStation.listFromJson((JsonArray) JsonUtility.fromJson(line))) select_station.addItem(ts);
             }
 
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
@@ -79,23 +82,20 @@ public class cli_gui_Gare {
     }
 
     public void Update(){
-
-        // peuple le panel qui donne les mines présentes :
         TrainStation ts = (TrainStation) select_station.getSelectedItem();
 
         if(ts != null){
             panel_liste_mines.removeAll();
             int i = 0;
-            panel_liste_mines.setLayout(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
+            panel_liste_mines.setLayout(new GridLayout(0, 1));
+            //GridBagConstraints gbc = new GridBagConstraints();
             for(Mine m : ts.getMines()) {
-
                 JLabel label = new JLabel(m.toString());
-
-                gbc.fill = GridBagConstraints.HORIZONTAL;
-                gbc.gridx = 0;
-                gbc.gridy = i++;
-                panel_liste_mines.add(label,gbc);
+                //gbc.fill = GridBagConstraints.HORIZONTAL;
+                //gbc.gridx = 0;
+                //gbc.gridy = i++;
+                //panel_liste_mines.add(label,gbc);
+                panel_liste_mines.add(label);
 
             }
         }
@@ -107,12 +107,12 @@ public class cli_gui_Gare {
         label_stationName.setText(name);
         label_stationCoords.setText(x + ";" + y);
 
-        // TODO
-        int totalTime = 20;// hard coded
+        Train train = Client.getInstance().getTrain();
+        int totalTime = train.getTrainStationTotalETA();// hard coded
         progressBar1.setMaximum(totalTime);
-        Client.getInstance().updateTrainStatus();
-
-        progressBar1.setValue(totalTime - Client.getInstance().getTrain().getTrainStationETA());
+        //Client.getInstance().updateTrainStatus();
+        progressBar1.setValue(totalTime - train.getTrainStationETA());
+        progressBar1.setString((train.getTrainStationETA() == totalTime) ? "At Station" : "On the move");
 
     }
 
