@@ -38,11 +38,10 @@ class MineControllerTest {
         stationId = server.getDataBase().getTrainStationIdByPos(x, y);
         server.getDataBase().changeStaionOfTrain(user, stationId);
         mineId = server.getDataBase().addMine(stationId, 500, Ressource.Type.IRON_ORE.ordinal());
-        mineId = server.getDataBase().addMine(stationId, 500, Ressource.Type.WOOD_LOG.ordinal());
+        server.getDataBase().addMine(stationId, 500, Ressource.Type.WOOD_LOG.ordinal());
         wagonId = server.getDataBase().addWagon(user, 1000, 1, WagonStats.DRILL_ID);
 
-        for(Wagon w : server.getDataBase().getTrain(user).getWagons())
-        server.getDataBase().updateWagon(user, w.getWeight(), 5, w.getTypeID(), w.getId());
+        for(Wagon w : server.getDataBase().getTrain(user).getWagons()) server.getDataBase().updateWagon(user, w.getWeight(), 5, w.getTypeID(), w.getId());
 
         client = Client.getInstance();
         client.connectServer();

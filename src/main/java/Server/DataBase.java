@@ -256,8 +256,7 @@ public class DataBase {
         return result;
     }
 
-    public int updateWagon(String username, int weight, int level, int type, int id){
-        int result = -1;
+    public boolean updateWagon(String username, int weight, int level, int type, int id){
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE Wagon SET `proprietaire`=?, `poids`=?, `niveau`=?, `typeID`=? WHERE `id`=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
@@ -267,14 +266,12 @@ public class DataBase {
             ps.setObject(5, id);
             int status = ps.executeUpdate();
             if(status != 0){
-                ResultSet resultSet = ps.getGeneratedKeys();
-                resultSet.next();
-                result = resultSet.getInt(1);
+                return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result;
+        return false;
     }
 
     /**
