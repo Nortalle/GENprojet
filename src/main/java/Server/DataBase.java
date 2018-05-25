@@ -238,7 +238,7 @@ public class DataBase {
      */
     public boolean addWagon(String username, int weight, int level, String type){
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Utilisateur VALUES(?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             ps.setObject(2, weight);
             ps.setObject(3, level);
@@ -259,7 +259,7 @@ public class DataBase {
      * @param type type of the wagons that want to be get
      * @return a list containing all the owner's wagons of this type
      */
-    public ArrayList<Wagon> getWagonsOfType(String username, String type){
+    public ArrayList<Wagon> getWagonsOfType(String username, int type){
         ArrayList<Wagon> result = new ArrayList<Wagon>();
         try {
             ResultSet resultSet;
@@ -270,7 +270,7 @@ public class DataBase {
             while(resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String owner = resultSet.getString("proprietaire");
-                String _type = resultSet.getString("type");
+                int _type = resultSet.getInt("type");
                 int weight = resultSet.getInt("poids");
                 int level = resultSet.getInt("niveau");
                 /*
