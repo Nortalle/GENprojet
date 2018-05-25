@@ -71,7 +71,7 @@ public class TestDataBase {
         dataBase.addMine(stationId, 400, Ressource.Type.IRON_ORE.ordinal());
         dataBase.addMine(stationId, 0, Ressource.Type.GOLD_ORE.ordinal());
         TrainStation tsNext = dataBase.getTrainStation(stationId);
-        assertEquals(tsPrev.getMines().size() + 1, tsNext.getMines().size());
+        assertEquals(tsPrev.getMines().size() + 2, tsNext.getMines().size());
     }
 
 
