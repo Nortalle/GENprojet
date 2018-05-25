@@ -27,10 +27,12 @@ public class MineController {
                     ETMs.set(i, --ETM);
                     if(ETM == 0) {
                         ETMs.set(i, (long)WagonStats.getMiningTime(wm.getWagon()));
-                        Resources r = new Resources(Server.getInstance().getDataBase().getPlayerResources(username));
-                        int newResources[] = r.toArray();
-                        newResources[wm.getCurrentMine().getResource()]++;
-                        Server.getInstance().getDataBase().setPlayerResources(username, newResources);
+                        if(Server.getInstance().getDataBase().changeMineAmount(wm.getCurrentMine().getId(), -1)) {
+                            Resources r = new Resources(Server.getInstance().getDataBase().getPlayerResources(username));
+                            int newResources[] = r.toArray();
+                            newResources[wm.getCurrentMine().getResource()]++;
+                            Server.getInstance().getDataBase().setPlayerResources(username, newResources);
+                        }
                     }
                 }
             }

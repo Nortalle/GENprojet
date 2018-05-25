@@ -72,10 +72,6 @@ public class WagonMining  {
         return trainStations;
     }
 
-    public Mine getMine(){
-        return this.currentMine;
-    }
-
     public Wagon getWagon() {
         return wagon;
     }
