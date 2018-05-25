@@ -236,7 +236,8 @@ public class DataBase {
      * @param type the type of the wagon
      * @return true if the wagon has been created, else false
      */
-    public boolean addWagon(String username, int weight, int level, String type){
+    public int addWagon(String username, int weight, int level, int type){
+        int result = -1;
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
@@ -245,12 +246,14 @@ public class DataBase {
             ps.setObject(4, type);
             int status = ps.executeUpdate();
             if(status != 0){
-                return true;
+                ResultSet resultSet = ps.getGeneratedKeys();
+                resultSet.next();
+                result = resultSet.getInt(0);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return result;
     }
 
     /**
@@ -263,14 +266,14 @@ public class DataBase {
         ArrayList<Wagon> result = new ArrayList<Wagon>();
         try {
             ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=? AND `type`=?;", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=? AND `typeID`=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             ps.setObject(2, type);
             resultSet = ps.executeQuery();
             while(resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String owner = resultSet.getString("proprietaire");
-                int _type = resultSet.getInt("type");
+                int _type = resultSet.getInt("typeID");
                 int weight = resultSet.getInt("poids");
                 int level = resultSet.getInt("niveau");
                 /*
@@ -564,7 +567,8 @@ public class DataBase {
      * @param type type of the mine
      * @return true if the mine has been added, else false
      */
-    public boolean addMine(int emplacement, int qteResources, int type){
+    public int addMine(int emplacement, int qteResources, int type){
+        int result = -1;
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Mine VALUES(default,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, type);
@@ -574,14 +578,14 @@ public class DataBase {
             if(status != 0){
                 ResultSet resultSet = ps.getGeneratedKeys();
                 resultSet.next();
-                // need tests
+                result = resultSet.getInt(0);
+                        // need tests
                 Server.getInstance().getRegenerationController().addMine(new Mine(resultSet.getInt(1), type, qteResources, emplacement));
-                return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return result;
 
     }
 
