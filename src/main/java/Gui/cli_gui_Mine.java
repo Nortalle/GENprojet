@@ -22,6 +22,7 @@ public class cli_gui_Mine implements Updatable{
     private JPanel availableMinesPanel;
     private JComboBox select_wagon;
     private JPanel currently_mining_panel;
+    private JButton stopMiningButton;
 
     public cli_gui_Mine() {
 
@@ -48,9 +49,18 @@ public class cli_gui_Mine implements Updatable{
                 System.out.println("Wagon utilisé : " + wagon);
 
                 String line = Client.getInstance().startMining(wagon.getId(), mine.getId());
-                System.out.println(line);
+                //System.out.println(line);
                 if(line.equals(OTrainProtocol.SUCCESS)) {
                     
+                }
+            }
+        });
+        stopMiningButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String line = Client.getInstance().stopMining(((Wagon) select_wagon.getSelectedItem()).getId());
+                if(line.equals(OTrainProtocol.SUCCESS)) {
+
                 }
             }
         });
@@ -81,7 +91,7 @@ public class cli_gui_Mine implements Updatable{
         // récupération de la liste des wagons qui sont entrain de miner
         currently_mining_panel.setLayout(new GridLayout(0,1));
         currently_mining_panel.removeAll();
-        Client.getInstance().updateWagonMining();
+        //Client.getInstance().updateWagonMining();
         for( WagonMining wm : Client.getInstance().getWagonMining()) {
             JLabel label = new JLabel(wm.getWagon() + " -> " + wm.getCurrentMine());
             currently_mining_panel.add(label);

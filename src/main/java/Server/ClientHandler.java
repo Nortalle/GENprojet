@@ -74,7 +74,12 @@ ClientHandler implements Runnable {
                 } else if(line.equals(OTrainProtocol.STOP_MINE)) {
                     String wagonLine = readLine();
                     // Mining Controller
-
+                    if(Server.getInstance().getMineController().removeWagon(wagonLine)) {
+                        writer.println(OTrainProtocol.SUCCESS);
+                    } else {
+                        writer.println(OTrainProtocol.FAILURE);
+                    }
+                    writer.flush();
                     // writer.flush();
                 }
 

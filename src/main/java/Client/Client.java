@@ -128,6 +128,7 @@ public class Client {
     }
 
     public ArrayList<WagonMining> getWagonMining() {
+        updateWagonMining();
         return wagonMining;
     }
 
@@ -138,7 +139,7 @@ public class Client {
         train.fromJson((JsonObject) JsonUtility.fromJson(answer));
     }
 
-    public void updateWagonMining() {
+    private void updateWagonMining() {
         writer.println(OTrainProtocol.MINE_INFO);
         writer.flush();
         String answer = readLine();
@@ -162,6 +163,13 @@ public class Client {
         writer.println(OTrainProtocol.MINE);
         writer.println(wagonId);
         writer.println(mineId);
+        writer.flush();
+        return readLine();
+    }
+
+    public String stopMining(int wagonId) {
+        writer.println(OTrainProtocol.STOP_MINE);
+        writer.println(wagonId);
         writer.flush();
         return readLine();
     }

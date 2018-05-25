@@ -72,9 +72,23 @@ public class MineController {
 
     }
 
+    public boolean removeWagon(String wagonLine) {
+        return removeWagon(Integer.valueOf(wagonLine));
+    }
+
+    public boolean removeWagon(int id) {// need tests
+        for(int i = 0; i < wagonMining.size(); i++) {
+            if(wagonMining.get(i).getWagon().getId() == id) {
+                wagonMining.remove(i);
+                ETMs.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ArrayList<WagonMining> getPlayerWagonMining(String username) {
         ArrayList<WagonMining> result = new ArrayList<>();
-        //TODO UPDATER LA MINE ET LE WAGON AVANT DE L'ENVOYER
         for(WagonMining wm : wagonMining) {
             if(Server.getInstance().getDataBase().getUsernameByWagonId(wm.getWagon().getId()).equals(username)) {
                 wm.setCurrentMine(Server.getInstance().getDataBase().getMine(wm.getCurrentMine().getId()));

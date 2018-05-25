@@ -248,7 +248,28 @@ public class DataBase {
             if(status != 0){
                 ResultSet resultSet = ps.getGeneratedKeys();
                 resultSet.next();
-                result = resultSet.getInt(0);
+                result = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public int updateWagon(String username, int weight, int level, int type, int id){
+        int result = -1;
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE Wagon SET `proprietaire`=?, `poids`=?, `niveau`=?, `typeID`=? WHERE `id`=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, weight);
+            ps.setObject(3, level);
+            ps.setObject(4, type);
+            ps.setObject(5, id);
+            int status = ps.executeUpdate();
+            if(status != 0){
+                ResultSet resultSet = ps.getGeneratedKeys();
+                resultSet.next();
+                result = resultSet.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -263,7 +284,7 @@ public class DataBase {
      * @return a list containing all the owner's wagons of this type
      */
     public ArrayList<Wagon> getWagonsOfType(String username, int type){
-        ArrayList<Wagon> result = new ArrayList<Wagon>();
+        ArrayList<Wagon> result = new ArrayList<>();
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=? AND `typeID`=?;", Statement.RETURN_GENERATED_KEYS);
@@ -294,7 +315,7 @@ public class DataBase {
      * @return the liste of all the wagons of the train
      */
     public ArrayList<Wagon> getAllWagons(String username){
-        ArrayList<Wagon> result = new ArrayList<Wagon>();
+        ArrayList<Wagon> result = new ArrayList<>();
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=?;", Statement.RETURN_GENERATED_KEYS);
@@ -418,7 +439,7 @@ public class DataBase {
      * @return a list containing all the stations of the database
      */
     public ArrayList<TrainStation> getAllTrainStations(){
-        ArrayList<TrainStation> result = new ArrayList<TrainStation>();
+        ArrayList<TrainStation> result = new ArrayList<>();
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare;", Statement.RETURN_GENERATED_KEYS);
@@ -552,6 +573,21 @@ public class DataBase {
         return Math.abs(ts2.getPosX() - ts1.getPosX()) + Math.abs(ts2.getPosY() - ts1.getPosY());
     }
 
+    public boolean changeStaionOfTrain(String username, int newTsId){
+        try {
+            // NOT SAFE !
+            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, newTsId);
+            ps.setObject(2, username);
+            ps.executeUpdate();
+
+            return true;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * @param username player who wants to move
      * @param newTsId id of the station where the player wants to move
@@ -603,7 +639,7 @@ public class DataBase {
             if(status != 0){
                 ResultSet resultSet = ps.getGeneratedKeys();
                 resultSet.next();
-                result = resultSet.getInt(0);
+                result = resultSet.getInt(1);
                         // need tests
                 Server.getInstance().getRegenerationController().addMine(new Mine(resultSet.getInt(1), type, qteResources, emplacement));
             }
