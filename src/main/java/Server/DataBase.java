@@ -665,6 +665,8 @@ public class DataBase {
      * @param amount    : quantité à mettre à jour
      */
     public void setMineAmount(int id, int amount){
+        int MAX = 1000;
+
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE `id`=?", Statement.RETURN_GENERATED_KEYS);
 
@@ -675,6 +677,30 @@ public class DataBase {
         }catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Mets à jour la mine donnée avec la quantité donnée
+     *
+     * @param id        : mine à mettre à jour
+     * @param changeAmount    : quantité à mettre à jour
+     */
+    public boolean changeMineAmount(int id, int changeAmount){
+        int MAX = 1000;
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE `id`=?", Statement.RETURN_GENERATED_KEYS);
+
+            ps.setObject(1, changeAmount);
+            ps.setObject(2, id);
+
+            int status = ps.executeUpdate();
+            if(status != 0){
+                return true;
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

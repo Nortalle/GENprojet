@@ -11,8 +11,8 @@ public class MineRegeneration {
     private ArrayList<Mine> mines = new ArrayList<Mine>();
 
     private int MAX_AMOUNT = 1000;
-    private int AMOUNT_TO_ADD = 1;
-    private int INTERVAL_MS = 1000;
+    private int AMOUNT_TO_ADD = 10;
+    private int INTERVAL_MS = 1000 * 60;
 
 
     public MineRegeneration() {
