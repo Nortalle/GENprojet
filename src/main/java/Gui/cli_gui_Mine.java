@@ -39,7 +39,6 @@ public class cli_gui_Mine {
         startMiningButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // TODO
-                System.out.println("Clic clic");
                 Train train = Client.getInstance().getTrain();
                 System.out.println("Train state :" + train.getTrainStationETA());
                 if(train.getTrainStationETA() > 0) return;
@@ -65,23 +64,18 @@ public class cli_gui_Mine {
 
     public void update(){
         Train train = Client.getInstance().getTrain();
-        //String listOfMines = "<html>";
         comboBox1.removeAllItems();
         availableMinesPanel.removeAll();
         int i = 0;
-        availableMinesPanel.setLayout(new GridBagLayout());
+        availableMinesPanel.setLayout(new GridBagLayout());// put it in form
         GridBagConstraints gbc = new GridBagConstraints();
         for(Mine m : train.getTrainStation().getMines()) {
-
             JLabel label = new JLabel(m.toString());
-
             gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.gridx = 0;
             gbc.gridy = i++;
             availableMinesPanel.add(label,gbc);
-            //listOfMines += m + "<br/>";
             comboBox1.addItem(m);
         }
-        //availableMineLabel.setText(listOfMines + "</html>");
     }
 }
