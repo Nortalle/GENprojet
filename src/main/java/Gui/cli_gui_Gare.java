@@ -3,9 +3,10 @@ package Gui;
 import Client.Client;
 import Client.Updatable;
 import Game.Mine;
-import Game.Train;
 import Game.TrainStation;
+import Utils.JsonUtility;
 import Utils.OTrainProtocol;
+import com.google.gson.JsonArray;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -39,7 +40,7 @@ public class cli_gui_Gare implements Updatable{
         setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
 
         String line = Client.getInstance().getStations();
-        for(TrainStation station : TrainStation.listFromJSON(line)) select_station.addItem(station);
+        for(TrainStation station : TrainStation.listFromJson((JsonArray) JsonUtility.fromJson(line))) select_station.addItem(station);
 
         button_travel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -70,7 +71,7 @@ public class cli_gui_Gare implements Updatable{
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 String line = Client.getInstance().getStations();
                 select_station.removeAllItems();
-                for(TrainStation ts : TrainStation.listFromJSON(line)) select_station.addItem(ts);
+                for(TrainStation ts : TrainStation.listFromJson((JsonArray) JsonUtility.fromJson(line))) select_station.addItem(ts);
             }
 
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}

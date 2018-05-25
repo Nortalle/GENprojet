@@ -4,7 +4,10 @@ import Game.Train;
 import Game.WagonMining;
 import Gui.LoginForm;
 import Server.ClientHandler;
+import Utils.JsonUtility;
 import Utils.OTrainProtocol;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -132,14 +135,14 @@ public class Client {
         writer.println(OTrainProtocol.GET_TRAIN_STATUS);
         writer.flush();
         String answer = readLine();
-        train.fromJSON(answer);
+        train.fromJson((JsonObject) JsonUtility.fromJson(answer));
     }
 
-    public void updateWagonMinig() {
+    public void updateWagonMining() {
         writer.println(OTrainProtocol.MINE_INFO);
         writer.flush();
         String answer = readLine();
-        wagonMining = WagonMining.listFromJSON(answer);
+        wagonMining = WagonMining.listFromJson((JsonArray) JsonUtility.fromJson(answer));
     }
 
     public String getStations() {

@@ -2,7 +2,9 @@ import Client.Client;
 import Game.TrainStation;
 import Server.Server;
 import Server.DataBase;
+import Utils.JsonUtility;
 import Utils.OTrainProtocol;
+import com.google.gson.JsonArray;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +45,7 @@ public class ChangeStationTest {
         String line = client.getStations();
         int nbStation = dataBase.getAllTrainStations().size();
         if(nbStation < 1) fail("No stations, insert one or more");
-        assertEquals(nbStation, TrainStation.listFromJSON(line).size());
+        assertEquals(nbStation, TrainStation.listFromJson((JsonArray) JsonUtility.fromJson(line)).size());
 
     }
 

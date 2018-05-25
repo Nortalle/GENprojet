@@ -14,7 +14,6 @@ import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class cli_gui_Mine implements Updatable{
     private JComboBox select_mine;
@@ -82,7 +81,7 @@ public class cli_gui_Mine implements Updatable{
         // récupération de la liste des wagons qui sont entrain de miner
         currently_mining_panel.setLayout(new GridLayout(0,1));
         currently_mining_panel.removeAll();
-        Client.getInstance().updateWagonMinig();
+        Client.getInstance().updateWagonMining();
         for( WagonMining wm : Client.getInstance().getWagonMining()) {
             JLabel label = new JLabel(wm.getWagon() + " -> " + wm.getCurrentMine());
             currently_mining_panel.add(label);

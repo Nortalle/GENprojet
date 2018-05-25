@@ -8,7 +8,6 @@ import Utils.OTrainProtocol;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class
@@ -45,14 +44,14 @@ ClientHandler implements Runnable {
                     writer.println(resources.toJSON());
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_TRAIN_STATUS)) {
-                    writer.println(db.getTrain(username).toJSON());
+                    writer.println(db.getTrain(username).toJson());
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.MINE_INFO)) {
-                    writer.println(WagonMining.listToJSON(Server.getInstance().getMineController().getPlayerWagonMining(username)));
+                    writer.println(WagonMining.listToJson(Server.getInstance().getMineController().getPlayerWagonMining(username)));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_GARES)) {
                     ArrayList<TrainStation> trainStations = db.getAllTrainStations();
-                    writer.println(TrainStation.listToJSON(trainStations));
+                    writer.println(TrainStation.listToJson(trainStations));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
                     String newTsLine = readLine();

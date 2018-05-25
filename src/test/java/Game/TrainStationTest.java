@@ -1,5 +1,7 @@
 package Game;
 
+import Utils.JsonUtility;
+import com.google.gson.JsonArray;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +33,7 @@ public class TrainStationTest {
         mines.add(new Mine());
         mines.add(new Mine());
         TrainStation ts = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
-        String json = ts.toJSON();
+        String json = JsonUtility.toJson(ts.toJson());
         TrainStation newTs = new TrainStation(json);
         assertEquals(ts.getMines().size(), newTs.getMines().size());
     }
@@ -42,8 +44,8 @@ public class TrainStationTest {
         stations.add(new TrainStation());
         stations.add(new TrainStation());
         stations.add(new TrainStation());
-        String json = TrainStation.listToJSON(stations);
+        String json = JsonUtility.toJson(TrainStation.listToJson(stations));
         System.out.println(stations.size());
-        assertEquals(stations.size(), TrainStation.listFromJSON(json).size());
+        assertEquals(stations.size(), TrainStation.listFromJson((JsonArray) JsonUtility.fromJson(json)).size());
     }
 }

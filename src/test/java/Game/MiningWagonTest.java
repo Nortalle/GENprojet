@@ -1,11 +1,8 @@
 package Game;
 
-import Utils.WagonStats;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,7 +29,7 @@ public class MiningWagonTest {
 
     @Test
     void jsonCurrentMine() {
-        WagonMining newWagon = new WagonMining(wm.toJSON());
+        WagonMining newWagon = new WagonMining(wm.toJson());
         assertEquals(mine.getResource(), newWagon.getCurrentMine().getResource());
     }
 }

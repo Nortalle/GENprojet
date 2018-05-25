@@ -1,5 +1,6 @@
 package Game;
 
+import Utils.JsonUtility;
 import com.google.gson.*;
 
 import java.util.ArrayList;
@@ -14,8 +15,12 @@ public class TrainStation {
 
     public TrainStation() {}
 
+    public TrainStation(JsonObject json) {
+        fromJson(json);
+    }
+
     public TrainStation(String json) {
-        fromJSON(json);
+        fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
     public TrainStation(int id, int x, int y, int nbPlat, int sizePlat, ArrayList<Mine> m) {
@@ -27,49 +32,37 @@ public class TrainStation {
         mines = m;
     }
 
-    public String toJSON() {
-        Gson jsonEngine = new GsonBuilder().create();
-
+    public JsonObject toJson() {
         JsonObject trainStation = new JsonObject();
         trainStation.add("id", new JsonPrimitive(id));
         trainStation.add("posX", new JsonPrimitive(posX));
         trainStation.add("posY", new JsonPrimitive(posY));
         trainStation.add("nbOfPlatforms", new JsonPrimitive(nbOfPlatforms));
         trainStation.add("sizeOfPlatforms", new JsonPrimitive(sizeOfPlatforms));
-        //JsonArray jMines = new JsonArray();
-        //for(Mine m : mines) jMines.add(new JsonPrimitive(m.getResource()));
-        trainStation.add("mines", new JsonPrimitive(Mine.listToJSON(mines)));
+        trainStation.add("mines", Mine.listToJson(mines));
 
-        return jsonEngine.toJson(trainStation);
+        return trainStation;
     }
 
-    public void fromJSON(String from) {
-        Gson jsonEngine = new GsonBuilder().create();
-
-        JsonObject trainStation = jsonEngine.fromJson(from, JsonObject.class);
-        id = trainStation.get("id").getAsInt();
-        posX = trainStation.get("posX").getAsInt();
-        posY = trainStation.get("posY").getAsInt();
-        nbOfPlatforms = trainStation.get("nbOfPlatforms").getAsInt();
-        sizeOfPlatforms = trainStation.get("sizeOfPlatforms").getAsInt();
-        mines = Mine.listFromJSON(trainStation.get("mines").getAsString());
+    public void fromJson(JsonObject from) {
+        id = from.get("id").getAsInt();
+        posX = from.get("posX").getAsInt();
+        posY = from.get("posY").getAsInt();
+        nbOfPlatforms = from.get("nbOfPlatforms").getAsInt();
+        sizeOfPlatforms = from.get("sizeOfPlatforms").getAsInt();
+        mines = Mine.listFromJson((JsonArray) from.get("mines"));
     }
 
-    public static String listToJSON(ArrayList<TrainStation> trainStations) {
-        Gson jsonEngine = new GsonBuilder().create();
-
+    public static JsonArray listToJson(ArrayList<TrainStation> trainStations) {
         JsonArray list = new JsonArray();
-        for(TrainStation ts : trainStations) list.add(new JsonPrimitive(ts.toJSON()));
+        for(TrainStation ts : trainStations) list.add(ts.toJson());
 
-        return jsonEngine.toJson(list);
+        return list;
     }
 
-    public static ArrayList<TrainStation> listFromJSON(String from) {
+    public static ArrayList<TrainStation> listFromJson(JsonArray from) {
         ArrayList<TrainStation> trainStations = new ArrayList<>();
-        Gson jsonEngine = new GsonBuilder().create();
-
-        ArrayList<String> jTrainsStation = jsonEngine.fromJson(from, ArrayList.class);
-        for(String s : jTrainsStation) trainStations.add(new TrainStation(s));
+        for(JsonElement j : from) trainStations.add(new TrainStation((JsonObject) j));
 
         return trainStations;
     }

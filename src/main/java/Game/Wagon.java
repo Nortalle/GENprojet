@@ -1,5 +1,6 @@
 package Game;
 
+import Utils.JsonUtility;
 import Utils.WagonStats;
 import com.google.gson.*;
 
@@ -13,8 +14,12 @@ public class Wagon {
 
     public Wagon() {}
 
+    public Wagon(JsonObject json) {
+        fromJson(json);
+    }
+
     public Wagon(String json) {
-        fromJSON(json);
+        fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
     public Wagon(int id , int weight, int level, int typeID) {
@@ -24,45 +29,33 @@ public class Wagon {
         this.typeID = typeID;
     }
 
-    public String toJSON() {
-        Gson jsonEngine = new GsonBuilder().create();
-
+    public JsonObject toJson() {
         JsonObject wagon = new JsonObject();
         wagon.add("id", new JsonPrimitive(id));
         wagon.add("weight", new JsonPrimitive(weight));
         wagon.add("level", new JsonPrimitive(level));
         wagon.add("typeID", new JsonPrimitive(typeID));
 
-        return jsonEngine.toJson(wagon);
+        return wagon;
     }
 
-    public void fromJSON(String from) {
-        Gson jsonEngine = new GsonBuilder().create();
-
-        JsonObject wagon = jsonEngine.fromJson(from, JsonObject.class);
-        id = wagon.get("id").getAsInt();
-        weight = wagon.get("weight").getAsInt();
-        level = wagon.get("level").getAsInt();
-        typeID = wagon.get("typeID").getAsInt();
+    public void fromJson(JsonObject from) {
+        id = from.get("id").getAsInt();
+        weight = from.get("weight").getAsInt();
+        level = from.get("level").getAsInt();
+        typeID = from.get("typeID").getAsInt();
     }
 
-    public static String listToJSON(ArrayList<Wagon> wagons) {
-        Gson jsonEngine = new GsonBuilder().create();
-
+    public static JsonArray listToJson(ArrayList<Wagon> wagons) {
         JsonArray list = new JsonArray();
-        for(Wagon w : wagons) list.add(new JsonPrimitive(w.toJSON()));
+        for(Wagon w : wagons) list.add(w.toJson());
 
-        return jsonEngine.toJson(list);
+        return list;
     }
 
-    public static ArrayList<Wagon> listFromJSON(String from) {
+    public static ArrayList<Wagon> listFromJson(JsonArray from) {
         ArrayList<Wagon> wagons = new ArrayList<>();
-        Gson jsonEngine = new GsonBuilder().create();
-
-        ArrayList<String> jWagons = jsonEngine.fromJson(from, ArrayList.class);
-        for(String s : jWagons) {
-            wagons.add(new Wagon(s));
-        }
+        for(JsonElement j : from) wagons.add(new Wagon((JsonObject) j));
 
         return wagons;
     }
