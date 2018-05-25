@@ -664,19 +664,23 @@ public class DataBase {
      * @param id        : mine à mettre à jour
      * @param amount    : quantité à mettre à jour
      */
-    public void setMineAmount(int id, int amount){
-        int MAX = 1000;
+    public boolean setMineAmount(int id, int amount){
 
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE `id`=?", Statement.RETURN_GENERATED_KEYS);
 
             ps.setObject(1, amount);
             ps.setObject(2, id);
+            int status = ps.executeUpdate();
+            if(status != 0){
+                return true;
+            }
 
             ps.executeUpdate();
         }catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     /**
@@ -687,10 +691,24 @@ public class DataBase {
      */
     public boolean changeMineAmount(int id, int changeAmount){
         int MAX = 1000;
+        ///int MAX = getMine(id).getMax(); lorsqu'il y aura le MAX dans la database
         try {
+
+            int current_amount = getMine(id).getAmount();
+
+            current_amount += changeAmount;
+
+            if(current_amount > MAX){
+                current_amount = MAX;
+            }
+
+            if(current_amount < 0){
+                current_amount = 0;
+            }
+
             PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE `id`=?", Statement.RETURN_GENERATED_KEYS);
 
-            ps.setObject(1, changeAmount);
+            ps.setObject(1, current_amount);
             ps.setObject(2, id);
 
             int status = ps.executeUpdate();
