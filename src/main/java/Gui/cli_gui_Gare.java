@@ -34,7 +34,7 @@ public class cli_gui_Gare implements Updatable{
     public cli_gui_Gare() {
 
         Update();
-        Client.getInstance().updateTrainStatus();
+        //Client.getInstance().updateTrainStatus();
         TrainStation ts = Client.getInstance().getTrain().getTrainStation();
         setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
 
@@ -61,7 +61,7 @@ public class cli_gui_Gare implements Updatable{
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Client.getInstance().updateTrainStatus();
+                //Client.getInstance().updateTrainStatus();
                 TrainStation ts = Client.getInstance().getTrain().getTrainStation();
                 setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
             }
@@ -111,8 +111,7 @@ public class cli_gui_Gare implements Updatable{
         // TODO
         int totalTime = 20;// hard coded
         progressBar1.setMaximum(totalTime);
-        Client.getInstance().updateTrainStatus();
-
+        //Client.getInstance().updateTrainStatus();
         progressBar1.setValue(totalTime - Client.getInstance().getTrain().getTrainStationETA());
 
     }

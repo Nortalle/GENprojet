@@ -10,9 +10,6 @@ import Game.Resources;
 import java.awt.event.*;
 
 public class ClientForm implements Updatable{
-
-    private Logger LOG = Logger.getInstance();
-
     private JPanel panel_main;
 
     //Ressources
@@ -48,9 +45,6 @@ public class ClientForm implements Updatable{
     public ClientForm() {
         Client.setClientLogComponent(logTextArea);
         updateResources();
-
-        LOG.log("Ouverture de ce que le client va voir");
-
 
         tabs.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -88,7 +82,8 @@ public class ClientForm implements Updatable{
 
     @Override
     public void Update() {
-        Client.getInstance().updateTrainStatus();
+        //Client.getInstance().updateTrainStatus();
+        Client.getInstance().getTrain();
         cli_gui_gare.Update();
         cli_gui_mine.Update();
         updateResources();

@@ -120,6 +120,7 @@ public class Client {
     }
 
     public Train getTrain() {
+        updateTrainStatus();
         return train;
     }
 
@@ -127,7 +128,7 @@ public class Client {
         return wagonMining;
     }
 
-    public void updateTrainStatus() {
+    private void updateTrainStatus() {
         writer.println(OTrainProtocol.GET_TRAIN_STATUS);
         writer.flush();
         String answer = readLine();
