@@ -6,6 +6,7 @@ import Game.Wagon;
 import Game.WagonMining;
 import Server.DataBase;
 import Server.Server;
+import Utils.WagonStats;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,8 @@ class MineControllerTest {
         while(System.currentTimeMillis() - start < 1200){
 
         }
+
+        assertEquals(450 - WagonStats.getMiningTime(2,1), mine1.getAmount());
 
 
     }
