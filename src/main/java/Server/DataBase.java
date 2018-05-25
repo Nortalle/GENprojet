@@ -216,10 +216,9 @@ public class DataBase {
             if(!resultSet.next()){return null;}
             String name = resultSet.getString("nom");
             int currentTs = resultSet.getInt("gareActuelle");
-            int eta = resultSet.getInt("tempsArriveeEstime");
+            //int eta = resultSet.getInt("tempsArriveeEstime");
 
-            Integer realETA = Server.getInstance().getTravelController().getETA(username);
-            if(realETA != null) eta = realETA;
+            int eta = Server.getInstance().getTravelController().getETA(username);
             train = new Train(getAllWagons(username), getTrainStation(currentTs), eta);
 
         } catch (SQLException e) {

@@ -41,8 +41,11 @@ public class Travel {
     }
 
 
-    public Integer getETA(String username) {
-        return map.get(username);
+    public int getETA(String username) {
+        int eta = 0;
+        Integer storedETA = map.get(username);
+        if(storedETA != null) eta = storedETA;
+        return eta;
     }
 
     public boolean ctrlChangeStation(String username, String newStation) {
@@ -51,10 +54,7 @@ public class Travel {
         Train train = db.getTrain(username);
         TrainStation newTrainStation = db.getTrainStation(newTsId);
 
-        int eta = 0;
-        Integer realETA = Server.getInstance().getTravelController().getETA(username);
-        if(realETA != null) eta = realETA;
-        if(eta == 0) {
+        if(getETA(username) == 0) {
             if(newTrainStation.getSizeOfPlatforms() >= train.getSize()) {
                 if(db.getNbUsedPlatforms(newTsId) < newTrainStation.getNbOfPlatforms()){
                     if(db.sendTrainToNewStation(username, newTrainStation.getId())) {
