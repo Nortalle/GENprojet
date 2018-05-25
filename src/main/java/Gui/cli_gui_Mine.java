@@ -3,7 +3,6 @@ package Gui;
 import Client.*;
 import Game.Mine;
 import Game.Train;
-import Game.TrainStation;
 import Game.Wagon;
 import Utils.OTrainProtocol;
 import Utils.WagonStats;
@@ -14,19 +13,19 @@ import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class cli_gui_Mine {
-    private JComboBox comboBox1;
+    private JComboBox select_mine;
     private JButton startMiningButton;
     private JPanel panel1;
     private JPanel availableMinesPanel;
+    private JComboBox select_wagon;
 
     public cli_gui_Mine() {
 
         update();
 
-        comboBox1.addPopupMenuListener(new PopupMenuListener() {
+        select_mine.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                 update();
             }
@@ -42,15 +41,9 @@ public class cli_gui_Mine {
                 Train train = Client.getInstance().getTrain();
                 System.out.println("Train state :" + train.getTrainStationETA());
                 if(train.getTrainStationETA() > 0) return;
-                Mine mine = (Mine) comboBox1.getSelectedItem();
+                Mine mine = (Mine) select_mine.getSelectedItem();
                 System.out.println("mine sélectionnée : " + mine);
-                Wagon wagon = null;
-                for(Wagon w : train.getWagons()) {
-                    if(w.getTypeID() == WagonStats.DRILL_ID) {
-                        wagon = w;
-                        break;
-                    }
-                }
+                Wagon wagon = (Wagon) select_wagon.getSelectedItem();
                 System.out.println("Wagon utilisé : " + wagon);
 
                 String line = Client.getInstance().startMining(wagon.getId(), mine.getId());
@@ -64,18 +57,26 @@ public class cli_gui_Mine {
 
     public void update(){
         Train train = Client.getInstance().getTrain();
-        comboBox1.removeAllItems();
-        availableMinesPanel.removeAll();
         int i = 0;
         availableMinesPanel.setLayout(new GridBagLayout());// put it in form
         GridBagConstraints gbc = new GridBagConstraints();
+
+        availableMinesPanel.removeAll();
+        select_mine.removeAllItems();
         for(Mine m : train.getTrainStation().getMines()) {
             JLabel label = new JLabel(m.toString());
             gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.gridx = 0;
             gbc.gridy = i++;
             availableMinesPanel.add(label,gbc);
-            comboBox1.addItem(m);
+            select_mine.addItem(m);
+        }
+
+        select_wagon.removeAllItems();
+        for(Wagon w : train.getWagons()){
+            if(w.getTypeID() == WagonStats.DRILL_ID){
+                select_wagon.addItem(w);
+            }
         }
     }
 }
