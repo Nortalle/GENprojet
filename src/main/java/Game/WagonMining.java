@@ -1,9 +1,8 @@
 package Game;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
+
+import java.util.ArrayList;
 
 public class WagonMining  {
     private Wagon wagon;
@@ -52,6 +51,25 @@ public class WagonMining  {
         wagon.fromJSON(miningWagon.get("wagon").getAsString());
         if(currentMine == null) currentMine = new Mine();// can we do better ?
         currentMine.fromJSON(miningWagon.get("currentMine").getAsString());
+    }
+
+    public static String listToJSON(ArrayList<WagonMining> wagonMining) {
+        Gson jsonEngine = new GsonBuilder().create();
+
+        JsonArray list = new JsonArray();
+        for(WagonMining wm : wagonMining) list.add(new JsonPrimitive(wm.toJSON()));
+
+        return jsonEngine.toJson(list);
+    }
+
+    public static ArrayList<WagonMining> listFromJSON(String from) {
+        ArrayList<WagonMining> trainStations = new ArrayList<>();
+        Gson jsonEngine = new GsonBuilder().create();
+
+        ArrayList<String> jTrainsStation = jsonEngine.fromJson(from, ArrayList.class);
+        for(String s : jTrainsStation) trainStations.add(new WagonMining(s));
+
+        return trainStations;
     }
 
     public Mine getMine(){
