@@ -603,7 +603,7 @@ public class DataBase {
             int eta = calculateTravelTime(currentTsId, newTsId);
             Wagon loco = getPlayerLoco(username);
             if(loco == null) return false;
-            eta = Math.max(1, eta / WagonStats.LOCO_SPEED[loco.getLevel()]);
+            eta = Math.max(1, eta / WagonStats.LOCO_SPEED[loco.getLevel() - 1]);
 
             PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, newTsId);

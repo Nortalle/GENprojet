@@ -76,4 +76,8 @@ public class Wagon {
     public int getLevel() {
         return level;
     }
+
+    public int getWeight() {
+        return weight;
+    }
 }
