@@ -1,22 +1,23 @@
 package Client;
 
 import Game.Train;
-import Game.TrainStation;
 import Game.WagonMining;
 import Gui.LoginForm;
+import Server.ClientHandler;
 import Utils.OTrainProtocol;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class Client {
+    private static final java.util.logging.Logger LOG = Logger.getLogger(ClientHandler.class.getName());
+    private static final ClientLog CLIENT_LOG = new ClientLog();
+    static {LOG.addHandler(CLIENT_LOG);}
+
     private static Client instance;
     private Socket socket;
     private BufferedReader reader;
@@ -28,6 +29,10 @@ public class Client {
     public static Client getInstance() {
         if(instance == null) instance = new Client();
         return instance;
+    }
+
+    public static void setClientLogComponent(JTextArea component) {
+        CLIENT_LOG.setComponent(component);
     }
 
     //GUI
@@ -76,13 +81,15 @@ public class Client {
         frame.pack();
     }
 
-    public String readLineFromServer() {
+    public String readLine() {
+        String line = "ERROR";
         try {
-            return reader.readLine();
+            line = reader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "ERROR";
+        LOG.info(line);
+        return line;
     }
 
     public void sendLine(String line) {
@@ -95,13 +102,7 @@ public class Client {
         writer.println(username);
         writer.println(password);
         writer.flush();
-        String answer = "ERROR";
-        try {
-            answer = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return answer;
+        return readLine();
     }
 
     public String signUp(String username, String password) {
@@ -109,26 +110,13 @@ public class Client {
         writer.println(username);
         writer.println(password);
         writer.flush();
-        String answer = "ERROR";
-        try {
-            answer = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return answer;
+        return readLine();
     }
 
     public String getResources() {
         writer.println(OTrainProtocol.GET_RESSOURCES);
-        writer.println(username);
         writer.flush();
-        String answer = "ERROR";
-        try {
-            answer = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return answer;
+        return readLine();
     }
 
     public Train getTrain() {
@@ -142,54 +130,28 @@ public class Client {
     public void updateTrainStatus() {
         writer.println(OTrainProtocol.GET_TRAIN_STATUS);
         writer.flush();
-        String answer = "ERROR";
-        try {
-            answer = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        String answer = readLine();
         train.fromJSON(answer);
     }
 
     public void updateWagonMinig() {
         writer.println(OTrainProtocol.MINE_INFO);
         writer.flush();
-        String answer = "ERROR";
-        try {
-            answer = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        String answer = readLine();
         wagonMining = WagonMining.listFromJSON(answer);
     }
 
     public String getStations() {
         writer.println(OTrainProtocol.GET_GARES);
         writer.flush();
-        String answer = "ERROR";
-        try {
-            answer = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return answer;
+        return readLine();
     }
 
     public String changeStation(int stationId) {
         writer.println(OTrainProtocol.GO_TO);
         writer.println(stationId);
         writer.flush();
-        String answer = "ERROR";
-        try {
-            answer = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return answer;
+        return readLine();
     }
 
     public String startMining(int wagonId, int mineId) {
@@ -197,31 +159,10 @@ public class Client {
         writer.println(wagonId);
         writer.println(mineId);
         writer.flush();
-        String answer = "ERROR";
-        try {
-            answer = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return answer;
+        return readLine();
     }
 
     public static void main(String ... args) {
         Client.getInstance().startingFrame();
-
-        // Crée la fenêtre de login
-        /*JFrame frame = new JFrame("OTrain");
-        frame.setContentPane(new LoginForm(client).getPanel_main());
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);*/
-
-        //test server responses
-        /*String line = client.readLineFromServer();
-        while(true) {
-            System.out.println("Server : " + line);
-            line = client.readLineFromServer();
-        }*/
     }
 }

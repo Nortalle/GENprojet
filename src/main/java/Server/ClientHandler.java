@@ -8,9 +8,13 @@ import Utils.OTrainProtocol;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class
 ClientHandler implements Runnable {
+    private static final Logger LOG = Logger.getLogger(ClientHandler.class.getName());
+
     private Socket socket;
     private DataBase db;
     private boolean running;
@@ -31,10 +35,10 @@ ClientHandler implements Runnable {
         try {
             waitForAuthentication();
 
-            String line = reader.readLine();
+            String line = readLine();
             while (running && line != null) {
                 //work...
-                System.out.println("Client (" + username + ") : " + line);
+
                 if(line.equals(OTrainProtocol.GET_RESSOURCES)) {
                     int r[] = db.getPlayerResources(username);
                     Resources resources = new Resources(r);
@@ -51,7 +55,7 @@ ClientHandler implements Runnable {
                     writer.println(TrainStation.listToJSON(trainStations));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
-                    String newTsLine = reader.readLine();
+                    String newTsLine = readLine();
                     System.out.println(newTsLine);
                     if(Server.getInstance().getTravelController().ctrlChangeStation(username, newTsLine)) {
                         writer.println(OTrainProtocol.SUCCESS);
@@ -60,8 +64,8 @@ ClientHandler implements Runnable {
                     }
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.MINE)) {
-                    String wagonLine = reader.readLine();
-                    String mineLine = reader.readLine();
+                    String wagonLine = readLine();
+                    String mineLine = readLine();
                     if(Server.getInstance().getMineController().tryMine(username, wagonLine, mineLine)) {
                         writer.println(OTrainProtocol.SUCCESS);
                     } else {
@@ -69,15 +73,13 @@ ClientHandler implements Runnable {
                     }
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.STOP_MINE)) {
-                    String wagonLine = reader.readLine();
+                    String wagonLine = readLine();
                     // Mining Controller
 
                     // writer.flush();
                 }
-                /*writer.println("You sent me that : " + line);
-                writer.flush();*/
 
-                line = reader.readLine();
+                line = readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -86,15 +88,21 @@ ClientHandler implements Runnable {
         }
     }
 
+    private String readLine() throws IOException {
+        String line = reader.readLine();
+        LOG.info("Client (" + username + ") : " + line);
+        return line;
+    }
+
     private void waitForAuthentication() {
         try {
             boolean logged = false;
             boolean signedUp;
             while(!logged) {
-                String request = reader.readLine();
-                while(!request.equals(OTrainProtocol.CONNECT) && !request.equals(OTrainProtocol.SIGN_UP)) request = reader.readLine();
-                username = reader.readLine();
-                String password = reader.readLine();
+                String request = readLine();
+                while(!request.equals(OTrainProtocol.CONNECT) && !request.equals(OTrainProtocol.SIGN_UP)) request = readLine();
+                username = readLine();
+                String password = readLine();
                 if(request.equals(OTrainProtocol.CONNECT)) {
                     logged = db.checkLogin(username, password);
                     writer.println(logged ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);

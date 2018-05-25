@@ -29,7 +29,6 @@ public class ClientForm implements Updatable{
 
     //Logs
     private JPanel Logs;
-    private JTextPane LoggerTestPane;
     private JLabel eau_i;
     private JLabel bois_i;
     private JLabel coal_i;
@@ -44,8 +43,10 @@ public class ClientForm implements Updatable{
     private cli_gui_Mine cli_gui_mine;
     private cli_gui_Gare cli_gui_gare;
     private Gui.cli_gui_craft cli_gui_craft;
+    private JTextArea logTextArea;
 
     public ClientForm() {
+        Client.setClientLogComponent(logTextArea);
         updateResources();
 
         LOG.log("Ouverture de ce que le client va voir");
