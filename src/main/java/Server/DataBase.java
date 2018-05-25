@@ -323,7 +323,7 @@ public class DataBase {
                 int idWagon = resultSet.getInt("id");
                 int weight = resultSet.getInt("poids");
                 int level = resultSet.getInt("niveau");
-                int typeID = resultSet.getInt("type");
+                int typeID = resultSet.getInt("typeID");
 
                 wagon = new Wagon(id, weight, level, typeID);
             }

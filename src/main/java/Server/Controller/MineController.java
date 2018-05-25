@@ -10,28 +10,27 @@ import java.util.TimerTask;
 
 public class MineController {
 
-    private ArrayList<WagonMining> wagonMining = new ArrayList<WagonMining>();
-    private ArrayList<Long> ETMs = new ArrayList<Long>();
-    private long start;
+    private ArrayList<WagonMining> wagonMining = new ArrayList<>();
+    private ArrayList<Long> ETMs = new ArrayList<>();
 
     private final int INTERVAL_MS = 1000;
 
 
     public MineController() {
-        start = System.currentTimeMillis();
-
         new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 for(int i = 0; i < wagonMining.size(); ++i) {
-                    WagonMining wagon = wagonMining.get(i);
-                    String username = Server.getInstance().getDataBase().getUsernameByWagonId(wagon.getWagon().getId());
+                    WagonMining wm = wagonMining.get(i);
+                    String username = Server.getInstance().getDataBase().getUsernameByWagonId(wm.getWagon().getId());
                     long ETM = ETMs.get(i);
                     ETMs.set(i, --ETM);
                     if(ETM == 0) {
-                        ETMs.set(i, (long)WagonStats.getMiningTime(wagon.getWagon()));
+                        ETMs.set(i, (long)WagonStats.getMiningTime(wm.getWagon()));
                         Resources r = new Resources(Server.getInstance().getDataBase().getPlayerResources(username));
-                        Server.getInstance().getDataBase().setPlayerResources(username, r.toArray());
+                        int newResources[] = r.toArray();
+                        newResources[wm.getCurrentMine().getResource()]++;
+                        Server.getInstance().getDataBase().setPlayerResources(username, newResources);
                     }
                 }
             }
@@ -39,12 +38,17 @@ public class MineController {
     }
 
     public boolean tryMine(String username, String wagonLine, String mineLine) {
+        System.out.println("try mine 1");
         DataBase db = Server.getInstance().getDataBase();
+        System.out.println("try mine 2");
         Wagon wagon = db.getWagon(Integer.valueOf(wagonLine));
+        System.out.println("try mine 3");
         Mine mine = db.getMine(Integer.valueOf(mineLine));
+        System.out.println("try mine 4");
         Train train = db.getTrain(username);
+        System.out.println("try mine 5");
         if(wagon == null || mine == null) return false;//if wagon and mine exist
-        if(wagon.getTypeID() == WagonStats.DRILL_ID) return false;//if wagon can mine
+        if(wagon.getTypeID() == WagonStats.DRILL_ID) return false;//if wagon can mine // TODO
         if(train.getTrainStationETA() > 0) return false;//if train is arrived
         if(train.getTrainStation().getId() != mine.getPlace()) return false;//if mine is at curr station of train
         addWagon(new WagonMining(wagon, mine));
