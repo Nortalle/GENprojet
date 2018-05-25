@@ -33,39 +33,35 @@ public class cli_gui_Gare implements Updatable{
     private JPanel panel_liste_joueurs;
     private JPanel panel_infos;
 
+    private TrainStation viewingStation;
+
     public cli_gui_Gare() {
 
         Update();
-        //Client.getInstance().updateTrainStatus();
-        TrainStation ts = Client.getInstance().getTrain().getTrainStation();
-        setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
+        viewingStation = Client.getInstance().getTrain().getTrainStation();
+        setStationInfo();
 
         String line = Client.getInstance().getStations();
         for(TrainStation station : TrainStation.listFromJson((JsonArray) JsonUtility.fromJson(line))) select_station.addItem(station);
 
         button_travel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                TrainStation ts = (TrainStation) select_station.getSelectedItem();
-                String line = Client.getInstance().changeStation(ts.getId());
-                if(line.equals(OTrainProtocol.SUCCESS)) setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
+                viewingStation = (TrainStation) select_station.getSelectedItem();
+                String line = Client.getInstance().changeStation(viewingStation.getId());
+                if(line.equals(OTrainProtocol.SUCCESS)) setStationInfo();
 
             }
         });
         button_view.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // peupler les panel
-                // info station
-                // players at station
-                // mines at station
-                TrainStation ts = (TrainStation) select_station.getSelectedItem();
-                setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
+                viewingStation = (TrainStation) select_station.getSelectedItem();
+                setStationInfo();
             }
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //Client.getInstance().updateTrainStatus();
-                TrainStation ts = Client.getInstance().getTrain().getTrainStation();
-                setStationInfo(ts.toString(), ts.getPosX(), ts.getPosY());
+                viewingStation = Client.getInstance().getTrain().getTrainStation();
+                setStationInfo();
             }
         });
         select_station.addPopupMenuListener(new PopupMenuListener() {
@@ -82,35 +78,29 @@ public class cli_gui_Gare implements Updatable{
     }
 
     public void Update(){
-        TrainStation ts = (TrainStation) select_station.getSelectedItem();
-
-        if(ts != null){
+        //TrainStation ts = (TrainStation) select_station.getSelectedItem();
+        viewingStation = (TrainStation) select_station.getSelectedItem();
+        setStationInfo();
+        if(viewingStation != null){
             panel_liste_mines.removeAll();
-            int i = 0;
             panel_liste_mines.setLayout(new GridLayout(0, 1));
-            //GridBagConstraints gbc = new GridBagConstraints();
-            for(Mine m : ts.getMines()) {
+            for(Mine m : viewingStation.getMines()) {
                 JLabel label = new JLabel(m.toString());
-                //gbc.fill = GridBagConstraints.HORIZONTAL;
-                //gbc.gridx = 0;
-                //gbc.gridy = i++;
-                //panel_liste_mines.add(label,gbc);
                 panel_liste_mines.add(label);
-
             }
         }
 
     }
 
-    private void setStationInfo(String name, int x, int y) {
+    private void setStationInfo() {
+        if(viewingStation == null) viewingStation = Client.getInstance().getTrain().getTrainStation();
 
-        label_stationName.setText(name);
-        label_stationCoords.setText(x + ";" + y);
+        label_stationName.setText(viewingStation.toString());
+        label_stationCoords.setText(viewingStation.getPosX() + ";" + viewingStation.getPosY());
 
         Train train = Client.getInstance().getTrain();
-        int totalTime = train.getTrainStationTotalETA();// hard coded
+        int totalTime = train.getTrainStationTotalETA();
         progressBar1.setMaximum(totalTime);
-        //Client.getInstance().updateTrainStatus();
         progressBar1.setValue(totalTime - train.getTrainStationETA());
         progressBar1.setString((train.getTrainStationETA() == totalTime) ? "At Station" : "On the move");
 
