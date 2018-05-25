@@ -668,14 +668,12 @@ public class DataBase {
 
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE `id`=?", Statement.RETURN_GENERATED_KEYS);
-
             ps.setObject(1, amount);
             ps.setObject(2, id);
             int status = ps.executeUpdate();
             if(status != 0){
                 return true;
             }
-
             ps.executeUpdate();
         }catch (SQLException e) {
             e.printStackTrace();
@@ -695,26 +693,15 @@ public class DataBase {
         try {
 
             int current_amount = getMine(id).getAmount();
-
             current_amount += changeAmount;
-
-            if(current_amount > MAX){
-                current_amount = MAX;
-            }
-
-            if(current_amount < 0){
-                current_amount = 0;
-            }
+            if(current_amount > MAX) current_amount = MAX;
+            if(current_amount < 0) current_amount = 0;
 
             PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE `id`=?", Statement.RETURN_GENERATED_KEYS);
-
             ps.setObject(1, current_amount);
             ps.setObject(2, id);
-
             int status = ps.executeUpdate();
-            if(status != 0){
-                return true;
-            }
+            if(status != 0) return true;
         }catch (SQLException e) {
             e.printStackTrace();
         }
