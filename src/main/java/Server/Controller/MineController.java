@@ -26,6 +26,7 @@ public class MineController {
                     long ETM = ETMs.get(i);
                     ETMs.set(i, --ETM);
                     if(ETM == 0) {
+                        // TODO TEST IF TRAIN STILL AT STATION WHERE MINE IS
                         ETMs.set(i, (long)WagonStats.getMiningTime(wm.getWagon()));
                         if(Server.getInstance().getDataBase().changeMineAmount(wm.getCurrentMine().getId(), -1)) {
                             Resources r = new Resources(Server.getInstance().getDataBase().getPlayerResources(username));
