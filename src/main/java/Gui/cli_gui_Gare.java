@@ -80,23 +80,20 @@ public class cli_gui_Gare implements Updatable{
     }
 
     public void Update(){
-
-        // peuple le panel qui donne les mines présentes :
         TrainStation ts = (TrainStation) select_station.getSelectedItem();
 
         if(ts != null){
             panel_liste_mines.removeAll();
             int i = 0;
-            panel_liste_mines.setLayout(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
+            panel_liste_mines.setLayout(new GridLayout(0, 1));
+            //GridBagConstraints gbc = new GridBagConstraints();
             for(Mine m : ts.getMines()) {
-
                 JLabel label = new JLabel(m.toString());
-
-                gbc.fill = GridBagConstraints.HORIZONTAL;
-                gbc.gridx = 0;
-                gbc.gridy = i++;
-                panel_liste_mines.add(label,gbc);
+                //gbc.fill = GridBagConstraints.HORIZONTAL;
+                //gbc.gridx = 0;
+                //gbc.gridy = i++;
+                //panel_liste_mines.add(label,gbc);
+                panel_liste_mines.add(label);
 
             }
         }

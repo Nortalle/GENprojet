@@ -43,7 +43,6 @@ public class cli_gui_Mine implements Updatable{
                 // TODO
                 Train train = Client.getInstance().getTrain();
                 System.out.println("Train state :" + train.getTrainStationETA());
-                if(train.getTrainStationETA() > 0) return;
                 Mine mine = (Mine) select_mine.getSelectedItem();
                 System.out.println("mine sélectionnée : " + mine);
                 Wagon wagon = (Wagon) select_wagon.getSelectedItem();
