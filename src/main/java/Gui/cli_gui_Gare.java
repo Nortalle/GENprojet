@@ -80,21 +80,6 @@ public class cli_gui_Gare {
 
     public void Update(){
 
-
-    }
-
-    private void setStationInfo(String name, int x, int y) {
-
-        label_stationName.setText(name);
-        label_stationCoords.setText(x + ";" + y);
-
-        // TODO
-        int totalTime = 20;// hard coded
-        progressBar1.setMaximum(totalTime);
-        Client.getInstance().updateTrainStatus();
-
-        progressBar1.setValue(totalTime - Client.getInstance().getTrain().getTrainStationETA());
-
         // peuple le panel qui donne les mines présentes :
         TrainStation ts = (TrainStation) select_station.getSelectedItem();
 
@@ -114,6 +99,21 @@ public class cli_gui_Gare {
 
             }
         }
+
+    }
+
+    private void setStationInfo(String name, int x, int y) {
+
+        label_stationName.setText(name);
+        label_stationCoords.setText(x + ";" + y);
+
+        // TODO
+        int totalTime = 20;// hard coded
+        progressBar1.setMaximum(totalTime);
+        Client.getInstance().updateTrainStatus();
+
+        progressBar1.setValue(totalTime - Client.getInstance().getTrain().getTrainStationETA());
+
     }
 
     public JPanel getPanel_main() {
