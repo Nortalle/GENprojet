@@ -46,7 +46,7 @@ public class MineController {
         Mine mine = db.getMine(Integer.valueOf(mineLine));
         Train train = db.getTrain(username);
         if(wagon == null || mine == null) return false;//if wagon and mine exist
-        if(wagon.getTypeID() != WagonStats.DRILL_ID) return false;//if wagon can mine // TODO
+        if(!WagonStats.canMine(wagon, mine)) return false;//if wagon can mine
         if(train.getTrainStationETA() > 0) return false;//if train is arrived
         if(train.getTrainStation().getId() != mine.getPlace()) return false;//if mine is at curr station of train
         addWagon(new WagonMining(wagon, mine));
