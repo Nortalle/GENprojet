@@ -330,7 +330,7 @@ public class DataBase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return wagon;
     }
 
     // STATION REQUESTS

@@ -38,17 +38,12 @@ public class MineController {
     }
 
     public boolean tryMine(String username, String wagonLine, String mineLine) {
-        System.out.println("try mine 1");
         DataBase db = Server.getInstance().getDataBase();
-        System.out.println("try mine 2");
         Wagon wagon = db.getWagon(Integer.valueOf(wagonLine));
-        System.out.println("try mine 3");
         Mine mine = db.getMine(Integer.valueOf(mineLine));
-        System.out.println("try mine 4");
         Train train = db.getTrain(username);
-        System.out.println("try mine 5");
         if(wagon == null || mine == null) return false;//if wagon and mine exist
-        if(wagon.getTypeID() == WagonStats.DRILL_ID) return false;//if wagon can mine // TODO
+        if(wagon.getTypeID() != WagonStats.DRILL_ID) return false;//if wagon can mine // TODO
         if(train.getTrainStationETA() > 0) return false;//if train is arrived
         if(train.getTrainStation().getId() != mine.getPlace()) return false;//if mine is at curr station of train
         addWagon(new WagonMining(wagon, mine));
