@@ -4,11 +4,17 @@ public class Ressource {
     /**
      * Enum qui représente les types des ressources du jeu. c'est l'ID unique qui représente une ressource dans la BDD
      */
+    //scrum, eau, bois, charbon, petrol, fer, cuivre, acier, or
     public enum  Type {
+        SCRUM,
+        WATER,
         WOOD_LOG,
         CHARCOAL,
+        OIL,
         IRON_ORE,
         COPPER_ORE,
+        STEEL,
+        GOLD_ORE,
         IRON_INGOT,
         COPPER_INGOT,
         IRON_PLATE,
@@ -25,6 +31,16 @@ public class Ressource {
      */
     public static String RessourceToString(Ressource.Type t){
         switch (t){
+            case SCRUM:
+                return "Scrum";
+            case STEEL:
+                return "Steel";
+            case WATER:
+                return "Water";
+            case OIL:
+                return "Oil";
+            case GOLD_ORE:
+                return "Gold Ore";
             case WOOD_LOG:
                 return "Wood Log";
             case CHARCOAL:

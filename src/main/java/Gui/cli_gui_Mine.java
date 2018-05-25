@@ -3,8 +3,8 @@ package Gui;
 import Client.*;
 import Game.Mine;
 import Game.Train;
-import Game.TrainStation;
 import Game.Wagon;
+import Game.WagonMining;
 import Utils.OTrainProtocol;
 import Utils.WagonStats;
 
@@ -16,19 +16,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class cli_gui_Mine {
-    private JComboBox comboBox1;
+public class cli_gui_Mine implements Updatable{
+    private JComboBox select_mine;
     private JButton startMiningButton;
     private JPanel panel1;
     private JPanel availableMinesPanel;
+    private JComboBox select_wagon;
+    private JPanel currently_mining_panel;
 
     public cli_gui_Mine() {
 
-        update();
+        Update();
 
-        comboBox1.addPopupMenuListener(new PopupMenuListener() {
+        select_mine.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                update();
+                Update();
             }
 
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
@@ -39,19 +41,12 @@ public class cli_gui_Mine {
         startMiningButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // TODO
-                System.out.println("Clic clic");
                 Train train = Client.getInstance().getTrain();
                 System.out.println("Train state :" + train.getTrainStationETA());
                 if(train.getTrainStationETA() > 0) return;
-                Mine mine = (Mine) comboBox1.getSelectedItem();
+                Mine mine = (Mine) select_mine.getSelectedItem();
                 System.out.println("mine sélectionnée : " + mine);
-                Wagon wagon = null;
-                for(Wagon w : train.getWagons()) {
-                    if(w.getTypeID() == WagonStats.DRILL_ID) {
-                        wagon = w;
-                        break;
-                    }
-                }
+                Wagon wagon = (Wagon) select_wagon.getSelectedItem();
                 System.out.println("Wagon utilisé : " + wagon);
 
                 String line = Client.getInstance().startMining(wagon.getId(), mine.getId());
@@ -63,25 +58,35 @@ public class cli_gui_Mine {
         });
     }
 
-    public void update(){
+    @Override
+    public void Update(){
+
+        // réupération et maj de la liste des mines
         Train train = Client.getInstance().getTrain();
-        //String listOfMines = "<html>";
-        comboBox1.removeAllItems();
+        availableMinesPanel.setLayout(new GridLayout(0,1));
         availableMinesPanel.removeAll();
-        int i = 0;
-        availableMinesPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
+        select_mine.removeAllItems();
         for(Mine m : train.getTrainStation().getMines()) {
-
             JLabel label = new JLabel(m.toString());
-
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.gridx = 0;
-            gbc.gridy = i++;
-            availableMinesPanel.add(label,gbc);
-            //listOfMines += m + "<br/>";
-            comboBox1.addItem(m);
+            availableMinesPanel.add(label);
+            select_mine.addItem(m);
         }
-        //availableMineLabel.setText(listOfMines + "</html>");
+
+        // récupération de la liste des wagons
+        select_wagon.removeAllItems();
+        for(Wagon w : train.getWagons()){
+            if(w.getTypeID() == WagonStats.DRILL_ID){
+                select_wagon.addItem(w);
+            }
+        }
+
+        // récupération de la liste des wagons qui sont entrain de miner
+        currently_mining_panel.setLayout(new GridLayout(0,1));
+        currently_mining_panel.removeAll();
+        Client.getInstance().updateWagonMinig();
+        for( WagonMining wm : Client.getInstance().getWagonMining()) {
+            JLabel label = new JLabel(wm.getWagon() + " -> " + wm.getCurrentMine());
+            currently_mining_panel.add(label);
+        }
     }
 }

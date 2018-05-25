@@ -12,14 +12,11 @@ public class MineController {
 
     private ArrayList<WagonMining> wagonMining = new ArrayList<>();
     private ArrayList<Long> ETMs = new ArrayList<>();
-    private long start;
 
     private final int INTERVAL_MS = 1000;
 
 
     public MineController() {
-        start = System.currentTimeMillis();
-
         new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -30,10 +27,12 @@ public class MineController {
                     ETMs.set(i, --ETM);
                     if(ETM == 0) {
                         ETMs.set(i, (long)WagonStats.getMiningTime(wm.getWagon()));
-                        Resources r = new Resources(Server.getInstance().getDataBase().getPlayerResources(username));
-                        int newRes[] = r.toArray();
-                        newRes[wm.getCurrentMine().getResource()]++;
-                        Server.getInstance().getDataBase().setPlayerResources(username, r.toArray());
+                        if(Server.getInstance().getDataBase().changeMineAmount(wm.getCurrentMine().getId(), -1)) {
+                            Resources r = new Resources(Server.getInstance().getDataBase().getPlayerResources(username));
+                            int newResources[] = r.toArray();
+                            newResources[wm.getCurrentMine().getResource()]++;
+                            Server.getInstance().getDataBase().setPlayerResources(username, newResources);
+                        }
                     }
                 }
             }
@@ -46,7 +45,7 @@ public class MineController {
         Mine mine = db.getMine(Integer.valueOf(mineLine));
         Train train = db.getTrain(username);
         if(wagon == null || mine == null) return false;//if wagon and mine exist
-        if(wagon.getTypeID() == WagonStats.DRILL_ID) return false;//if wagon can mine
+        if(wagon.getTypeID() != WagonStats.DRILL_ID) return false;//if wagon can mine // TODO
         if(train.getTrainStationETA() > 0) return false;//if train is arrived
         if(train.getTrainStation().getId() != mine.getPlace()) return false;//if mine is at curr station of train
         addWagon(new WagonMining(wagon, mine));
@@ -75,7 +74,9 @@ public class MineController {
 
     public ArrayList<WagonMining> getPlayerWagonMining(String username) {
         ArrayList<WagonMining> result = new ArrayList<>();
+        //TODO UPDATER LA MINE ET LE WAGON AVANT DE L'ENVOYER
         for(WagonMining wm : wagonMining) {
+
             if(Server.getInstance().getDataBase().getUsernameByWagonId(wm.getWagon().getId()).equals(username)) {
                 result.add(wm);
             }

@@ -216,10 +216,9 @@ public class DataBase {
             if(!resultSet.next()){return null;}
             String name = resultSet.getString("nom");
             int currentTs = resultSet.getInt("gareActuelle");
-            int eta = resultSet.getInt("tempsArriveeEstime");
+            //int eta = resultSet.getInt("tempsArriveeEstime");
 
-            Integer realETA = Server.getInstance().getTravelController().getETA(username);
-            if(realETA != null) eta = realETA;
+            int eta = Server.getInstance().getTravelController().getETA(username);
             train = new Train(getAllWagons(username), getTrainStation(currentTs), eta);
 
         } catch (SQLException e) {
@@ -237,21 +236,24 @@ public class DataBase {
      * @param type the type of the wagon
      * @return true if the wagon has been created, else false
      */
-    public boolean addWagon(String username, int weight, int level, String type){
+    public int addWagon(String username, int weight, int level, int type){
+        int result = -1;
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Utilisateur VALUES(?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             ps.setObject(2, weight);
             ps.setObject(3, level);
             ps.setObject(4, type);
             int status = ps.executeUpdate();
             if(status != 0){
-                return true;
+                ResultSet resultSet = ps.getGeneratedKeys();
+                resultSet.next();
+                result = resultSet.getInt(0);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return result;
     }
 
     /**
@@ -260,18 +262,18 @@ public class DataBase {
      * @param type type of the wagons that want to be get
      * @return a list containing all the owner's wagons of this type
      */
-    public ArrayList<Wagon> getWagonsOfType(String username, String type){
+    public ArrayList<Wagon> getWagonsOfType(String username, int type){
         ArrayList<Wagon> result = new ArrayList<Wagon>();
         try {
             ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=? AND `type`=?;", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=? AND `typeID`=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             ps.setObject(2, type);
             resultSet = ps.executeQuery();
             while(resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String owner = resultSet.getString("proprietaire");
-                String _type = resultSet.getString("type");
+                int _type = resultSet.getInt("typeID");
                 int weight = resultSet.getInt("poids");
                 int level = resultSet.getInt("niveau");
                 /*
@@ -324,14 +326,14 @@ public class DataBase {
                 int idWagon = resultSet.getInt("id");
                 int weight = resultSet.getInt("poids");
                 int level = resultSet.getInt("niveau");
-                int typeID = resultSet.getInt("type");
+                int typeID = resultSet.getInt("typeID");
 
                 wagon = new Wagon(id, weight, level, typeID);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return wagon;
     }
 
     // STATION REQUESTS
@@ -565,7 +567,8 @@ public class DataBase {
      * @param type type of the mine
      * @return true if the mine has been added, else false
      */
-    public boolean addMine(int emplacement, int qteResources, int type){
+    public int addMine(int emplacement, int qteResources, int type){
+        int result = -1;
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Mine VALUES(default,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, type);
@@ -575,14 +578,14 @@ public class DataBase {
             if(status != 0){
                 ResultSet resultSet = ps.getGeneratedKeys();
                 resultSet.next();
-                // need tests
+                result = resultSet.getInt(0);
+                        // need tests
                 Server.getInstance().getRegenerationController().addMine(new Mine(resultSet.getInt(1), type, qteResources, emplacement));
-                return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return result;
 
     }
 
@@ -665,17 +668,49 @@ public class DataBase {
      * @param id        : mine à mettre à jour
      * @param amount    : quantité à mettre à jour
      */
-    public void setMineAmount(int id, int amount){
+    public boolean setMineAmount(int id, int amount){
+
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE `id`=?", Statement.RETURN_GENERATED_KEYS);
-
             ps.setObject(1, amount);
             ps.setObject(2, id);
-
+            int status = ps.executeUpdate();
+            if(status != 0){
+                return true;
+            }
             ps.executeUpdate();
         }catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
+    }
+
+    /**
+     * Mets à jour la mine donnée avec la quantité donnée
+     *
+     * @param id        : mine à mettre à jour
+     * @param changeAmount    : quantité à mettre à jour
+     */
+    public boolean changeMineAmount(int id, int changeAmount){
+        int MAX = 1000;
+        ///int MAX = getMine(id).getMax(); lorsqu'il y aura le MAX dans la database
+        try {
+
+            int current_amount = getMine(id).getAmount();
+            if(current_amount == MAX || current_amount == 0) return false;
+            current_amount += changeAmount;
+            if(current_amount > MAX) current_amount = MAX;
+            if(current_amount < 0) current_amount = 0;
+
+            PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE `id`=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, current_amount);
+            ps.setObject(2, id);
+            int status = ps.executeUpdate();
+            if(status != 0) return true;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

@@ -2,6 +2,7 @@ package Server;
 
 import Game.Resources;
 import Game.TrainStation;
+import Game.WagonMining;
 import Utils.OTrainProtocol;
 
 import java.io.*;
@@ -42,6 +43,9 @@ ClientHandler implements Runnable {
                 } else if(line.equals(OTrainProtocol.GET_TRAIN_STATUS)) {
                     writer.println(db.getTrain(username).toJSON());
                     writer.flush();
+                } else if(line.equals(OTrainProtocol.MINE_INFO)) {
+                    writer.println(WagonMining.listToJSON(Server.getInstance().getMineController().getPlayerWagonMining(username)));
+                    writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_GARES)) {
                     ArrayList<TrainStation> trainStations = db.getAllTrainStations();
                     writer.println(TrainStation.listToJSON(trainStations));
@@ -55,7 +59,6 @@ ClientHandler implements Runnable {
                         writer.println(OTrainProtocol.FAILURE);
                     }
                     writer.flush();
-
                 } else if(line.equals(OTrainProtocol.MINE)) {
                     String wagonLine = reader.readLine();
                     String mineLine = reader.readLine();
@@ -64,10 +67,12 @@ ClientHandler implements Runnable {
                     } else {
                         writer.println(OTrainProtocol.FAILURE);
                     }
+                    writer.flush();
                 } else if(line.equals(OTrainProtocol.STOP_MINE)) {
                     String wagonLine = reader.readLine();
                     // Mining Controller
 
+                    // writer.flush();
                 }
                 /*writer.println("You sent me that : " + line);
                 writer.flush();*/

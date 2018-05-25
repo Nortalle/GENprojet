@@ -21,6 +21,8 @@ public class OTrainProtocol {
     public static final String GET_TRAIN_STATUS = "GET_TRAIN_STATUS";
     // sends train to station
     public static final String GO_TO = "GO_TO";
+    // get mining wagon info
+    public static final String MINE_INFO = "MINE_INFO";
     // start a mining session
     public static final String MINE = "MINE";
     // end mining session
