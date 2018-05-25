@@ -336,6 +336,28 @@ public class DataBase {
         return wagon;
     }
 
+    public Wagon getPlayerLoco(String username){
+        Wagon wagon = null;
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=? AND `typeID`=?");
+            ps.setObject(1, username);
+            ps.setObject(2, WagonStats.LOCO_ID);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                int idWagon = resultSet.getInt("id");
+                int weight = resultSet.getInt("poids");
+                int level = resultSet.getInt("niveau");
+                int typeID = resultSet.getInt("typeID");
+
+                wagon = new Wagon(idWagon, weight, level, typeID);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return wagon;
+    }
+
     // STATION REQUESTS
 
     /**
@@ -543,7 +565,9 @@ public class DataBase {
             if(ts.getId() == currentTsId) return false;
             //A modifier pour donner le vrai temps de trajet initial
             int eta = calculateTravelTime(currentTsId, newTsId);
-            eta /= 4;
+            Wagon loco = getPlayerLoco(username);
+            if(loco == null) return false;
+            eta = Math.max(1, eta / WagonStats.LOCO_SPEED[loco.getLevel()]);
 
             PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, newTsId);

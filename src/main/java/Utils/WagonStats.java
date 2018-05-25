@@ -7,9 +7,10 @@ public class WagonStats {
     // --- LOCO --- //
     public static final int LOCO_ID = 1;
     public static final String LOCO_NAME = "Loco";
+    public static final int LOCO_SPEED[] = {4, 5, 7, 10, 15};// units of distance / seconds
 
     // -- mining levels -- //
-    public static final int MINING_TIME[][] = {{10,9,8,7,6}, {5,4,3,2,1}, {20,19,18,17,16}};//DRILL; SAW; PUMP
+    public static final int MINING_TIME[][] = {{10,9,8,7,6}, {5,4,3,2,1}, {20,19,18,17,16}};// DRILL; SAW; PUMP
 
     // --- DRILL WAGON --- //
     public static final int DRILL_ID = 2;
