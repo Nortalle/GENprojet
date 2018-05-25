@@ -12,7 +12,6 @@ public class ClientLog extends Handler {
         String toPrint = record.getLevel() + ": " + record.getMessage();
         if(component != null) {
             component.setText(toPrint);
-            System.out.println("OK");
         }
     }
 
