@@ -2,6 +2,7 @@ package Client;
 
 import Game.Train;
 import Game.TrainStation;
+import Game.WagonMining;
 import Gui.LoginForm;
 import Utils.OTrainProtocol;
 import com.google.gson.Gson;
@@ -12,6 +13,7 @@ import com.google.gson.JsonPrimitive;
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Client {
     private static Client instance;
@@ -20,6 +22,7 @@ public class Client {
     private PrintWriter writer;
     private String username;
     private Train train;
+    private ArrayList<WagonMining> wagonMining;
 
     public static Client getInstance() {
         if(instance == null) instance = new Client();
@@ -126,6 +129,10 @@ public class Client {
         return train;
     }
 
+    public ArrayList<WagonMining> getWagonMining() {
+        return wagonMining;
+    }
+
     public void updateTrainStatus() {
         writer.println(OTrainProtocol.GET_TRAIN_STATUS);
         writer.flush();
@@ -137,6 +144,19 @@ public class Client {
         }
 
         train.fromJSON(answer);
+    }
+
+    public void updateWagonMinig() {
+        writer.println(OTrainProtocol.MINE_INFO);
+        writer.flush();
+        String answer = "ERROR";
+        try {
+            answer = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        wagonMining = WagonMining.listFromJSON(answer);
     }
 
     public String getStations() {

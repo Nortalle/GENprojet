@@ -79,4 +79,14 @@ public class WagonMining  {
     public Wagon getWagon() {
         return wagon;
     }
+
+    public boolean linkWagonToTrain(Train train) {
+        for(Wagon w : train.getWagons()) {
+            if(wagon.getId() == w.getId()) {
+                wagon = w;
+                return true;
+            }
+        }
+        return false;
+    }
 }
