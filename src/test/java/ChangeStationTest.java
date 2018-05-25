@@ -95,7 +95,7 @@ public class ChangeStationTest {
         int firstETA = client.getTrain().getTrainStationETA();
 
         long start = System.currentTimeMillis();
-        while(System.currentTimeMillis() - start < 1500);
+        while(System.currentTimeMillis() - start < 1200);
 
         client.updateTrainStatus();
         int secondETA = client.getTrain().getTrainStationETA();

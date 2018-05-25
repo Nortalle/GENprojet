@@ -42,7 +42,7 @@ class MineControllerTest {
         mc.addWagon(wagonMining);
 
         long start = System.currentTimeMillis();
-        while(System.currentTimeMillis() - start < 1500){
+        while(System.currentTimeMillis() - start < 1200){
 
         }
 

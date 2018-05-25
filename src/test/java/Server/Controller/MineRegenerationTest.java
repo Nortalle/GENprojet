@@ -39,7 +39,7 @@ class MineRegenerationTest {
     @Test
     public void doesMinesRegenerate(){
         long start = System.currentTimeMillis();
-        while(System.currentTimeMillis() - start < 1500){
+        while(System.currentTimeMillis() - start < 1200){
 
         }
 
@@ -53,7 +53,7 @@ class MineRegenerationTest {
         mines.add(mine5);
 
         start = System.currentTimeMillis();
-        while(System.currentTimeMillis() - start < 1400){
+        while(System.currentTimeMillis() - start < 1200){
 
         }
 
