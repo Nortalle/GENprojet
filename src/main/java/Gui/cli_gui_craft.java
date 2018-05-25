@@ -1,11 +1,10 @@
 package Gui;
 
 import Client.Updatable;
-import Utils.Cost;
+import Utils.ResourceAmount;
 import Utils.Reciept;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class cli_gui_craft implements Updatable {
     private JPanel panel1;
@@ -29,7 +28,7 @@ public class cli_gui_craft implements Updatable {
             name.setText(r.getName());
             p.add(name);
             recieptDropdown.addItem(r.getName() + ": ");       // ajout au dropdown du nom
-            for(Cost c : r.getCosts()){
+            for(ResourceAmount c : r.getResourceAmounts()){
                 JLabel cost = new JLabel();
                 cost.setText("\t" + c.getQuantity() + " " + c.getRessource());
                 p.add(cost);

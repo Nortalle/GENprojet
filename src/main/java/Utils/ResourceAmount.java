@@ -1,10 +1,10 @@
 package Utils;
 
-public class Cost{
+public class ResourceAmount {
     private Ressource.Type ressource;
     private int quantity;
 
-    Cost( Ressource.Type r, int q){
+    ResourceAmount(Ressource.Type r, int q){
         ressource = r;
         quantity = q;
     }
