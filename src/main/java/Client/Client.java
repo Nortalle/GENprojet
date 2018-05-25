@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -63,6 +64,11 @@ public class Client {
         frame.setVisible(true);
 
         connectServer();
+    }
+
+    public void setFrameContent(JPanel panel, Dimension d) {
+        frame.setContentPane(panel);
+        frame.setSize(d);
     }
 
     public void setFrameContent(JPanel panel) {

@@ -693,6 +693,7 @@ public class DataBase {
         try {
 
             int current_amount = getMine(id).getAmount();
+            if(current_amount == MAX || current_amount == 0) return false;
             current_amount += changeAmount;
             if(current_amount > MAX) current_amount = MAX;
             if(current_amount < 0) current_amount = 0;
