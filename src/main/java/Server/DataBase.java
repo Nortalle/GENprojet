@@ -1,6 +1,8 @@
 package Server;
 
 import Game.*;
+import Utils.ResourceAmount;
+import Utils.Ressource;
 import Utils.WagonStats;
 
 import java.sql.*;
@@ -51,7 +53,7 @@ public class DataBase {
             status = ps.executeUpdate();
             if(status == 0) return false;
 
-            //DEFAULT LOCO + WAGONS//
+            //DEFAULT LOCO + DRILL + CARGO//
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             ps.setObject(2, WagonStats.LOCO_ID);
@@ -61,6 +63,12 @@ public class DataBase {
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             ps.setObject(2, WagonStats.DRILL_ID);
+            status = ps.executeUpdate();
+            if(status == 0) return false;
+
+            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, WagonStats.CARGO_ID);
             status = ps.executeUpdate();
             if(status == 0) return false;
             // //
@@ -174,6 +182,70 @@ public class DataBase {
             ps.executeUpdate();
             return true;
         }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public ArrayList<ResourceAmount> getPlayerObjects(String username) {
+        ArrayList<ResourceAmount> resourceAmounts = new ArrayList<>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM ObjetsParJoueur WHERE nomJoueur=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String user = resultSet.getString(2);
+                int typeId = resultSet.getInt(3);
+                int amount = resultSet.getInt(4);
+                resourceAmounts.add(new ResourceAmount(Ressource.Type.values()[typeId], amount));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resourceAmounts;
+    }
+
+    private int[] getPlayerObjectsId(String username, int typeId) {
+        int[] result = {-1, -1};// id , amount
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM ObjetsParJoueur WHERE nomJoueur=? AND objetId=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, typeId);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                result[0] = resultSet.getInt(1);
+                result[1] = resultSet.getInt(4);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public boolean addPlayerObjects(String username, int typeId, int amount){
+        try {
+            PreparedStatement ps;
+            int[] existingEntry = getPlayerObjectsId(username, typeId);
+            if(existingEntry[0] == -1) {
+                ps = connection.prepareStatement("INSERT INTO ObjetsParJoueur VALUES(default,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+                ps.setObject(1, username);
+                ps.setObject(2, typeId);
+                ps.setObject(3, amount);
+            } else {
+                ps = connection.prepareStatement("UPDATE ObjetsParJoueur SET objetAmount=? WHERE nomJoueur=? AND objetId=?;", Statement.RETURN_GENERATED_KEYS);
+                ps.setObject(1, existingEntry[1] + amount);
+                ps.setObject(2, username);
+                ps.setObject(3, typeId);
+            }
+
+            int status = ps.executeUpdate();
+            if(status != 0){
+                return true;
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;

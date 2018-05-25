@@ -68,11 +68,12 @@ ENGINE = InnoDB;
 
 -- table ObjetsParJoueurs
 CREATE TABLE IF NOT EXISTS `ObjetsParJoueur` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nomJoueur` VARCHAR(45) NOT NULL,
   `objetId` INT NOT NULL DEFAULT 0,
   `objetAmount` INT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`nomJoueur`),
-  UNIQUE INDEX `joueur_UNIQUE` (`nomJoueur` ASC),
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `ObjetsParJoueur_UNIQUE` (`id` ASC),
   CONSTRAINT `fk_joueur_objets`
     FOREIGN KEY (`nomJoueur`)
     REFERENCES `Joueur` (`nomJoueur`)

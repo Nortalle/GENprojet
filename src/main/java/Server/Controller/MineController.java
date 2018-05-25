@@ -3,6 +3,7 @@ package Server.Controller;
 import Game.*;
 import Server.Server;
 import Server.DataBase;
+import Utils.ResourceAmount;
 import Utils.WagonStats;
 
 import java.util.ArrayList;
@@ -20,19 +21,26 @@ public class MineController {
         new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                DataBase db = Server.getInstance().getDataBase();
                 for(int i = 0; i < wagonMining.size(); ++i) {
                     WagonMining wm = wagonMining.get(i);
-                    String username = Server.getInstance().getDataBase().getUsernameByWagonId(wm.getWagon().getId());
+                    String username = db.getUsernameByWagonId(wm.getWagon().getId());
                     long ETM = ETMs.get(i);
                     ETMs.set(i, --ETM);
                     if(ETM == 0) {
                         // TODO TEST IF TRAIN STILL AT STATION WHERE MINE IS
                         ETMs.set(i, (long)WagonStats.getMiningTime(wm.getWagon()));
-                        if(Server.getInstance().getDataBase().changeMineAmount(wm.getCurrentMine().getId(), -1)) {
-                            Resources r = new Resources(Server.getInstance().getDataBase().getPlayerResources(username));
-                            int newResources[] = r.toArray();
-                            newResources[wm.getCurrentMine().getResource()]++;
-                            Server.getInstance().getDataBase().setPlayerResources(username, newResources);
+                        int currentCargoUsed = 0;
+                        for(ResourceAmount ra : db.getPlayerObjects(username)) currentCargoUsed += ra.getQuantity();
+                        if(currentCargoUsed < WagonStats.getMaxCapacity(db.getTrain(db.getUsernameByWagonId(wm.getWagon().getId())))) {// because one mine 1 by 1
+                            if (db.changeMineAmount(wm.getCurrentMine().getId(), -1)) {
+                                Resources r = new Resources(db.getPlayerResources(username));
+                                int newResources[] = r.toArray();
+                                newResources[wm.getCurrentMine().getResource()]++;
+                                db.setPlayerResources(username, newResources);
+                                // in ObjetsParJoueur
+                                db.addPlayerObjects(username, wm.getCurrentMine().getResource(), 1);
+                            }
                         }
                     }
                 }

@@ -34,29 +34,9 @@ public class MineRegeneration {
             public void run() {
                 for (Mine mine : mines) {
                     Server.getInstance().getDataBase().changeMineAmount(mine.getId(), AMOUNT_TO_ADD);
-                    //mine = Server.getInstance().getDataBase().getMine(mine.getId());
-
-                    /*int current_amount = mine.getAmount();
-                    //Si la mine n'est pas pleine, on la régénère
-                    if (current_amount < MAX_AMOUNT) {
-                        current_amount += AMOUNT_TO_ADD;
-                        //Si la mine est trop pleine, on la met au MAX_AMOUNT
-                        if (current_amount > MAX_AMOUNT) {
-                            current_amount = MAX_AMOUNT;
-                        }
-                        mine.setAmount(current_amount);
-                    }/*/
                 }
-                //met à jour les mines de la base de donnée chaque seconde
-                //updateDB();
             }
         }, INTERVAL_MS, INTERVAL_MS);
-    }
-
-    public void updateDB(){
-        for(Mine mine: mines){
-            Server.getInstance().getDataBase().setMineAmount(mine.getId(),mine.getAmount());
-        }
     }
 
     public void addMine(Mine mine_to_add) {

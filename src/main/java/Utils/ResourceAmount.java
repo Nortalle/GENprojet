@@ -4,7 +4,7 @@ public class ResourceAmount {
     private Ressource.Type ressource;
     private int quantity;
 
-    ResourceAmount(Ressource.Type r, int q){
+    public ResourceAmount(Ressource.Type r, int q){
         ressource = r;
         quantity = q;
     }
