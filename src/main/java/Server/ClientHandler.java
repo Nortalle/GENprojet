@@ -40,7 +40,8 @@ ClientHandler implements Runnable {
                 //work...
 
                 if(line.equals(OTrainProtocol.GET_RESSOURCES)) {
-                    int r[] = db.getPlayerResources(username);
+                    //int r[] = db.getPlayerResources(username);
+                    int r[] = db.getPlayerResourcesViaObjects(username);// temp solution
                     Resources resources = new Resources(r);
                     writer.println(resources.toJSON());
                     writer.flush();
@@ -78,14 +79,12 @@ ClientHandler implements Runnable {
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.STOP_MINE)) {
                     String wagonLine = readLine();
-                    // Mining Controller
                     if(Server.getInstance().getMineController().removeWagon(wagonLine)) {
                         writer.println(OTrainProtocol.SUCCESS);
                     } else {
                         writer.println(OTrainProtocol.FAILURE);
                     }
                     writer.flush();
-                    // writer.flush();
                 }
 
                 line = readLine();

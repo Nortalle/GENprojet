@@ -28,7 +28,7 @@ public class MineController {
                     long ETM = ETMs.get(i);
                     ETMs.set(i, --ETM);
                     if(ETM == 0) {
-                        // TODO TEST IF TRAIN STILL AT STATION WHERE MINE IS
+                        // TODO TEST IF TRAIN IS STILL AT STATION WHERE MINE IS
                         ETMs.set(i, (long)WagonStats.getMiningTime(wm.getWagon()));
                         int currentCargoUsed = 0;
                         for(ResourceAmount ra : db.getPlayerObjects(username)) currentCargoUsed += ra.getQuantity();
@@ -38,6 +38,7 @@ public class MineController {
                                 int newResources[] = r.toArray();
                                 newResources[wm.getCurrentMine().getResource()]++;
                                 db.setPlayerResources(username, newResources);
+
                                 // in ObjetsParJoueur
                                 db.addPlayerObjects(username, wm.getCurrentMine().getResource(), 1);
                             }

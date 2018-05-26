@@ -172,6 +172,15 @@ public class DataBase {
         return result;
     }
 
+    public int[] getPlayerResourcesViaObjects(String username) {
+        int resources[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+        for(int i : Ressource.getBaseResources()) {
+            int amount = getPlayerObjectOfType(username, i)[1];
+            if(amount != -1) resources[i] = amount;
+        }
+        return resources;
+    }
+
     public boolean setPlayerResources(String username, int resources[]){
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE RessourcesParJoueur SET qteScrum=?, qteEau=?, qteBois=?, qteCharbon=?, qtePetrol=?, qteFer=?, qteCuivre=?, qteAcier=?, qteOr=? WHERE `nomJoueur`=?", Statement.RETURN_GENERATED_KEYS);
@@ -207,8 +216,14 @@ public class DataBase {
         return resourceAmounts;
     }
 
-    private int[] getPlayerObjectsId(String username, int typeId) {
-        int[] result = {-1, -1};// id , amount
+    /**
+     *
+     * @param username player name
+     * @param typeId id of the type of the object you want
+     * @return tab {DB id, amount}
+     */
+    private int[] getPlayerObjectOfType(String username, int typeId) {
+        int[] result = {-1, -1};// id, amount
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM ObjetsParJoueur WHERE nomJoueur=? AND objetId=?", Statement.RETURN_GENERATED_KEYS);
@@ -228,7 +243,7 @@ public class DataBase {
     public boolean addPlayerObjects(String username, int typeId, int amount){
         try {
             PreparedStatement ps;
-            int[] existingEntry = getPlayerObjectsId(username, typeId);
+            int[] existingEntry = getPlayerObjectOfType(username, typeId);
             if(existingEntry[0] == -1) {
                 ps = connection.prepareStatement("INSERT INTO ObjetsParJoueur VALUES(default,?,?,?);", Statement.RETURN_GENERATED_KEYS);
                 ps.setObject(1, username);
@@ -817,11 +832,13 @@ public class DataBase {
     }
 
     /**
+     * Deprecated because you should use changeMineAmount() instead
      * Mets à jour la mine donnée avec la quantité donnée
      *
-     * @param id        : mine à mettre à jour
-     * @param amount    : quantité à mettre à jour
+     * @param id     : mine à mettre à jour
+     * @param amount : quantité à mettre à jour
      */
+    @Deprecated// Deprecated because you should use changeMineAmount() instead
     public boolean setMineAmount(int id, int amount){
 
         try {
@@ -842,8 +859,8 @@ public class DataBase {
     /**
      * Mets à jour la mine donnée avec la quantité donnée
      *
-     * @param id        : mine à mettre à jour
-     * @param changeAmount    : quantité à mettre à jour
+     * @param id           : mine à mettre à jour
+     * @param changeAmount : quantité à mettre à jour
      */
     public boolean changeMineAmount(int id, int changeAmount){
         int MAX = 1000;

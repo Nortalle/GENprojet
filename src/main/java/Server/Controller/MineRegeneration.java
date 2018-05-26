@@ -8,7 +8,7 @@ import java.util.*;
 public class MineRegeneration {
 
     //Contient toutes les mines du jeux
-    private ArrayList<Mine> mines = new ArrayList<Mine>();
+    private ArrayList<Mine> mines;
 
     private int MAX_AMOUNT = 1000;
     private int AMOUNT_TO_ADD = 10;
@@ -33,7 +33,9 @@ public class MineRegeneration {
             @Override
             public void run() {
                 for (Mine mine : mines) {
-                    Server.getInstance().getDataBase().changeMineAmount(mine.getId(), AMOUNT_TO_ADD);
+                    if(Server.getInstance().getDataBase().changeMineAmount(mine.getId(), AMOUNT_TO_ADD)) {
+                        System.out.println("mine : " + mine.getId() + " might not exist and must be removed from regen ctrl");
+                    }
                 }
             }
         }, INTERVAL_MS, INTERVAL_MS);
