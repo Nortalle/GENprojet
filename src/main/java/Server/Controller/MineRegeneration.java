@@ -34,6 +34,8 @@ public class MineRegeneration {
             public void run() {
                 for (Mine mine : mines) {
                     if(Server.getInstance().getDataBase().changeMineAmount(mine.getId(), AMOUNT_TO_ADD)) {
+                        // all good
+                    } else {
                         System.out.println("mine : " + mine.getId() + " might not exist and must be removed from regen ctrl");
                     }
                 }

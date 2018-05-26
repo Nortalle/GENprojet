@@ -1,12 +1,11 @@
 package Gui;
 
-import Client.Updatable;
 import Utils.ResourceAmount;
 import Utils.Reciept;
 
 import javax.swing.*;
 
-public class cli_gui_craft implements Updatable {
+public class cli_gui_craft {
     private JPanel panel1;
     private JTextField quantity_text_field;
     private JComboBox recieptDropdown;
@@ -16,7 +15,8 @@ public class cli_gui_craft implements Updatable {
     private JPanel OrderQueuePanel;
 
 
-    public void update(){
+    // TODO ???
+    public void updateOld(){
 
         // il faut remplir le panel des availableCrafts avec les recettes
         // availableCrafts.addContent (...);
@@ -48,9 +48,7 @@ public class cli_gui_craft implements Updatable {
 
     }
 
-
-    @Override
-    public void Update() {
+    public void update() {
 
     }
 }

@@ -1,7 +1,6 @@
 package Gui;
 
 import Client.Client;
-import Client.Updatable;
 import Game.Mine;
 import Game.Train;
 import Game.TrainStation;
@@ -16,7 +15,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class cli_gui_Gare implements Updatable{
+public class cli_gui_Gare {
     private JPanel panel_main;
     private JLabel label_stationName;
     private JLabel label_stationCoords;
@@ -38,7 +37,7 @@ public class cli_gui_Gare implements Updatable{
 
     public cli_gui_Gare() {
 
-        Update();
+        update();
         viewingStation = Client.getInstance().getTrain().getTrainStation();// maybe useless
         //setStationInfo();
         //String line = Client.getInstance().getStations();
@@ -76,7 +75,7 @@ public class cli_gui_Gare implements Updatable{
         });
     }
 
-    public void Update(){
+    public void update(){
         setStationInfo();
     }
 
