@@ -19,6 +19,8 @@ public class OTrainProtocol {
     /* Train related commands */
     // gets the train informations
     public static final String GET_TRAIN_STATUS = "GET_TRAIN_STATUS";
+    // gets all trains at station
+    public static final String GET_TRAINS_AT = "GET_TRAINS_AT";
     // sends train to station
     public static final String GO_TO = "GO_TO";
     // get mining wagon info

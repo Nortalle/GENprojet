@@ -285,18 +285,42 @@ public class DataBase {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Train WHERE `proprietaire`=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             resultSet = ps.executeQuery();
-            if(!resultSet.next()){return null;}
-            String name = resultSet.getString("nom");
-            int currentTs = resultSet.getInt("gareActuelle");
-            //int eta = resultSet.getInt("tempsArriveeEstime");
+            if(resultSet.next()){
+                String user = resultSet.getString("proprietaire");
+                String name = resultSet.getString("nom");
+                int currentTs = resultSet.getInt("gareActuelle");
 
-            int eta[] = Server.getInstance().getTravelController().getETA(username);
-            train = new Train(getAllWagons(username), getTrainStation(currentTs), eta[0], eta[1]);
+                int eta[] = Server.getInstance().getTravelController().getETA(username);
+                train = new Train(getAllWagons(username), getTrainStation(currentTs), eta[0], eta[1]);
+            }
+
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return train;
+    }
+
+    public ArrayList<Train> getAllTrainsAtStation(int stationId){
+        ArrayList<Train> trains = new ArrayList<>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Train WHERE `gareActuelle`=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, stationId);
+            resultSet = ps.executeQuery();
+            while(resultSet.next()){
+                String user = resultSet.getString("proprietaire");
+                String name = resultSet.getString("nom");
+                int currentTs = resultSet.getInt("gareActuelle");
+
+                int eta[] = Server.getInstance().getTravelController().getETA(user);
+
+                trains.add(new Train(getAllWagons(user), getTrainStation(currentTs), eta[0], eta[1]));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return trains;
     }
 
     // WAGON REQUESTS

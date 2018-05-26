@@ -95,4 +95,8 @@ public class TrainStation {
     public String toString() {
         return id + " : " + posX + ";" + posY;
     }
+
+    public String getInfos() {
+        return "Nbr of Platforms: " + nbOfPlatforms + " Size of Platforms: " + sizeOfPlatforms;
+    }
 }

@@ -1,6 +1,7 @@
 package Server;
 
 import Game.Resources;
+import Game.Train;
 import Game.TrainStation;
 import Game.WagonMining;
 import Utils.OTrainProtocol;
@@ -45,6 +46,10 @@ ClientHandler implements Runnable {
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_TRAIN_STATUS)) {
                     writer.println(db.getTrain(username).toJson());
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_TRAINS_AT)) {
+                    int stationId = Integer.valueOf(readLine());
+                    writer.println(Train.listToJson(db.getAllTrainsAtStation(stationId)));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.MINE_INFO)) {
                     writer.println(WagonMining.listToJson(Server.getInstance().getMineController().getPlayerWagonMining(username)));
