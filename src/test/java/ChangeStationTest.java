@@ -58,11 +58,6 @@ public class ChangeStationTest {
 
     @Test
     public void cantGoToFullStation() {
-        int posX = 20;
-        int posY = 10;
-        int stationId = dataBase.getTrainStationIdByPos(posX, posY);
-        if(stationId != -1) dataBase.deleteTrainStation(stationId);
-        dataBase.insertTrainStation(posX, posY, 2, 4);
         String users[] = {"u1","u2","u3"};
         for(String u : users) {
             dataBase.deleteUser(u);
@@ -73,7 +68,11 @@ public class ChangeStationTest {
             clients[i].connectServer();
             clients[i].sendLogin(users[i], users[i]);
         }
-        stationId = dataBase.getTrainStationIdByPos(posX, posY);
+        int posX = 20;
+        int posY = 10;
+        dataBase.deleteTrainStation(dataBase.getTrainStationIdByPos(posX, posY));
+        dataBase.insertTrainStation(posX, posY, 2, 5);
+        int stationId = dataBase.getTrainStationIdByPos(posX, posY);
         clients[0].changeStation(stationId);
         clients[1].changeStation(stationId);
         assertEquals(OTrainProtocol.FAILURE, clients[2].changeStation(stationId));

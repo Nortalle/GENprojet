@@ -37,9 +37,10 @@ public class Server {
 
     public void startServer() {
         try {
-            init();
+            if(serverSocket != null && serverSocket.isBound()) return;
             serverSocket = new ServerSocket(OTrainProtocol.PORT);
-            clientHandlers = new LinkedList<ClientHandler>();
+            init();// init after binding
+            clientHandlers = new LinkedList<>();
             running = true;
 
             Thread serverThread = new Thread(new Runnable() {
