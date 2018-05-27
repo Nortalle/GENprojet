@@ -12,29 +12,33 @@ public class Recipe {
         return allRecipes;
     }
 
-    private LinkedList<ResourceAmount> resourceAmounts;
+    private LinkedList<ResourceAmount> cost;
     private String name;
     private ResourceAmount finalProduct;
     private int productionTime;
 
     Recipe(String n, ResourceAmount fp, int time){
         name = n;
-        resourceAmounts = new LinkedList<>();
+        cost = new LinkedList<>();
         finalProduct = fp;
         productionTime = time;
         allRecipes.add(this);
     }
 
-    public LinkedList<ResourceAmount> getResourceAmounts() {
-        return resourceAmounts;
+    public LinkedList<ResourceAmount> getCost() {
+        return cost;
     }
 
     public String getName(){
         return name;
     }
 
+    public int getProductionTime() {
+        return productionTime;
+    }
+
     public void addCost(ResourceAmount c){
-        resourceAmounts.add(c);
+        cost.add(c);
     }
 
     public ResourceAmount getFinalProduct(){

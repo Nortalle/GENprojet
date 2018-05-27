@@ -28,7 +28,7 @@ public class cli_gui_craft {
             name.setText(r.getName());
             p.add(name);
             recieptDropdown.addItem(r.getName() + ": ");       // ajout au dropdown du nom
-            for(ResourceAmount c : r.getResourceAmounts()){
+            for(ResourceAmount c : r.getCost()){
                 JLabel cost = new JLabel();
                 cost.setText("\t" + c.getQuantity() + " " + c.getRessource());
                 p.add(cost);
