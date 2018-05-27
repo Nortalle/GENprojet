@@ -19,7 +19,7 @@ public class CraftController {
             public void run() {
                 ArrayList<Craft> toRemove = new ArrayList<>();
                 for(Craft c : crafts) {
-                    c.decreceRemainingTime();
+                    c.decreaseRemainingTime();
                     if(c.getRemainingTime() <= 0) {
                         // insert in DB
                         ResourceAmount finalProduct = Recipe.getAllRecipes().get(c.getRecipeIndex()).getFinalProduct();

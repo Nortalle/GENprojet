@@ -205,7 +205,7 @@ public class DataBase {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM ObjetsParJoueur WHERE nomJoueur=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             resultSet = ps.executeQuery();
-            if(resultSet.next()) {
+            while(resultSet.next()) {
                 int id = resultSet.getInt(1);
                 String user = resultSet.getString(2);
                 int typeId = resultSet.getInt(3);

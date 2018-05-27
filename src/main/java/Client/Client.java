@@ -7,6 +7,7 @@ import Gui.LoginForm;
 import Server.ClientHandler;
 import Utils.JsonUtility;
 import Utils.OTrainProtocol;
+import Utils.ResourceAmount;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -122,6 +123,13 @@ public class Client {
         writer.println(OTrainProtocol.GET_RESSOURCES);
         writer.flush();
         return readLine();
+    }
+
+    public ArrayList<ResourceAmount> getAllObjects() {
+        writer.println(OTrainProtocol.GET_OBJECTS);
+        writer.flush();
+        String answer = readLine();
+        return ResourceAmount.listFromJson((JsonArray) JsonUtility.fromJson(answer));
     }
 
     public Train getTrain() {

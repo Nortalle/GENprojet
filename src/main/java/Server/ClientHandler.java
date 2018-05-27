@@ -2,6 +2,7 @@ package Server;
 
 import Game.*;
 import Utils.OTrainProtocol;
+import Utils.ResourceAmount;
 
 import java.io.*;
 import java.net.Socket;
@@ -44,6 +45,9 @@ ClientHandler implements Runnable {
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_TRAIN_STATUS)) {
                     writer.println(db.getTrain(username).toJson());
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_OBJECTS)) {
+                    writer.println(ResourceAmount.listToJson(db.getPlayerObjects(username)));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_TRAINS_AT)) {
                     int stationId = Integer.valueOf(readLine());

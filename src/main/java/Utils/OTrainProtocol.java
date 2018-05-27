@@ -12,8 +12,10 @@ public class OTrainProtocol {
 
     // get the list of stations
     public static final String GET_GARES = "GET_GARES";
-    // get the player's ressources
+    // get the player's resources
     public static final String GET_RESSOURCES = "GET_RESSOURCES";
+    // get the player's objects
+    public static final String GET_OBJECTS = "GET_OBJECTS";
 
 
     /* Train related commands */

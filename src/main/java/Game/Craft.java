@@ -42,7 +42,7 @@ public class Craft {
     /**
      * Don't forget to test if == 0
      */
-    public void decreceRemainingTime() {
+    public void decreaseRemainingTime() {
         remainingTime--;
     }
 

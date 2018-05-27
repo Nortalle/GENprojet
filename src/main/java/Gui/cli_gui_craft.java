@@ -10,6 +10,7 @@ import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class cli_gui_craft {
     private JPanel panel1;
@@ -67,6 +68,33 @@ public class cli_gui_craft {
         availableCrafts.removeAll();
         availableCrafts.setLayout(new GridLayout(0, 1));
         for(Recipe r : Recipe.getAllRecipes()) availableCrafts.add(new JLabel(r.toString()));
+        //
+        ArrayList<ResourceAmount> playerObjects = Client.getInstance().getAllObjects();
+        for(ResourceAmount ra : playerObjects) System.out.println(ra);
+
+        availableCrafts.removeAll();
+        availableCrafts.setLayout(new GridLayout(0, 1));
+        for(Recipe r : Recipe.getAllRecipes()) {
+            if(canCraft(r, playerObjects)) {
+                availableCrafts.add(new JLabel(r.toString()));
+            }
+        }
+    }
+
+    public boolean canCraft(Recipe recipe, ArrayList<ResourceAmount> resourceAmounts) {
+        for(ResourceAmount cost : recipe.getCost()) {
+            if(!hasEnough(cost, resourceAmounts)) return false;
+        }
+        return true;
+    }
+
+    public boolean hasEnough(ResourceAmount cost, ArrayList<ResourceAmount> resourceAmounts) {
+        for(ResourceAmount ra : resourceAmounts) {
+            if(ra.getRessource() == cost.getRessource()) {
+                return ra.getQuantity() >= cost.getQuantity();
+            }
+        }
+        return false;
     }
 
     public void update() {
