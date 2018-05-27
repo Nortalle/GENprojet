@@ -65,20 +65,21 @@ public class cli_gui_craft {
     }
 
     public void updateAvailableCrafts(){
-        availableCrafts.removeAll();
-        availableCrafts.setLayout(new GridLayout(0, 1));
-        for(Recipe r : Recipe.getAllRecipes()) availableCrafts.add(new JLabel(r.toString()));
-        //
         ArrayList<ResourceAmount> playerObjects = Client.getInstance().getAllObjects();
         for(ResourceAmount ra : playerObjects) System.out.println(ra);
 
         availableCrafts.removeAll();
-        availableCrafts.setLayout(new GridLayout(0, 1));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.gridx = 1;
         for(Recipe r : Recipe.getAllRecipes()) {
             if(canCraft(r, playerObjects)) {
-                availableCrafts.add(new JLabel(r.toString()));
+                availableCrafts.add(new JLabel(r.toString()), gbc);
             }
         }
+        gbc.weighty = 1.0;
+        gbc.weightx = 1.0;
+        availableCrafts.add(new JLabel(""), gbc);
     }
 
     public boolean canCraft(Recipe recipe, ArrayList<ResourceAmount> resourceAmounts) {
