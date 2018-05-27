@@ -13,6 +13,7 @@ import com.google.gson.JsonPrimitive;
  * @author Vincent Guidoux
  */
 public class Resources {
+    // use enum instead
     private static final int SCRUM_ID = 0;
     private static final int EAU_ID = 1;
     private static final int BOIS_ID = 2;
@@ -76,7 +77,7 @@ public class Resources {
      *
      * @return the resources Jsonified
      */
-    public JsonObject toJSON(){
+    public JsonObject toJson(){
         JsonObject resources = new JsonObject();
         resources.add("scrum", new JsonPrimitive(scrum));
         resources.add("eau", new JsonPrimitive(eau));
@@ -95,7 +96,6 @@ public class Resources {
      * Sets all the resources to zero
      */
     public void init(){
-
         setAll(0);
     }
 

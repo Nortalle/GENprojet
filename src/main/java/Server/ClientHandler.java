@@ -43,7 +43,7 @@ ClientHandler implements Runnable {
                     //int r[] = db.getPlayerResources(username);
                     int r[] = db.getPlayerResourcesViaObjects(username);// temp solution
                     Resources resources = new Resources(r);
-                    writer.println(resources.toJSON());
+                    writer.println(resources.toJson());
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_TRAIN_STATUS)) {
                     writer.println(db.getTrain(username).toJson());

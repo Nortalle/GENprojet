@@ -2,6 +2,7 @@ package Server.Controller;
 
 import Game.Mine;
 import Server.Server;
+import Utils.Ressource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +13,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MineRegenerationTest {
-    private static MineRegeneration regeneration;
-    private static ArrayList<Mine> mines = new ArrayList<Mine>();
+    private static ArrayList<Mine> mines = new ArrayList<>();
 
     @BeforeAll
     public static void setUpBeforeAll() {
@@ -27,8 +27,6 @@ class MineRegenerationTest {
         mines.add(mine2);
         mines.add(mine3);
         mines.add(mine4);
-
-        regeneration = new MineRegeneration(mines);
     }
 
     @BeforeEach
@@ -37,39 +35,11 @@ class MineRegenerationTest {
     }
 
     @Test
-    public void doesMinesRegenerate(){
-        /*
-        long start = System.currentTimeMillis();
-        while(System.currentTimeMillis() - start < 1200){
-
-        }
-
-        assertEquals(31, mines.get(0).getAmount());
-        assertEquals(1000, mines.get(1).getAmount());
-        assertEquals(901, mines.get(2).getAmount());
-        assertEquals(1, mines.get(3).getAmount());
-
-        Mine mine5 = new Mine(5, 5, 50, 1);
-        mines.add(mine5);
-
-        start = System.currentTimeMillis();
-        while(System.currentTimeMillis() - start < 1200){
-
-        }
-
-        assertEquals(51, mines.get(4).getAmount());
-        */
-    }
-
-    @Test
-    void ajouteDesMines() {
-        /*
+    void addMines() {
         Server.getInstance().init();
-
-        Server.getInstance().getDataBase().addMine(1, 50, 1);
-        Server.getInstance().getDataBase().addMine(1, 50, 4);
-        Server.getInstance().getDataBase().addMine(1, 550, 4);
-        Server.getInstance().getDataBase().addMine(1, 780, 5);
-        */
+        int nbrMines = Server.getInstance().getRegenerationController().getMines().size();
+        Server.getInstance().getRegenerationController().addMine(new Mine(-1, Ressource.Type.WOOD_LOG.ordinal(), 500, 1));
+        ArrayList<Mine> updatedMines = Server.getInstance().getRegenerationController().getMines();
+        assertEquals(nbrMines + 1, updatedMines.size());
     }
 }
