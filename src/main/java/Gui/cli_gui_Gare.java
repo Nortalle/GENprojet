@@ -4,9 +4,7 @@ import Client.Client;
 import Game.Mine;
 import Game.Train;
 import Game.TrainStation;
-import Utils.JsonUtility;
 import Utils.OTrainProtocol;
-import com.google.gson.JsonArray;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -39,28 +37,25 @@ public class cli_gui_Gare {
 
         update();
         viewingStation = Client.getInstance().getTrain().getTrainStation();// maybe useless
-        //setStationInfo();
-        //String line = Client.getInstance().getStations();
-        //for(TrainStation station : TrainStation.listFromJson((JsonArray) JsonUtility.fromJson(line))) select_station.addItem(station);
 
         button_travel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
                 String line = Client.getInstance().changeStation(viewingStation.getId());
-                if(line.equals(OTrainProtocol.SUCCESS)) setStationInfo();
+                if(line.equals(OTrainProtocol.SUCCESS)) updateExceptList();
 
             }
         });
         button_view.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
-                setStationInfo();
+                updateExceptList();
             }
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = Client.getInstance().getTrain().getTrainStation();
-                setStationInfo();
+                updateExceptList();
             }
         });
         select_station.addPopupMenuListener(new PopupMenuListener() {
@@ -76,44 +71,54 @@ public class cli_gui_Gare {
     }
 
     public void update(){
-        setStationInfo();
+        updateStationInfo();
+        updateEtaBar();
+        updateTrainsAtStation();
+        updateMines();
+        updateStationList();
     }
 
-    private void setStationInfo() {
-        if(viewingStation == null) viewingStation = Client.getInstance().getTrain().getTrainStation();
+    public void updateExceptList(){
+        updateStationInfo();
+        updateEtaBar();
+        updateTrainsAtStation();
+        updateMines();
+    }
 
+    public void updateStationInfo() {
+        if(viewingStation == null) viewingStation = Client.getInstance().getTrain().getTrainStation();
         label_stationName.setText(viewingStation.toString());
         label_stationCoords.setText(viewingStation.getPosX() + ";" + viewingStation.getPosY());
-
-        // station info
         stationInfosLabel.setText(viewingStation.getInfos());
+    }
 
-        // ETA bar
+    public void updateEtaBar() {
         Train train = Client.getInstance().getTrain();
         int totalTime = train.getTrainStationTotalETA();
+        int eta = train.getTrainStationETA();
         progressBar1.setMaximum(totalTime);
-        progressBar1.setValue(totalTime - train.getTrainStationETA());
-        progressBar1.setString((train.getTrainStationETA() == totalTime) ? "At Station" : "On the move");
+        progressBar1.setValue(totalTime - eta);
+        progressBar1.setString((eta == totalTime) ? "At Station" : "On the move");
+    }
 
-        // trains at station
-        panel_liste_joueurs.removeAll();
-        panel_liste_joueurs.setLayout(new GridLayout(0, 1));
-        for(Train t : Client.getInstance().getTrainsAtStation(viewingStation.getId())) panel_liste_joueurs.add(new JLabel(t.toString()));
+    public void updateTrainsAtStation() {
+        if(viewingStation != null) {
+            panel_liste_joueurs.removeAll();
+            panel_liste_joueurs.setLayout(new GridLayout(0, 1));
+            for(Train t : Client.getInstance().getTrainsAtStation(viewingStation.getId())) panel_liste_joueurs.add(new JLabel(t.toString()));
+        }
+    }
 
-        // mines
-        if(viewingStation != null){// shouldn't be needed
+    public void updateMines() {
+        if(viewingStation != null) {
             panel_liste_mines.removeAll();
             panel_liste_mines.setLayout(new GridLayout(0, 1));
             for(Mine m : viewingStation.getMines()) panel_liste_mines.add(new JLabel(m.toString()));
         }
-
-        // update drop down list
-        select_station.removeAllItems();
-        for(TrainStation ts : Client.getInstance().getStations()) select_station.addItem(ts);
-
     }
 
-    public JPanel getPanel_main() {
-        return panel_main;
+    public void updateStationList() {
+        select_station.removeAllItems();
+        for(TrainStation ts : Client.getInstance().getStations()) select_station.addItem(ts);
     }
 }
