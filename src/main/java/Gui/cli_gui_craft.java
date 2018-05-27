@@ -1,7 +1,7 @@
 package Gui;
 
 import Utils.ResourceAmount;
-import Utils.Reciept;
+import Utils.Recipe;
 
 import javax.swing.*;
 
@@ -22,7 +22,7 @@ public class cli_gui_craft {
         // availableCrafts.addContent (...);
 
         // il faut remplir le dropdown avec la liste des recette
-        for(Reciept r : Reciept.getAllReciepts()){
+        for(Recipe r : Recipe.getAllRecipes()){
             JPanel p = new JPanel();
             JLabel name = new JLabel();
             name.setText(r.getName());
