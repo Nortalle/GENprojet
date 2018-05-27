@@ -1,5 +1,6 @@
 package Client;
 
+import Game.Craft;
 import Game.Train;
 import Game.TrainStation;
 import Game.WagonMining;
@@ -130,6 +131,13 @@ public class Client {
         writer.flush();
         String answer = readLine();
         return ResourceAmount.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+    }
+
+    public ArrayList<Craft> getCrafts() {
+        writer.println(OTrainProtocol.GET_PROD_QUEUE);
+        writer.flush();
+        String answer = readLine();
+        return Craft.listFromJson((JsonArray) JsonUtility.fromJson(answer));
     }
 
     public Train getTrain() {

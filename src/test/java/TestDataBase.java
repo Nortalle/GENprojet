@@ -69,21 +69,8 @@ public class TestDataBase {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         TrainStation tsPrev = dataBase.getTrainStation(stationId);
         dataBase.addMine(stationId, 400, Ressource.Type.IRON_ORE.ordinal());
-        dataBase.addMine(stationId, 0, Ressource.Type.GOLD_ORE.ordinal());
+        dataBase.addMine(stationId, 0, Ressource.Type.COPPER_ORE.ordinal());
         TrainStation tsNext = dataBase.getTrainStation(stationId);
         assertEquals(tsPrev.getMines().size() + 2, tsNext.getMines().size());
-    }
-
-
-    @Test
-    public void setMineAmount(){
-        /*
-        ArrayList<Mine> mines = dataBase.getAllMines();
-        int id = mines.get(0).getId();
-
-        dataBase.setMineAmount(id,467);
-
-        assertEquals(467, dataBase.getMine(id).getAmount());
-        */
     }
 }

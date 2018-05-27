@@ -1,6 +1,7 @@
 package Game;
 
 import Utils.JsonUtility;
+import Utils.Recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -73,5 +74,10 @@ public class Craft {
         for(JsonElement j : from) crafts.add(new Craft((JsonObject) j));
 
         return crafts;
+    }
+
+    @Override
+    public String toString() {
+        return Recipe.getAllRecipes().get(recipeIndex).getName() + " : " + remainingTime;
     }
 }

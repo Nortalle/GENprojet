@@ -232,7 +232,7 @@ public class DataBase {
             ps.setObject(2, typeId);
             resultSet = ps.executeQuery();
             if(resultSet.next()) {
-                int type = resultSet.getInt(1);
+                int type = resultSet.getInt(3);
                 int amount = resultSet.getInt(4);
                 return new ResourceAmount(Ressource.Type.values()[type], amount);
             }

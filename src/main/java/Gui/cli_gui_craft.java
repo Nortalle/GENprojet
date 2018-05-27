@@ -1,6 +1,7 @@
 package Gui;
 
 import Client.Client;
+import Game.Craft;
 import Utils.Recipe;
 import Utils.ResourceAmount;
 
@@ -19,7 +20,7 @@ public class cli_gui_craft {
     private JPanel costPanel;
     private JPanel availableCrafts;
     private JButton placeOrderButton;
-    private JPanel OrderQueuePanel;
+    private JPanel orderQueuePanel;
 
     private Recipe selectedRecipe;
 
@@ -47,6 +48,10 @@ public class cli_gui_craft {
             public void actionPerformed(ActionEvent e) {
                 if(selectedRecipe == null) return;
                 Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
+
+                updateAvailableCrafts();
+                updateCraftCost();
+                updateOrderQueue();
             }
         });
     }
@@ -62,6 +67,20 @@ public class cli_gui_craft {
         costPanel.setLayout(new GridLayout(0, 1));
         for(ResourceAmount cost : selectedRecipe.getCost()) costPanel.add(new JLabel(cost.toString()));
         costPanel.revalidate();
+    }
+
+    public void updateOrderQueue() {
+        ArrayList<Craft> crafts = Client.getInstance().getCrafts();
+        orderQueuePanel.removeAll();
+        orderQueuePanel.setLayout(new GridLayout(0, 2));
+        for(Craft c : crafts) {
+            orderQueuePanel.add(new JLabel(c.toString()));
+            JProgressBar bar = new JProgressBar();
+            int max = Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime();
+            bar.setMaximum(max);
+            bar.setValue(max - c.getRemainingTime());
+            orderQueuePanel.add(bar);
+        }
     }
 
     public void updateAvailableCrafts(){
@@ -102,5 +121,6 @@ public class cli_gui_craft {
         updateAvailableCrafts();
         updateRecipeDropdown();
         updateCraftCost();
+        updateOrderQueue();
     }
 }
