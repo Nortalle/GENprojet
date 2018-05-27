@@ -1,9 +1,6 @@
 package Server;
 
-import Game.Resources;
-import Game.Train;
-import Game.TrainStation;
-import Game.WagonMining;
+import Game.*;
 import Utils.OTrainProtocol;
 
 import java.io.*;
@@ -61,7 +58,6 @@ ClientHandler implements Runnable {
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
                     String newTsLine = readLine();
-                    System.out.println(newTsLine);
                     if(Server.getInstance().getTravelController().ctrlChangeStation(username, newTsLine)) {
                         writer.println(OTrainProtocol.SUCCESS);
                     } else {
@@ -87,16 +83,15 @@ ClientHandler implements Runnable {
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.CRAFT)) {
                     String recipeLine = readLine();
-                    // controller
-                    System.out.println(recipeLine);
-
-                    if(recipeLine.equals("0")) {
+                    if(Server.getInstance().getCraftController().tryCraft(username, recipeLine)) {
                         writer.println(OTrainProtocol.SUCCESS);
                     } else {
                         writer.println(OTrainProtocol.FAILURE);
                     }
                     writer.flush();
-                    //
+                } else if(line.equals(OTrainProtocol.GET_PROD_QUEUE)) {
+                    writer.println(Craft.listToJson(Server.getInstance().getCraftController().getPlayerCrafts(username)));
+                    writer.flush();
                 }
 
                 line = readLine();

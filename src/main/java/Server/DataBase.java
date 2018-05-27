@@ -175,8 +175,10 @@ public class DataBase {
     public int[] getPlayerResourcesViaObjects(String username) {
         int resources[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
         for(int i : Ressource.getBaseResources()) {
-            int amount = getPlayerObjectOfType(username, i)[1];
-            if(amount != -1) resources[i] = amount;
+            ResourceAmount ra = getPlayerObjectOfType(username, i);
+            if(ra == null) continue;
+            //if(ra.getQuantity() != -1) resources[i] = ra.getQuantity();
+            resources[i] = ra.getQuantity();
         }
         return resources;
     }
@@ -220,10 +222,9 @@ public class DataBase {
      *
      * @param username player name
      * @param typeId id of the type of the object you want
-     * @return tab {DB id, amount}
+     * @return DB id, amount
      */
-    private int[] getPlayerObjectOfType(String username, int typeId) {
-        int[] result = {-1, -1};// id, amount
+    public ResourceAmount getPlayerObjectOfType(String username, int typeId) {
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM ObjetsParJoueur WHERE nomJoueur=? AND objetId=?", Statement.RETURN_GENERATED_KEYS);
@@ -231,27 +232,28 @@ public class DataBase {
             ps.setObject(2, typeId);
             resultSet = ps.executeQuery();
             if(resultSet.next()) {
-                result[0] = resultSet.getInt(1);
-                result[1] = resultSet.getInt(4);
+                int type = resultSet.getInt(1);
+                int amount = resultSet.getInt(4);
+                return new ResourceAmount(Ressource.Type.values()[type], amount);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result;
+        return null;
     }
 
-    public boolean addPlayerObjects(String username, int typeId, int amount){
+    public boolean updatePlayerObjects(String username, int typeId, int amount){
         try {
             PreparedStatement ps;
-            int[] existingEntry = getPlayerObjectOfType(username, typeId);
-            if(existingEntry[0] == -1) {
+            ResourceAmount existingEntry = getPlayerObjectOfType(username, typeId);
+            if(existingEntry == null) {
                 ps = connection.prepareStatement("INSERT INTO ObjetsParJoueur VALUES(default,?,?,?);", Statement.RETURN_GENERATED_KEYS);
                 ps.setObject(1, username);
                 ps.setObject(2, typeId);
                 ps.setObject(3, amount);
             } else {
                 ps = connection.prepareStatement("UPDATE ObjetsParJoueur SET objetAmount=? WHERE nomJoueur=? AND objetId=?;", Statement.RETURN_GENERATED_KEYS);
-                ps.setObject(1, existingEntry[1] + amount);
+                ps.setObject(1, existingEntry.getQuantity() + amount);
                 ps.setObject(2, username);
                 ps.setObject(3, typeId);
             }

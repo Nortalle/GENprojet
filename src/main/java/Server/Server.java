@@ -1,5 +1,6 @@
 package Server;
 
+import Server.Controller.CraftController;
 import Server.Controller.MineController;
 import Server.Controller.MineRegeneration;
 import Server.Controller.Travel;
@@ -19,6 +20,7 @@ public class Server {
     private Travel travelController;
     private MineRegeneration regenerationController;
     private MineController mineController;
+    private CraftController craftController;
 
     private Server(){}
 
@@ -33,6 +35,7 @@ public class Server {
         travelController = new Travel();
         regenerationController = new MineRegeneration();
         mineController = new MineController();
+        craftController = new CraftController();
     }
 
     public void startServer() {
@@ -75,6 +78,10 @@ public class Server {
 
     public MineController getMineController() {
         return mineController;
+    }
+
+    public CraftController getCraftController() {
+        return craftController;
     }
 
     public DataBase getDataBase() {

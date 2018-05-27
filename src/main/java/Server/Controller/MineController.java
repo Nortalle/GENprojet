@@ -40,7 +40,7 @@ public class MineController {
                                 db.setPlayerResources(username, newResources);
 
                                 // in ObjetsParJoueur
-                                db.addPlayerObjects(username, wm.getCurrentMine().getResource(), 1);
+                                db.updatePlayerObjects(username, wm.getCurrentMine().getResource(), 1);
                             }
                         }
                     }
