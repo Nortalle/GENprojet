@@ -185,6 +185,13 @@ public class Client {
         return readLine();
     }
 
+    public String startCraft(int recipeIndex) {
+        writer.println(OTrainProtocol.CRAFT);
+        writer.println(recipeIndex);
+        writer.flush();
+        return readLine();
+    }
+
     public static void main(String ... args) {
         Client.getInstance().startingFrame();
     }

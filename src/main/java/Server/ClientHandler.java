@@ -85,6 +85,18 @@ ClientHandler implements Runnable {
                         writer.println(OTrainProtocol.FAILURE);
                     }
                     writer.flush();
+                } else if(line.equals(OTrainProtocol.CRAFT)) {
+                    String recipeLine = readLine();
+                    // controller
+                    System.out.println(recipeLine);
+
+                    if(recipeLine.equals("0")) {
+                        writer.println(OTrainProtocol.SUCCESS);
+                    } else {
+                        writer.println(OTrainProtocol.FAILURE);
+                    }
+                    writer.flush();
+                    //
                 }
 
                 line = readLine();

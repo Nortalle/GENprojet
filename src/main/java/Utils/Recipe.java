@@ -48,6 +48,10 @@ public class Recipe {
         return name;
     }
 
+    public int getRecipeIndex() {
+        return allRecipes.indexOf(this);
+    }
+
     // Définition des recettes existantes
 
     static Recipe IRON_INGOT_RCPT;

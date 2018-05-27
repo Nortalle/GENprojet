@@ -1,5 +1,6 @@
 package Gui;
 
+import Client.Client;
 import Utils.Recipe;
 import Utils.ResourceAmount;
 
@@ -7,6 +8,8 @@ import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class cli_gui_craft {
     private JPanel panel1;
@@ -21,6 +24,9 @@ public class cli_gui_craft {
 
     public cli_gui_craft() {
         update();
+        selectedRecipe = (Recipe) recipeDropdown.getSelectedItem();
+        updateCraftCost();
+
         recipeDropdown.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
@@ -28,11 +34,19 @@ public class cli_gui_craft {
             @Override
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 selectedRecipe = (Recipe) recipeDropdown.getSelectedItem();
-                update();
+                updateCraftCost();
             }
 
             @Override
             public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
+
+        placeOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(selectedRecipe == null) return;
+                Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
+            }
         });
     }
 
@@ -46,6 +60,7 @@ public class cli_gui_craft {
         costPanel.removeAll();
         costPanel.setLayout(new GridLayout(0, 1));
         for(ResourceAmount cost : selectedRecipe.getCost()) costPanel.add(new JLabel(cost.toString()));
+        costPanel.revalidate();
     }
 
     public void updateAvailableCrafts(){
