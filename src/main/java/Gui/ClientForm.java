@@ -76,6 +76,7 @@ public class ClientForm {
         Client.getInstance().getTrain();
         cli_gui_gare.update();
         cli_gui_mine.update();
+        cli_gui_craft.update();
         updateResources();
     }
 }

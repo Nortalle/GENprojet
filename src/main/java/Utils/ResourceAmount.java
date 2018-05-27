@@ -16,4 +16,9 @@ public class ResourceAmount {
     public int getQuantity() {
         return quantity;
     }
+
+    @Override
+    public String toString() {
+        return quantity + "x" + Ressource.RessourceToString(ressource);
+    }
 }

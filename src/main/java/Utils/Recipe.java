@@ -1,31 +1,29 @@
 package Utils;
 
-import java.util.LinkedList;
-
-
+import java.util.ArrayList;
 
 public class Recipe {
 
-    private static LinkedList<Recipe> allRecipes = new LinkedList<>();
+    private static ArrayList<Recipe> allRecipes = new ArrayList<>();
 
-    public static LinkedList<Recipe> getAllRecipes(){
+    public static ArrayList<Recipe> getAllRecipes(){
         return allRecipes;
     }
 
-    private LinkedList<ResourceAmount> cost;
+    private ArrayList<ResourceAmount> cost;
     private String name;
     private ResourceAmount finalProduct;
     private int productionTime;
 
     Recipe(String n, ResourceAmount fp, int time){
         name = n;
-        cost = new LinkedList<>();
+        cost = new ArrayList<>();
         finalProduct = fp;
         productionTime = time;
         allRecipes.add(this);
     }
 
-    public LinkedList<ResourceAmount> getCost() {
+    public ArrayList<ResourceAmount> getCost() {
         return cost;
     }
 
@@ -43,6 +41,11 @@ public class Recipe {
 
     public ResourceAmount getFinalProduct(){
         return finalProduct;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
     // Définition des recettes existantes

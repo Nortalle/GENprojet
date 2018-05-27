@@ -1,54 +1,62 @@
 package Gui;
 
-import Utils.ResourceAmount;
 import Utils.Recipe;
+import Utils.ResourceAmount;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import java.awt.*;
 
 public class cli_gui_craft {
     private JPanel panel1;
     private JTextField quantity_text_field;
-    private JComboBox recieptDropdown;
+    private JComboBox recipeDropdown;
     private JPanel costPanel;
     private JPanel availableCrafts;
     private JButton placeOrderButton;
     private JPanel OrderQueuePanel;
 
+    private Recipe selectedRecipe;
 
-    // TODO ???
-    public void updateOld(){
+    public cli_gui_craft() {
+        update();
+        recipeDropdown.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
 
-        // il faut remplir le panel des availableCrafts avec les recettes
-        // availableCrafts.addContent (...);
-
-        // il faut remplir le dropdown avec la liste des recette
-        for(Recipe r : Recipe.getAllRecipes()){
-            JPanel p = new JPanel();
-            JLabel name = new JLabel();
-            name.setText(r.getName());
-            p.add(name);
-            recieptDropdown.addItem(r.getName() + ": ");       // ajout au dropdown du nom
-            for(ResourceAmount c : r.getCost()){
-                JLabel cost = new JLabel();
-                cost.setText("\t" + c.getQuantity() + " " + c.getRessource());
-                p.add(cost);
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                selectedRecipe = (Recipe) recipeDropdown.getSelectedItem();
+                update();
             }
-            availableCrafts.add(p);                     // ajout au panel de la recette
-        }
-        //recieptDropdown.addItem(...);
 
-        // set la quantité du dropdown à 1 de base
-        quantity_text_field.setText("1");
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
+    }
 
-        // update le coût en fonction de la recette sélectionée
-        updateCraftCost();
+    public void updateRecipeDropdown(){
+        recipeDropdown.removeAllItems();
+        for(Recipe r : Recipe.getAllRecipes()) recipeDropdown.addItem(r);
     }
 
     public void updateCraftCost(){
+        if(selectedRecipe == null) return;
+        costPanel.removeAll();
+        costPanel.setLayout(new GridLayout(0, 1));
+        for(ResourceAmount cost : selectedRecipe.getCost()) costPanel.add(new JLabel(cost.toString()));
+    }
 
+    public void updateAvailableCrafts(){
+        availableCrafts.removeAll();
+        availableCrafts.setLayout(new GridLayout(0, 1));
+        for(Recipe r : Recipe.getAllRecipes()) availableCrafts.add(new JLabel(r.toString()));
     }
 
     public void update() {
-
+        updateAvailableCrafts();
+        updateRecipeDropdown();
+        updateCraftCost();
     }
 }
