@@ -12,7 +12,7 @@ import java.util.TimerTask;
 public class MineController {
 
     private ArrayList<WagonMining> wagonMining = new ArrayList<>();
-    private ArrayList<Long> ETMs = new ArrayList<>();
+    private ArrayList<Integer> ETMs = new ArrayList<>();
 
     private final int INTERVAL_MS = 1000;
 
@@ -25,11 +25,11 @@ public class MineController {
                 for(int i = 0; i < wagonMining.size(); ++i) {
                     WagonMining wm = wagonMining.get(i);
                     String username = db.getUsernameByWagonId(wm.getWagon().getId());
-                    long ETM = ETMs.get(i);
+                    int ETM = ETMs.get(i);
                     ETMs.set(i, --ETM);
                     if(ETM == 0) {
                         // TODO TEST IF TRAIN IS STILL AT STATION WHERE MINE IS
-                        ETMs.set(i, (long)WagonStats.getMiningTime(wm.getWagon()));
+                        ETMs.set(i, WagonStats.getMiningTime(wm.getWagon()));
                         int currentCargoUsed = 0;
                         for(ResourceAmount ra : db.getPlayerObjects(username)) currentCargoUsed += ra.getQuantity();
                         if(currentCargoUsed < WagonStats.getMaxCapacity(db.getTrain(db.getUsernameByWagonId(wm.getWagon().getId())))) {// because one mine 1 by 1
@@ -74,10 +74,10 @@ public class MineController {
 
         if(found) {
             wagonMining.set(i,wm);
-            ETMs.set(i, (long)WagonStats.getMiningTime(wm.getWagon()));
+            ETMs.set(i, WagonStats.getMiningTime(wm.getWagon()));
         } else {
             wagonMining.add(wm);
-            ETMs.add((long)WagonStats.getMiningTime(wm.getWagon()));
+            ETMs.add(WagonStats.getMiningTime(wm.getWagon()));
         }
 
     }

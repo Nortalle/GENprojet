@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MineControllerTest {
-    static Server server;
-    static Client client;
-    static String user = "a";
-    static int stationId;
-    static int mineId;
-    static int wagonId;
+    private static Server server;
+    private static Client client;
+    private static String user = "a";
+    private static int stationId;
+    private static int mineId;
+    private static int wagonId;
 
     @BeforeAll
     public static void setUpBeforeAll() {
@@ -39,6 +39,7 @@ class MineControllerTest {
         server.getDataBase().changeStaionOfTrain(user, stationId);
         mineId = server.getDataBase().addMine(stationId, 500, Ressource.Type.IRON_ORE.ordinal());
         server.getDataBase().addMine(stationId, 500, Ressource.Type.WOOD_LOG.ordinal());
+        server.getDataBase().addMine(stationId, 500, Ressource.Type.CHARCOAL.ordinal());
         wagonId = server.getDataBase().addWagon(user, 2000, 1, WagonStats.DRILL_ID);
 
         for(Wagon w : server.getDataBase().getTrain(user).getWagons()) server.getDataBase().updateWagon(user, w.getWeight(), 5, w.getTypeID(), w.getId());
