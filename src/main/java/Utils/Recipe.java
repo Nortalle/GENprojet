@@ -6,7 +6,7 @@ import java.util.LinkedList;
 
 public class Recipe {
 
-    private static LinkedList<Recipe> allRecipes = new LinkedList<Recipe>();
+    private static LinkedList<Recipe> allRecipes = new LinkedList<>();
 
     public static LinkedList<Recipe> getAllRecipes(){
         return allRecipes;
@@ -18,7 +18,7 @@ public class Recipe {
 
     Recipe(String n, ResourceAmount fp){
         name = n;
-        resourceAmounts = new LinkedList<ResourceAmount>();
+        resourceAmounts = new LinkedList<>();
         finalProduct = fp;
         allRecipes.add(this);
     }
