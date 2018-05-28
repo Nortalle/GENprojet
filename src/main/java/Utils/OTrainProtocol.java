@@ -12,13 +12,17 @@ public class OTrainProtocol {
 
     // get the list of stations
     public static final String GET_GARES = "GET_GARES";
-    // get the player's ressources
+    // get the player's resources
     public static final String GET_RESSOURCES = "GET_RESSOURCES";
+    // get the player's objects
+    public static final String GET_OBJECTS = "GET_OBJECTS";
 
 
     /* Train related commands */
     // gets the train informations
     public static final String GET_TRAIN_STATUS = "GET_TRAIN_STATUS";
+    // gets all trains at station
+    public static final String GET_TRAINS_AT = "GET_TRAINS_AT";
     // sends train to station
     public static final String GO_TO = "GO_TO";
     // get mining wagon info

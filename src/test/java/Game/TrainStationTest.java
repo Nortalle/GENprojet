@@ -28,7 +28,7 @@ public class TrainStationTest {
         int posY = 0;
         int nbOfPlatforms = 1;
         int sizeOfPlatforms = 1;
-        ArrayList<Mine> mines = new ArrayList<Mine>();
+        ArrayList<Mine> mines = new ArrayList<>();
         mines.add(new Mine());
         mines.add(new Mine());
         mines.add(new Mine());
@@ -40,7 +40,7 @@ public class TrainStationTest {
 
     @Test
     void listFromJSON() {
-        ArrayList<TrainStation> stations = new ArrayList<TrainStation>();
+        ArrayList<TrainStation> stations = new ArrayList<>();
         stations.add(new TrainStation());
         stations.add(new TrainStation());
         stations.add(new TrainStation());

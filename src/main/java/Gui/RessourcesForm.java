@@ -1,14 +1,13 @@
 package Gui;
 
 import Client.Client;
-import Client.Updatable;
 import Game.Resources;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class RessourcesForm implements Updatable{
+public class RessourcesForm {
 
     private Client client;
     private JPanel panel_main;
@@ -68,8 +67,7 @@ public class RessourcesForm implements Updatable{
         // TODO: place custom component creation code here
     }
 
-    @Override
-    public void Update() {
+    public void update() {
         updateResources();
     }
 }

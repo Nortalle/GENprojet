@@ -1,9 +1,8 @@
 package Server;
 
-import Game.Resources;
-import Game.TrainStation;
-import Game.WagonMining;
+import Game.*;
 import Utils.OTrainProtocol;
+import Utils.ResourceAmount;
 
 import java.io.*;
 import java.net.Socket;
@@ -39,12 +38,20 @@ ClientHandler implements Runnable {
                 //work...
 
                 if(line.equals(OTrainProtocol.GET_RESSOURCES)) {
-                    int r[] = db.getPlayerResources(username);
+                    //int r[] = db.getPlayerResources(username);
+                    int r[] = db.getPlayerResourcesViaObjects(username);// temp solution
                     Resources resources = new Resources(r);
-                    writer.println(resources.toJSON());
+                    writer.println(resources.toJson());
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_TRAIN_STATUS)) {
                     writer.println(db.getTrain(username).toJson());
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_OBJECTS)) {
+                    writer.println(ResourceAmount.listToJson(db.getPlayerObjects(username)));
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_TRAINS_AT)) {
+                    int stationId = Integer.valueOf(readLine());
+                    writer.println(Train.listToJson(db.getAllTrainsAtStation(stationId)));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.MINE_INFO)) {
                     writer.println(WagonMining.listToJson(Server.getInstance().getMineController().getPlayerWagonMining(username)));
@@ -55,7 +62,6 @@ ClientHandler implements Runnable {
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
                     String newTsLine = readLine();
-                    System.out.println(newTsLine);
                     if(Server.getInstance().getTravelController().ctrlChangeStation(username, newTsLine)) {
                         writer.println(OTrainProtocol.SUCCESS);
                     } else {
@@ -73,9 +79,23 @@ ClientHandler implements Runnable {
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.STOP_MINE)) {
                     String wagonLine = readLine();
-                    // Mining Controller
-
-                    // writer.flush();
+                    if(Server.getInstance().getMineController().removeWagon(wagonLine)) {
+                        writer.println(OTrainProtocol.SUCCESS);
+                    } else {
+                        writer.println(OTrainProtocol.FAILURE);
+                    }
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.CRAFT)) {
+                    String recipeLine = readLine();
+                    if(Server.getInstance().getCraftController().tryCraft(username, recipeLine)) {
+                        writer.println(OTrainProtocol.SUCCESS);
+                    } else {
+                        writer.println(OTrainProtocol.FAILURE);
+                    }
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_PROD_QUEUE)) {
+                    writer.println(Craft.listToJson(Server.getInstance().getCraftController().getPlayerCrafts(username)));
+                    writer.flush();
                 }
 
                 line = readLine();

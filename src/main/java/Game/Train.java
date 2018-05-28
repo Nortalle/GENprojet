@@ -1,6 +1,9 @@
 package Game;
 
+import Utils.JsonUtility;
+import Utils.WagonStats;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -20,6 +23,14 @@ public class Train {
         trainStationETA = eta;
         trainStationTotalETA = totETA;
 
+    }
+
+    public Train(JsonObject json) {
+        fromJson(json);
+    }
+
+    public Train(String json) {
+        fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
     public ArrayList<Wagon> getWagons() {
@@ -58,5 +69,26 @@ public class Train {
         trainStation.fromJson((JsonObject) from.get("trainStation"));
         trainStationETA = from.get("trainStationETA").getAsInt();
         trainStationTotalETA = from.get("trainStationTotalETA").getAsInt();
+    }
+
+    public static JsonArray listToJson(ArrayList<Train> trains) {
+        JsonArray list = new JsonArray();
+        for(Train t : trains) list.add(t.toJson());
+
+        return list;
+    }
+
+    public static ArrayList<Train> listFromJson(JsonArray from) {
+        ArrayList<Train> trains = new ArrayList<>();
+        for(JsonElement j : from) trains.add(new Train((JsonObject) j));
+
+        return trains;
+    }
+
+    @Override
+    public String toString() {
+        String result = "I'm Tom the train : ";
+        for(Wagon w : wagons) result += WagonStats.getName(w.getTypeID()) + " " + w.getLevel() + " | ";
+        return result;
     }
 }

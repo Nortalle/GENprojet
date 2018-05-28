@@ -57,8 +57,10 @@ public class Travel {
         if(getETA(username)[0] == 0) {
             if(newTrainStation.getSizeOfPlatforms() >= train.getSize()) {
                 if(db.getNbUsedPlatforms(newTsId) < newTrainStation.getNbOfPlatforms()){
-                    if(db.sendTrainToNewStation(username, newTrainStation.getId())) {
-                        return true;
+                    if(Server.getInstance().getMineController().getPlayerWagonMining(username).size() == 0) {
+                        if (db.sendTrainToNewStation(username, newTrainStation.getId())) {
+                            return true;
+                        }
                     }
                 }
             }

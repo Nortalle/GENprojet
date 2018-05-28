@@ -8,7 +8,7 @@ import java.util.*;
 public class MineRegeneration {
 
     //Contient toutes les mines du jeux
-    private ArrayList<Mine> mines = new ArrayList<Mine>();
+    private ArrayList<Mine> mines;
 
     private int MAX_AMOUNT = 1000;
     private int AMOUNT_TO_ADD = 10;
@@ -33,30 +33,14 @@ public class MineRegeneration {
             @Override
             public void run() {
                 for (Mine mine : mines) {
-                    Server.getInstance().getDataBase().changeMineAmount(mine.getId(), AMOUNT_TO_ADD);
-                    //mine = Server.getInstance().getDataBase().getMine(mine.getId());
-
-                    /*int current_amount = mine.getAmount();
-                    //Si la mine n'est pas pleine, on la régénère
-                    if (current_amount < MAX_AMOUNT) {
-                        current_amount += AMOUNT_TO_ADD;
-                        //Si la mine est trop pleine, on la met au MAX_AMOUNT
-                        if (current_amount > MAX_AMOUNT) {
-                            current_amount = MAX_AMOUNT;
-                        }
-                        mine.setAmount(current_amount);
-                    }/*/
+                    if(Server.getInstance().getDataBase().changeMineAmount(mine.getId(), AMOUNT_TO_ADD)) {
+                        // all good
+                    } else {
+                        System.out.println("mine : " + mine.getId() + " might not exist and must be removed from regen ctrl");
+                    }
                 }
-                //met à jour les mines de la base de donnée chaque seconde
-                //updateDB();
             }
         }, INTERVAL_MS, INTERVAL_MS);
-    }
-
-    public void updateDB(){
-        for(Mine mine: mines){
-            Server.getInstance().getDataBase().setMineAmount(mine.getId(),mine.getAmount());
-        }
     }
 
     public void addMine(Mine mine_to_add) {

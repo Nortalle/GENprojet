@@ -1,5 +1,7 @@
 package Client;
 
+import Utils.OTrainProtocol;
+
 import javax.swing.*;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
@@ -11,7 +13,9 @@ public class ClientLog extends Handler {
     public void publish(LogRecord record) {
         String toPrint = record.getLevel() + ": " + record.getMessage();
         if(component != null) {
-            component.setText(toPrint);
+            if(record.getMessage().equals(OTrainProtocol.SUCCESS) || record.getMessage().equals(OTrainProtocol.FAILURE)) {
+                component.setText(toPrint);
+            }
         }
     }
 

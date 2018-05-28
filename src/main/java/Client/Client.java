@@ -1,11 +1,14 @@
 package Client;
 
+import Game.Craft;
 import Game.Train;
+import Game.TrainStation;
 import Game.WagonMining;
 import Gui.LoginForm;
 import Server.ClientHandler;
 import Utils.JsonUtility;
 import Utils.OTrainProtocol;
+import Utils.ResourceAmount;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -77,6 +80,7 @@ public class Client {
     public void setFrameContent(JPanel panel, Dimension d) {
         frame.setContentPane(panel);
         frame.setSize(d);
+        frame.setPreferredSize(d);
     }
 
     public void setFrameContent(JPanel panel) {
@@ -122,12 +126,27 @@ public class Client {
         return readLine();
     }
 
+    public ArrayList<ResourceAmount> getAllObjects() {
+        writer.println(OTrainProtocol.GET_OBJECTS);
+        writer.flush();
+        String answer = readLine();
+        return ResourceAmount.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+    }
+
+    public ArrayList<Craft> getCrafts() {
+        writer.println(OTrainProtocol.GET_PROD_QUEUE);
+        writer.flush();
+        String answer = readLine();
+        return Craft.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+    }
+
     public Train getTrain() {
         updateTrainStatus();
         return train;
     }
 
     public ArrayList<WagonMining> getWagonMining() {
+        updateWagonMining();
         return wagonMining;
     }
 
@@ -138,17 +157,26 @@ public class Client {
         train.fromJson((JsonObject) JsonUtility.fromJson(answer));
     }
 
-    public void updateWagonMining() {
+    public ArrayList<Train> getTrainsAtStation(int stationId) {
+        writer.println(OTrainProtocol.GET_TRAINS_AT);
+        writer.println(stationId);
+        writer.flush();
+        String answer = readLine();
+        return Train.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+    }
+
+    private void updateWagonMining() {
         writer.println(OTrainProtocol.MINE_INFO);
         writer.flush();
         String answer = readLine();
         wagonMining = WagonMining.listFromJson((JsonArray) JsonUtility.fromJson(answer));
     }
 
-    public String getStations() {
+    public ArrayList<TrainStation> getStations() {
         writer.println(OTrainProtocol.GET_GARES);
         writer.flush();
-        return readLine();
+        String answer = readLine();
+        return TrainStation.listFromJson((JsonArray) JsonUtility.fromJson(answer));
     }
 
     public String changeStation(int stationId) {
@@ -162,6 +190,20 @@ public class Client {
         writer.println(OTrainProtocol.MINE);
         writer.println(wagonId);
         writer.println(mineId);
+        writer.flush();
+        return readLine();
+    }
+
+    public String stopMining(int wagonId) {
+        writer.println(OTrainProtocol.STOP_MINE);
+        writer.println(wagonId);
+        writer.flush();
+        return readLine();
+    }
+
+    public String startCraft(int recipeIndex) {
+        writer.println(OTrainProtocol.CRAFT);
+        writer.println(recipeIndex);
         writer.flush();
         return readLine();
     }

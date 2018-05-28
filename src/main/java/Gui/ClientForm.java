@@ -9,7 +9,7 @@ import Game.Resources;
 
 import java.awt.event.*;
 
-public class ClientForm implements Updatable{
+public class ClientForm {
     private JPanel panel_main;
 
     //Ressources
@@ -46,14 +46,9 @@ public class ClientForm implements Updatable{
         Client.setClientLogComponent(logTextArea);
         updateResources();
 
-        tabs.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                //panCraft.update();
-            }
-        });
         updateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Update();
+                update();
             }
         });
     }
@@ -73,19 +68,15 @@ public class ClientForm implements Updatable{
 
     }
 
-
-
-
     public JPanel getPanel_main() {
         return panel_main;
     }
 
-    @Override
-    public void Update() {
-        //Client.getInstance().updateTrainStatus();
+    public void update() {
         Client.getInstance().getTrain();
-        cli_gui_gare.Update();
-        cli_gui_mine.Update();
+        cli_gui_gare.update();
+        cli_gui_mine.update();
+        cli_gui_craft.update();
         updateResources();
     }
 }

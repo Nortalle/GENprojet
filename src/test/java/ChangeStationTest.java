@@ -42,10 +42,9 @@ public class ChangeStationTest {
 
     @Test
     public void getNumberOfAllTrainStations(){
-        String line = client.getStations();
         int nbStation = dataBase.getAllTrainStations().size();
         if(nbStation < 1) fail("No stations, insert one or more");
-        assertEquals(nbStation, TrainStation.listFromJson((JsonArray) JsonUtility.fromJson(line)).size());
+        assertEquals(nbStation, client.getStations().size());
 
     }
 
@@ -54,17 +53,11 @@ public class ChangeStationTest {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         String line = client.changeStation(stationId);
         System.out.println(line);
-        //client.updateTrainStatus();
         assertEquals(dataBase.getTrainStation(stationId).toString(), client.getTrain().getTrainStation().toString());
     }
 
     @Test
     public void cantGoToFullStation() {
-        int posX = 20;
-        int posY = 10;
-        int stationId = dataBase.getTrainStationIdByPos(posX, posY);
-        if(stationId != -1) dataBase.deleteTrainStation(stationId);
-        dataBase.insertTrainStation(posX, posY, 2, 4);
         String users[] = {"u1","u2","u3"};
         for(String u : users) {
             dataBase.deleteUser(u);
@@ -75,7 +68,11 @@ public class ChangeStationTest {
             clients[i].connectServer();
             clients[i].sendLogin(users[i], users[i]);
         }
-        stationId = dataBase.getTrainStationIdByPos(posX, posY);
+        int posX = 20;
+        int posY = 10;
+        dataBase.deleteTrainStation(dataBase.getTrainStationIdByPos(posX, posY));
+        dataBase.insertTrainStation(posX, posY, 2, 5);
+        int stationId = dataBase.getTrainStationIdByPos(posX, posY);
         clients[0].changeStation(stationId);
         clients[1].changeStation(stationId);
         assertEquals(OTrainProtocol.FAILURE, clients[2].changeStation(stationId));
@@ -85,23 +82,7 @@ public class ChangeStationTest {
     public void changeStationTakeTime() {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         String line = client.changeStation(stationId);
-        //client.updateTrainStatus();
+        System.out.println(line);
         assertTrue(client.getTrain().getTrainStationETA() > 0);
-    }
-
-    @Test
-    public void changeStationETAChange() {
-        int stationId = dataBase.getTrainStationIdByPos(x, y);
-        String line = client.changeStation(stationId);
-        //client.updateTrainStatus();
-        int firstETA = client.getTrain().getTrainStationETA();
-
-        long start = System.currentTimeMillis();
-        while(System.currentTimeMillis() - start < 1200);
-
-        //client.updateTrainStatus();
-        int secondETA = client.getTrain().getTrainStationETA();
-        System.out.println(firstETA + " -> " + secondETA);
-        assertTrue(firstETA > client.getTrain().getTrainStationETA());
     }
 }

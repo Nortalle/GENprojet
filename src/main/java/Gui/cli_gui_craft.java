@@ -1,57 +1,126 @@
 package Gui;
 
-import Client.Updatable;
-import Utils.Cost;
-import Utils.Reciept;
+import Client.Client;
+import Game.Craft;
+import Utils.Recipe;
+import Utils.ResourceAmount;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
-public class cli_gui_craft implements Updatable {
+public class cli_gui_craft {
     private JPanel panel1;
     private JTextField quantity_text_field;
-    private JComboBox recieptDropdown;
+    private JComboBox recipeDropdown;
     private JPanel costPanel;
     private JPanel availableCrafts;
     private JButton placeOrderButton;
-    private JPanel OrderQueuePanel;
+    private JPanel orderQueuePanel;
 
+    private Recipe selectedRecipe;
 
-    public void update(){
-
-        // il faut remplir le panel des availableCrafts avec les recettes
-        // availableCrafts.addContent (...);
-
-        // il faut remplir le dropdown avec la liste des recette
-        for(Reciept r : Reciept.getAllReciepts()){
-            JPanel p = new JPanel();
-            JLabel name = new JLabel();
-            name.setText(r.getName());
-            p.add(name);
-            recieptDropdown.addItem(r.getName() + ": ");       // ajout au dropdown du nom
-            for(Cost c : r.getCosts()){
-                JLabel cost = new JLabel();
-                cost.setText("\t" + c.getQuantity() + " " + c.getRessource());
-                p.add(cost);
-            }
-            availableCrafts.add(p);                     // ajout au panel de la recette
-        }
-        //recieptDropdown.addItem(...);
-
-        // set la quantité du dropdown à 1 de base
-        quantity_text_field.setText("1");
-
-        // update le coût en fonction de la recette sélectionée
+    public cli_gui_craft() {
+        update();
+        selectedRecipe = (Recipe) recipeDropdown.getSelectedItem();
         updateCraftCost();
+
+        recipeDropdown.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                selectedRecipe = (Recipe) recipeDropdown.getSelectedItem();
+                updateCraftCost();
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
+
+        placeOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(selectedRecipe == null) return;
+                Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
+
+                updateAvailableCrafts();
+                updateCraftCost();
+                updateOrderQueue();
+            }
+        });
+    }
+
+    public void updateRecipeDropdown(){
+        recipeDropdown.removeAllItems();
+        for(Recipe r : Recipe.getAllRecipes()) recipeDropdown.addItem(r);
     }
 
     public void updateCraftCost(){
-
+        if(selectedRecipe == null) return;
+        costPanel.removeAll();
+        costPanel.setLayout(new GridLayout(0, 1));
+        for(ResourceAmount cost : selectedRecipe.getCost()) costPanel.add(new JLabel(cost.toString()));
+        costPanel.revalidate();
     }
 
+    public void updateOrderQueue() {
+        ArrayList<Craft> crafts = Client.getInstance().getCrafts();
+        orderQueuePanel.removeAll();
+        orderQueuePanel.setLayout(new GridLayout(0, 2));
+        for(Craft c : crafts) {
+            orderQueuePanel.add(new JLabel(c.toString()));
+            JProgressBar bar = new JProgressBar();
+            int max = Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime();
+            bar.setMaximum(max);
+            bar.setValue(max - c.getRemainingTime());
+            orderQueuePanel.add(bar);
+        }
+    }
 
-    @Override
-    public void Update() {
+    public void updateAvailableCrafts(){
+        ArrayList<ResourceAmount> playerObjects = Client.getInstance().getAllObjects();
+        for(ResourceAmount ra : playerObjects) System.out.println(ra);
 
+        availableCrafts.removeAll();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.gridx = 1;
+        for(Recipe r : Recipe.getAllRecipes()) {
+            if(canCraft(r, playerObjects)) {
+                availableCrafts.add(new JLabel(r.toString()), gbc);
+            }
+        }
+        gbc.weighty = 1.0;
+        gbc.weightx = 1.0;
+        availableCrafts.add(new JLabel(""), gbc);
+    }
+
+    public boolean canCraft(Recipe recipe, ArrayList<ResourceAmount> resourceAmounts) {
+        for(ResourceAmount cost : recipe.getCost()) {
+            if(!hasEnough(cost, resourceAmounts)) return false;
+        }
+        return true;
+    }
+
+    public boolean hasEnough(ResourceAmount cost, ArrayList<ResourceAmount> resourceAmounts) {
+        for(ResourceAmount ra : resourceAmounts) {
+            if(ra.getRessource() == cost.getRessource()) {
+                return ra.getQuantity() >= cost.getQuantity();
+            }
+        }
+        return false;
+    }
+
+    public void update() {
+        updateAvailableCrafts();
+        updateRecipeDropdown();
+        updateCraftCost();
+        updateOrderQueue();
     }
 }

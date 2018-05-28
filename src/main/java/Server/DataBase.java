@@ -1,6 +1,8 @@
 package Server;
 
 import Game.*;
+import Utils.ResourceAmount;
+import Utils.Ressource;
 import Utils.WagonStats;
 
 import java.sql.*;
@@ -51,7 +53,7 @@ public class DataBase {
             status = ps.executeUpdate();
             if(status == 0) return false;
 
-            //DEFAULT LOCO + WAGONS//
+            //DEFAULT LOCO + DRILL + CARGO//
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             ps.setObject(2, WagonStats.LOCO_ID);
@@ -61,6 +63,12 @@ public class DataBase {
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             ps.setObject(2, WagonStats.DRILL_ID);
+            status = ps.executeUpdate();
+            if(status == 0) return false;
+
+            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, WagonStats.CARGO_ID);
             status = ps.executeUpdate();
             if(status == 0) return false;
             // //
@@ -164,6 +172,17 @@ public class DataBase {
         return result;
     }
 
+    public int[] getPlayerResourcesViaObjects(String username) {
+        int resources[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+        for(int i : Ressource.getBaseResources()) {
+            ResourceAmount ra = getPlayerObjectOfType(username, i);
+            if(ra == null) continue;
+            //if(ra.getQuantity() != -1) resources[i] = ra.getQuantity();
+            resources[i] = ra.getQuantity();
+        }
+        return resources;
+    }
+
     public boolean setPlayerResources(String username, int resources[]){
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE RessourcesParJoueur SET qteScrum=?, qteEau=?, qteBois=?, qteCharbon=?, qtePetrol=?, qteFer=?, qteCuivre=?, qteAcier=?, qteOr=? WHERE `nomJoueur`=?", Statement.RETURN_GENERATED_KEYS);
@@ -174,6 +193,76 @@ public class DataBase {
             ps.executeUpdate();
             return true;
         }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public ArrayList<ResourceAmount> getPlayerObjects(String username) {
+        ArrayList<ResourceAmount> resourceAmounts = new ArrayList<>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM ObjetsParJoueur WHERE nomJoueur=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            resultSet = ps.executeQuery();
+            while(resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String user = resultSet.getString(2);
+                int typeId = resultSet.getInt(3);
+                int amount = resultSet.getInt(4);
+                resourceAmounts.add(new ResourceAmount(Ressource.Type.values()[typeId], amount));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resourceAmounts;
+    }
+
+    /**
+     *
+     * @param username player name
+     * @param typeId id of the type of the object you want
+     * @return DB id, amount
+     */
+    public ResourceAmount getPlayerObjectOfType(String username, int typeId) {
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM ObjetsParJoueur WHERE nomJoueur=? AND objetId=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, typeId);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                int type = resultSet.getInt(3);
+                int amount = resultSet.getInt(4);
+                return new ResourceAmount(Ressource.Type.values()[type], amount);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean updatePlayerObjects(String username, int typeId, int amount){
+        try {
+            PreparedStatement ps;
+            ResourceAmount existingEntry = getPlayerObjectOfType(username, typeId);
+            if(existingEntry == null) {
+                ps = connection.prepareStatement("INSERT INTO ObjetsParJoueur VALUES(default,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+                ps.setObject(1, username);
+                ps.setObject(2, typeId);
+                ps.setObject(3, amount);
+            } else {
+                ps = connection.prepareStatement("UPDATE ObjetsParJoueur SET objetAmount=? WHERE nomJoueur=? AND objetId=?;", Statement.RETURN_GENERATED_KEYS);
+                ps.setObject(1, existingEntry.getQuantity() + amount);
+                ps.setObject(2, username);
+                ps.setObject(3, typeId);
+            }
+
+            int status = ps.executeUpdate();
+            if(status != 0){
+                return true;
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -213,18 +302,42 @@ public class DataBase {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Train WHERE `proprietaire`=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             resultSet = ps.executeQuery();
-            if(!resultSet.next()){return null;}
-            String name = resultSet.getString("nom");
-            int currentTs = resultSet.getInt("gareActuelle");
-            //int eta = resultSet.getInt("tempsArriveeEstime");
+            if(resultSet.next()){
+                String user = resultSet.getString("proprietaire");
+                String name = resultSet.getString("nom");
+                int currentTs = resultSet.getInt("gareActuelle");
 
-            int eta[] = Server.getInstance().getTravelController().getETA(username);
-            train = new Train(getAllWagons(username), getTrainStation(currentTs), eta[0], eta[1]);
+                int eta[] = Server.getInstance().getTravelController().getETA(username);
+                train = new Train(getAllWagons(username), getTrainStation(currentTs), eta[0], eta[1]);
+            }
+
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return train;
+    }
+
+    public ArrayList<Train> getAllTrainsAtStation(int stationId){
+        ArrayList<Train> trains = new ArrayList<>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Train WHERE `gareActuelle`=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, stationId);
+            resultSet = ps.executeQuery();
+            while(resultSet.next()){
+                String user = resultSet.getString("proprietaire");
+                String name = resultSet.getString("nom");
+                int currentTs = resultSet.getInt("gareActuelle");
+
+                int eta[] = Server.getInstance().getTravelController().getETA(user);
+
+                trains.add(new Train(getAllWagons(user), getTrainStation(currentTs), eta[0], eta[1]));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return trains;
     }
 
     // WAGON REQUESTS
@@ -248,12 +361,30 @@ public class DataBase {
             if(status != 0){
                 ResultSet resultSet = ps.getGeneratedKeys();
                 resultSet.next();
-                result = resultSet.getInt(0);
+                result = resultSet.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public boolean updateWagon(String username, int weight, int level, int type, int id){
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE Wagon SET `proprietaire`=?, `poids`=?, `niveau`=?, `typeID`=? WHERE `id`=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, weight);
+            ps.setObject(3, level);
+            ps.setObject(4, type);
+            ps.setObject(5, id);
+            int status = ps.executeUpdate();
+            if(status != 0){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**
@@ -263,7 +394,7 @@ public class DataBase {
      * @return a list containing all the owner's wagons of this type
      */
     public ArrayList<Wagon> getWagonsOfType(String username, int type){
-        ArrayList<Wagon> result = new ArrayList<Wagon>();
+        ArrayList<Wagon> result = new ArrayList<>();
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=? AND `typeID`=?;", Statement.RETURN_GENERATED_KEYS);
@@ -294,7 +425,7 @@ public class DataBase {
      * @return the liste of all the wagons of the train
      */
     public ArrayList<Wagon> getAllWagons(String username){
-        ArrayList<Wagon> result = new ArrayList<Wagon>();
+        ArrayList<Wagon> result = new ArrayList<>();
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=?;", Statement.RETURN_GENERATED_KEYS);
@@ -418,7 +549,7 @@ public class DataBase {
      * @return a list containing all the stations of the database
      */
     public ArrayList<TrainStation> getAllTrainStations(){
-        ArrayList<TrainStation> result = new ArrayList<TrainStation>();
+        ArrayList<TrainStation> result = new ArrayList<>();
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare;", Statement.RETURN_GENERATED_KEYS);
@@ -552,6 +683,21 @@ public class DataBase {
         return Math.abs(ts2.getPosX() - ts1.getPosX()) + Math.abs(ts2.getPosY() - ts1.getPosY());
     }
 
+    public boolean changeStaionOfTrain(String username, int newTsId){
+        try {
+            // NOT SAFE !
+            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, newTsId);
+            ps.setObject(2, username);
+            ps.executeUpdate();
+
+            return true;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * @param username player who wants to move
      * @param newTsId id of the station where the player wants to move
@@ -567,7 +713,7 @@ public class DataBase {
             int eta = calculateTravelTime(currentTsId, newTsId);
             Wagon loco = getPlayerLoco(username);
             if(loco == null) return false;
-            eta = Math.max(1, eta / WagonStats.LOCO_SPEED[loco.getLevel()]);
+            eta = Math.max(1, eta / WagonStats.LOCO_SPEED[loco.getLevel() - 1]);
 
             PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, newTsId);
@@ -603,7 +749,7 @@ public class DataBase {
             if(status != 0){
                 ResultSet resultSet = ps.getGeneratedKeys();
                 resultSet.next();
-                result = resultSet.getInt(0);
+                result = resultSet.getInt(1);
                         // need tests
                 Server.getInstance().getRegenerationController().addMine(new Mine(resultSet.getInt(1), type, qteResources, emplacement));
             }
@@ -688,11 +834,13 @@ public class DataBase {
     }
 
     /**
+     * Deprecated because you should use changeMineAmount() instead
      * Mets à jour la mine donnée avec la quantité donnée
      *
-     * @param id        : mine à mettre à jour
-     * @param amount    : quantité à mettre à jour
+     * @param id     : mine à mettre à jour
+     * @param amount : quantité à mettre à jour
      */
+    @Deprecated// Deprecated because you should use changeMineAmount() instead
     public boolean setMineAmount(int id, int amount){
 
         try {
@@ -713,8 +861,8 @@ public class DataBase {
     /**
      * Mets à jour la mine donnée avec la quantité donnée
      *
-     * @param id        : mine à mettre à jour
-     * @param changeAmount    : quantité à mettre à jour
+     * @param id           : mine à mettre à jour
+     * @param changeAmount : quantité à mettre à jour
      */
     public boolean changeMineAmount(int id, int changeAmount){
         int MAX = 1000;
@@ -722,7 +870,7 @@ public class DataBase {
         try {
 
             int current_amount = getMine(id).getAmount();
-            if(current_amount == MAX || current_amount == 0) return false;// maybe not good, maybe return the mine
+            //if(current_amount == MAX || current_amount == 0) return false;// maybe not good, maybe return the mine
             current_amount += changeAmount;
             if(current_amount > MAX) current_amount = MAX;
             if(current_amount < 0) current_amount = 0;
