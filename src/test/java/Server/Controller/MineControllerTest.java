@@ -36,7 +36,7 @@ class MineControllerTest {
         server.getDataBase().deleteTrainStation(server.getDataBase().getTrainStationIdByPos(x, y));
         server.getDataBase().insertTrainStation(x, y, 10, 10);
         stationId = server.getDataBase().getTrainStationIdByPos(x, y);
-        server.getDataBase().changeStaionOfTrain(user, stationId);
+        server.getDataBase().changeStationOfTrain(user, stationId);
         mineId = server.getDataBase().addMine(stationId, 500, Ressource.Type.IRON_ORE.ordinal());
         server.getDataBase().addMine(stationId, 500, Ressource.Type.WOOD_LOG.ordinal());
         server.getDataBase().addMine(stationId, 500, Ressource.Type.CHARCOAL.ordinal());

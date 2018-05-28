@@ -30,17 +30,14 @@ public class MineController {
                     if(ETM == 0) {
                         // TODO TEST IF TRAIN IS STILL AT STATION WHERE MINE IS
                         ETMs.set(i, WagonStats.getMiningTime(wm.getWagon()));
-                        int currentCargoUsed = 0;
-                        for(ResourceAmount ra : db.getPlayerObjects(username)) currentCargoUsed += ra.getQuantity();
-                        if(currentCargoUsed < WagonStats.getMaxCapacity(db.getTrain(db.getUsernameByWagonId(wm.getWagon().getId())))) {// because one mine 1 by 1
-                            if (db.changeMineAmount(wm.getCurrentMine().getId(), -1)) {
-                                Resources r = new Resources(db.getPlayerResources(username));
-                                int newResources[] = r.toArray();
-                                newResources[wm.getCurrentMine().getResource()]++;
-                                db.setPlayerResources(username, newResources);
-
-                                // in ObjetsParJoueur
-                                db.updatePlayerObjects(username, wm.getCurrentMine().getResource(), 1);
+                        int miningAmount = 1;
+                        miningAmount = -db.canChangeMineAmount(wm.getCurrentMine().getId(), -miningAmount);
+                        miningAmount = db.canUpdatePlayerObjects(username, miningAmount);
+                        if(miningAmount != 0) {
+                            if(db.changeMineAmount(wm.getCurrentMine().getId(), -miningAmount)) {
+                                if(db.updatePlayerObjects(username, wm.getCurrentMine().getResource(), miningAmount)) {
+                                    // SUCCESS
+                                }
                             }
                         }
                     }

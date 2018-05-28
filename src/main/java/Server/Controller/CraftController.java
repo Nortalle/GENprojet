@@ -23,7 +23,9 @@ public class CraftController {
                     if(c.getRemainingTime() <= 0) {
                         // insert in DB
                         ResourceAmount finalProduct = Recipe.getAllRecipes().get(c.getRecipeIndex()).getFinalProduct();
-                        Server.getInstance().getDataBase().updatePlayerObjects(c.getUsername(), finalProduct.getRessource().ordinal(), finalProduct.getQuantity());
+                        int finalAmount = finalProduct.getQuantity();
+                        finalAmount = Server.getInstance().getDataBase().canUpdatePlayerObjects(c.getUsername(), finalAmount);
+                        Server.getInstance().getDataBase().updatePlayerObjects(c.getUsername(), finalProduct.getRessource().ordinal(), finalAmount);
                         toRemove.add(c);
                     }
                 }

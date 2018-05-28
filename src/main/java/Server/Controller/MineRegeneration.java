@@ -2,6 +2,7 @@ package Server.Controller;
 
 import Game.Mine;
 import Server.Server;
+import Server.DataBase;
 
 import java.util.*;
 
@@ -32,8 +33,11 @@ public class MineRegeneration {
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                DataBase db = Server.getInstance().getDataBase();
                 for (Mine mine : mines) {
-                    if(Server.getInstance().getDataBase().changeMineAmount(mine.getId(), AMOUNT_TO_ADD)) {
+                    int miningAmount = AMOUNT_TO_ADD;
+                    miningAmount = db.canChangeMineAmount(mine.getId(), miningAmount);
+                    if(db.changeMineAmount(mine.getId(), miningAmount)) {
                         // all good
                     } else {
                         System.out.println("mine : " + mine.getId() + " might not exist and must be removed from regen ctrl");

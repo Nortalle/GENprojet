@@ -198,6 +198,12 @@ public class DataBase {
         return false;
     }
 
+    public int getPlayerCurrentCargoAmount(String username) {
+        int currentCargo = 0;
+        for(ResourceAmount ra : getPlayerObjects(username)) currentCargo += ra.getQuantity();
+        return currentCargo;
+    }
+
     public ArrayList<ResourceAmount> getPlayerObjects(String username) {
         ArrayList<ResourceAmount> resourceAmounts = new ArrayList<>();
         try {
@@ -242,7 +248,21 @@ public class DataBase {
         return null;
     }
 
-    public boolean updatePlayerObjects(String username, int typeId, int amount){
+    public int canUpdatePlayerObjects(String username, int amount) {
+        int maxChange = amount;
+
+        Train train = getTrain(username);
+        int MAX = WagonStats.getMaxCapacity(train);
+        int MIN = 0;
+        int currentAmount = getPlayerCurrentCargoAmount(username);
+        int newAmount =  currentAmount + amount;
+        if(newAmount > MAX) maxChange = MAX - currentAmount;
+        if(newAmount < MIN) maxChange = MIN - currentAmount;
+
+        return maxChange;
+    }
+
+    public boolean updatePlayerObjects(String username, int typeId, int amount) {
         try {
             PreparedStatement ps;
             ResourceAmount existingEntry = getPlayerObjectOfType(username, typeId);
@@ -394,6 +414,7 @@ public class DataBase {
      * @return a list containing all the owner's wagons of this type
      */
     public ArrayList<Wagon> getWagonsOfType(String username, int type){
+        // TODO
         ArrayList<Wagon> result = new ArrayList<>();
         try {
             ResultSet resultSet;
@@ -534,11 +555,8 @@ public class DataBase {
             int nbOfPlatforms = resultSet.getInt("nbrQuai");
             int sizeOfPlatforms = resultSet.getInt("tailleQuai");
             ArrayList<Mine> mines = getAllMinesOfStation(tsId);
-            // TODO
-            if(mines == null) mines = new ArrayList<Mine>();
 
             trainStation = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -562,10 +580,7 @@ public class DataBase {
                 int sizeOfPlatforms = resultSet.getInt("tailleQuai");
                 ArrayList<Mine> mines = getAllMinesOfStation(id);
 
-                TrainStation trainStation = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
-                result.add(trainStation);
-
-
+                result.add(new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -683,7 +698,7 @@ public class DataBase {
         return Math.abs(ts2.getPosX() - ts1.getPosX()) + Math.abs(ts2.getPosY() - ts1.getPosY());
     }
 
-    public boolean changeStaionOfTrain(String username, int newTsId){
+    public boolean changeStationOfTrain(String username, int newTsId){
         try {
             // NOT SAFE !
             PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
@@ -704,17 +719,16 @@ public class DataBase {
      * @return true is the player has been able to move, else false
      */
     public boolean sendTrainToNewStation(String username, int newTsId){
-        try {
-            TrainStation ts = getTrainStation(newTsId);
-            if(ts == null) return false;
-            int currentTsId = getTrain(username).getTrainStation().getId();
-            if(ts.getId() == currentTsId) return false;
-            //A modifier pour donner le vrai temps de trajet initial
-            int eta = calculateTravelTime(currentTsId, newTsId);
-            Wagon loco = getPlayerLoco(username);
-            if(loco == null) return false;
-            eta = Math.max(1, eta / WagonStats.LOCO_SPEED[loco.getLevel() - 1]);
+        TrainStation ts = getTrainStation(newTsId);
+        if(ts == null) return false;
+        int currentTsId = getTrain(username).getTrainStation().getId();
+        if(ts.getId() == currentTsId) return false;
+        int eta = calculateTravelTime(currentTsId, newTsId);
+        Wagon loco = getPlayerLoco(username);
+        if(loco == null) return false;
+        eta = Math.max(1, eta / WagonStats.LOCO_SPEED[loco.getLevel() - 1]);
 
+        try {
             PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, newTsId);
             ps.setObject(2, username);
@@ -750,7 +764,7 @@ public class DataBase {
                 ResultSet resultSet = ps.getGeneratedKeys();
                 resultSet.next();
                 result = resultSet.getInt(1);
-                        // need tests
+                // need tests
                 Server.getInstance().getRegenerationController().addMine(new Mine(resultSet.getInt(1), type, qteResources, emplacement));
             }
         } catch (SQLException e) {
@@ -765,7 +779,7 @@ public class DataBase {
      * @return the list of all the mines at the station
      */
     public ArrayList<Mine> getAllMinesOfStation(int trainStation){
-        ArrayList<Mine> result = new ArrayList<Mine>();
+        ArrayList<Mine> result = new ArrayList<>();
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Mine WHERE `emplacement` = " + trainStation + ";", Statement.RETURN_GENERATED_KEYS);
@@ -791,7 +805,7 @@ public class DataBase {
      * @return the list of all the mines
      */
     public ArrayList<Mine> getAllMines(){
-        ArrayList<Mine> result = new ArrayList<Mine>();
+        ArrayList<Mine> result = new ArrayList<>();
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Mine");
@@ -825,7 +839,7 @@ public class DataBase {
                 int qteRessources = resultSet.getInt("qteRessources");
                 int emplacement = resultSet.getInt("emplacement");
 
-                mine = new Mine(id, type, qteRessources, emplacement);
+                mine = new Mine(idMine, type, qteRessources, emplacement);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -859,27 +873,40 @@ public class DataBase {
     }
 
     /**
+     *
+     * @param id mine id
+     * @param changeAmount how much you want to change
+     * @return the max possible change
+     */
+    public int canChangeMineAmount(int id, int changeAmount) {
+        int maxChange = changeAmount;
+
+        int MAX = 1000;// int MAX = getMine(id).getMax(); lorsqu'il y aura le MAX dans la database
+        int MIN = 0;
+        int currentAmount = getMine(id).getAmount();
+        int newAmount =  currentAmount + changeAmount;
+        if(newAmount > MAX) maxChange = MAX - currentAmount;
+        if(newAmount < MIN) maxChange = MIN - currentAmount;
+
+        return maxChange;
+    }
+
+    /**
      * Mets à jour la mine donnée avec la quantité donnée
      *
      * @param id           : mine à mettre à jour
      * @param changeAmount : quantité à mettre à jour
      */
     public boolean changeMineAmount(int id, int changeAmount){
-        int MAX = 1000;
-        ///int MAX = getMine(id).getMax(); lorsqu'il y aura le MAX dans la database
         try {
-
-            int current_amount = getMine(id).getAmount();
-            //if(current_amount == MAX || current_amount == 0) return false;// maybe not good, maybe return the mine
-            current_amount += changeAmount;
-            if(current_amount > MAX) current_amount = MAX;
-            if(current_amount < 0) current_amount = 0;
-
             PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE `id`=?", Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, current_amount);
+            ps.setObject(1, getMine(id).getAmount() + changeAmount);
             ps.setObject(2, id);
             int status = ps.executeUpdate();
-            if(status != 0) return true;
+
+            if(status != 0) {
+                return true;
+            }
         }catch (SQLException e) {
             e.printStackTrace();
         }
