@@ -9,8 +9,6 @@ import Utils.OTrainProtocol;
 import Utils.WagonStats;
 
 import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,17 +51,15 @@ public class cli_gui_Mine {
     }
 
     public void update(){
-        train = Client.getInstance().getTrain();
         updateMinesPanel();
-        updateCurrentlyMinginWagons();
+        updateCurrentlyMiningWagons();
         updateMinesList();
         updateWagonsList();
     }
 
     public void updateExceptList() {
-        train = Client.getInstance().getTrain();
         updateMinesPanel();
-        updateCurrentlyMinginWagons();
+        updateCurrentlyMiningWagons();
     }
 
     public void updateMinesPanel() {
@@ -74,7 +70,7 @@ public class cli_gui_Mine {
         }
     }
 
-    public void updateCurrentlyMinginWagons() {
+    public void updateCurrentlyMiningWagons() {
         currently_mining_panel.setLayout(new GridLayout(0,1));
         currently_mining_panel.removeAll();
         for( WagonMining wm : Client.getInstance().getWagonMining()) {
