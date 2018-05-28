@@ -31,7 +31,7 @@ public class Server {
 
     public void init() {
         dataBase = new DataBase();
-        dataBase.insertTrainStation(0, 0, 30, 30);// make sure the starting station exist
+        dataBase.insertTrainStation(0, 0, 100, 100);// make sure the starting station exist
         travelController = new Travel();
         regenerationController = new MineRegeneration();
         mineController = new MineController();

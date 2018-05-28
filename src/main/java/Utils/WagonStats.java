@@ -36,6 +36,11 @@ public class WagonStats {
     public static final String CARGO_NAME = "Cargo wagon";
     public static final int CARGO_CAPACITY[] = {100, 200, 400, 600, 1000};
 
+    // --- CRAFT WAGON --- //
+    public static final int CRAFT_ID = 6;
+    public static final String CRAFT_NAME = "Craft wagon";
+    public static final int CRAFT_PARALLEL[] = {1, 2, 3, 4, 5};
+
 
 
 
@@ -46,6 +51,7 @@ public class WagonStats {
             case SAW_ID: return SAW_NAME;
             case PUMP_ID: return PUMP_NAME;
             case CARGO_ID: return CARGO_NAME;
+            case CRAFT_ID: return CRAFT_NAME;
         }
         return "unknown";
     }
@@ -69,5 +75,11 @@ public class WagonStats {
         int capacity = 0;
         for(Wagon w : train.getWagons()) if(w.getTypeID() == CARGO_ID) capacity += CARGO_CAPACITY[w.getLevel() - 1];
         return capacity;
+    }
+
+    public static int getMaxParallelCraft(Train train) {
+        int parallelCraft = 0;
+        for(Wagon w : train.getWagons()) if(w.getTypeID() == CRAFT_ID) parallelCraft += CRAFT_PARALLEL[w.getLevel() - 1];
+        return parallelCraft;
     }
 }

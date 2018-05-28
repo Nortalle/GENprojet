@@ -21,7 +21,6 @@ public class CliGuiInventory {
 
     public void updateObjectsList() {
         objectsPanel.removeAll();
-        //objectsPanel.setLayout(new GridLayout(0, 2));
         GridBagConstraints gbc = new GridBagConstraints();
         for(ResourceAmount ra : Client.getInstance().getAllObjects()) {
             gbc.gridx = 0;

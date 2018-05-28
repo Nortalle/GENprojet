@@ -71,6 +71,12 @@ public class DataBase {
             ps.setObject(2, WagonStats.CARGO_ID);
             status = ps.executeUpdate();
             if(status == 0) return false;
+
+            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, WagonStats.CRAFT_ID);
+            status = ps.executeUpdate();
+            if(status == 0) return false;
             // //
 
             return true;

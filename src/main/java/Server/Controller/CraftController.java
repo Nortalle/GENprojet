@@ -4,12 +4,14 @@ import Game.Craft;
 import Server.Server;
 import Utils.Recipe;
 import Utils.ResourceAmount;
+import Utils.WagonStats;
 
 import java.util.ArrayList;
 import java.util.TimerTask;
 
 public class CraftController {
     private ArrayList<Craft> crafts = new ArrayList<>();
+    private ArrayList<Craft> waiting = new ArrayList<>();
 
     private final int INTERVAL_MS = 1000;
 
@@ -30,13 +32,23 @@ public class CraftController {
                     }
                 }
 
-                for(Craft c : toRemove) crafts.remove(c);
+                // TODO NEED TESTS
+                for(Craft c : toRemove) {
+                    crafts.remove(c);
+                    for(int i = 0; i < waiting.size(); i++) {
+                        if(waiting.get(i).getUsername().equals(c.getUsername())) {
+                            crafts.add(waiting.get(i));
+                            waiting.remove(i--);
+                        }
+                    }
+                }
             }
         }, INTERVAL_MS, INTERVAL_MS);
     }
 
     public void addCraft(Craft craft) {
-        crafts.add(craft);
+        if(getPlayerCurrentCrafts(craft.getUsername()).size() < WagonStats.getMaxParallelCraft(Server.getInstance().getDataBase().getTrain(craft.getUsername()))) crafts.add(craft);
+        else waiting.add(craft);
     }
 
     public boolean tryCraft(String username, String recipeLine) {
@@ -55,6 +67,16 @@ public class CraftController {
     }
 
     public ArrayList<Craft> getPlayerCrafts(String username) {
+        ArrayList<Craft> result = new ArrayList<>();
+        for(Craft c : crafts) {
+            if(c.getUsername().equals(username)) {
+                result.add(c);
+            }
+        }
+        return result;
+    }
+
+    private ArrayList<Craft> getPlayerCurrentCrafts(String username) {
         ArrayList<Craft> result = new ArrayList<>();
         for(Craft c : crafts) {
             if(c.getUsername().equals(username)) {
