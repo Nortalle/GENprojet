@@ -5,9 +5,6 @@ import Game.TrainStation;
 import Server.Server;
 import Server.DataBase;
 
-import javax.swing.*;
-import javax.swing.Timer;
-import java.awt.event.ActionListener;
 import java.util.*;
 
 public class Travel {
@@ -21,7 +18,7 @@ public class Travel {
                 ArrayList<String> toRemove = new ArrayList<>();
                 Iterator it = map.entrySet().iterator();
                 while(it.hasNext()) {
-                    Map.Entry pair = (Map.Entry)it.next();
+                    Map.Entry pair = (Map.Entry)it.next();// might be able to do better
                     int newValue[] = (int[]) pair.getValue();
                     if(--newValue[0] == 0) toRemove.add((String) pair.getKey());
                     pair.setValue(newValue);

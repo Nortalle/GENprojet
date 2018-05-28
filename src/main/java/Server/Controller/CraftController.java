@@ -2,16 +2,17 @@ package Server.Controller;
 
 import Game.Craft;
 import Server.Server;
+import Server.DataBase;
 import Utils.Recipe;
 import Utils.ResourceAmount;
 import Utils.WagonStats;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TimerTask;
 
 public class CraftController {
     private ArrayList<Craft> crafts = new ArrayList<>();
-    private ArrayList<Craft> waiting = new ArrayList<>();// merge and use hash map
 
     private final int INTERVAL_MS = 1000;
 
@@ -19,37 +20,29 @@ public class CraftController {
         new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                DataBase db = Server.getInstance().getDataBase();
                 ArrayList<Craft> toRemove = new ArrayList<>();
+                HashMap<String, Integer> nbrCrafts = new HashMap<>();
                 for(Craft c : crafts) {
+                    if(nbrCrafts.merge(c.getUsername(), 1, (a, b) -> a + b) > WagonStats.getMaxParallelCraft(db.getTrain(c.getUsername()))) continue;
                     c.decreaseRemainingTime();
                     if(c.getRemainingTime() <= 0) {
                         // insert in DB
                         ResourceAmount finalProduct = Recipe.getAllRecipes().get(c.getRecipeIndex()).getFinalProduct();
                         int finalAmount = finalProduct.getQuantity();
-                        finalAmount = Server.getInstance().getDataBase().canUpdatePlayerObjects(c.getUsername(), finalAmount);
-                        Server.getInstance().getDataBase().updatePlayerObjects(c.getUsername(), finalProduct.getRessource().ordinal(), finalAmount);
+                        finalAmount = db.canUpdatePlayerObjects(c.getUsername(), finalAmount);
+                        db.updatePlayerObjects(c.getUsername(), finalProduct.getRessource().ordinal(), finalAmount);
                         toRemove.add(c);
                     }
                 }
 
-                // TODO NEED TESTS
-                for(Craft c : toRemove) {
-                    crafts.remove(c);
-                    for(int i = 0; i < waiting.size(); i++) {
-                        if(waiting.get(i).getUsername().equals(c.getUsername())) {
-                            crafts.add(waiting.get(i));
-                            waiting.remove(i--);
-                        }
-                    }
-                }
+                for(Craft c : toRemove) crafts.remove(c);
             }
         }, INTERVAL_MS, INTERVAL_MS);
     }
 
     public void addCraft(Craft craft) {
-        if(getPlayerCurrentCrafts(craft.getUsername()).size() < WagonStats.getMaxParallelCraft(Server.getInstance().getDataBase().getTrain(craft.getUsername()))) crafts.add(craft);
-        else waiting.add(craft);
-        
+        crafts.add(craft);
     }
 
     public boolean tryCraft(String username, String recipeLine) {
@@ -68,23 +61,6 @@ public class CraftController {
     }
 
     public ArrayList<Craft> getPlayerCrafts(String username) {
-        ArrayList<Craft> result = new ArrayList<>();
-
-        for(Craft c : crafts) {
-            if(c.getUsername().equals(username)) {
-                result.add(c);
-            }
-        }
-        for(Craft c : waiting) {
-            if(c.getUsername().equals(username)) {
-                result.add(c);
-            }
-        }
-
-        return result;
-    }
-
-    private ArrayList<Craft> getPlayerCurrentCrafts(String username) {
         ArrayList<Craft> result = new ArrayList<>();
         for(Craft c : crafts) {
             if(c.getUsername().equals(username)) {
