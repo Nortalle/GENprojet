@@ -6,6 +6,7 @@ import Client.*;
 import Game.Resources;
 
 import java.awt.event.*;
+import java.util.TimerTask;
 
 public class ClientForm {
     private JPanel panel_main;
@@ -73,10 +74,19 @@ public class ClientForm {
 
     public void update() {
         Client.getInstance().getTrain();
+        updateResources();
         cli_gui_gare.update();
         cli_gui_mine.update();
         cli_gui_craft.update();
         cliGuiInventory.update();
+    }
+
+    public void updateExceptList() {
+        Client.getInstance().getTrain();
         updateResources();
+        cli_gui_gare.updateExceptList();
+        cli_gui_mine.updateExceptList();
+        cli_gui_craft.updateExceptList();
+        cliGuiInventory.update();// no list for the moment
     }
 }

@@ -49,9 +49,7 @@ public class cli_gui_craft {
                 if(selectedRecipe == null) return;
                 Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
 
-                updateAvailableCrafts();
-                updateCraftCost();
-                updateOrderQueue();
+                updateExceptList();
             }
         });
     }
@@ -85,7 +83,6 @@ public class cli_gui_craft {
 
     public void updateAvailableCrafts(){
         ArrayList<ResourceAmount> playerObjects = Client.getInstance().getAllObjects();
-        for(ResourceAmount ra : playerObjects) System.out.println(ra);
 
         availableCrafts.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
@@ -120,6 +117,12 @@ public class cli_gui_craft {
     public void update() {
         updateAvailableCrafts();
         updateRecipeDropdown();
+        updateCraftCost();
+        updateOrderQueue();
+    }
+
+    public void updateExceptList() {
+        updateAvailableCrafts();
         updateCraftCost();
         updateOrderQueue();
     }
