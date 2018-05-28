@@ -11,7 +11,7 @@ import java.util.TimerTask;
 
 public class CraftController {
     private ArrayList<Craft> crafts = new ArrayList<>();
-    private ArrayList<Craft> waiting = new ArrayList<>();
+    private ArrayList<Craft> waiting = new ArrayList<>();// merge and use hash map
 
     private final int INTERVAL_MS = 1000;
 
@@ -49,6 +49,7 @@ public class CraftController {
     public void addCraft(Craft craft) {
         if(getPlayerCurrentCrafts(craft.getUsername()).size() < WagonStats.getMaxParallelCraft(Server.getInstance().getDataBase().getTrain(craft.getUsername()))) crafts.add(craft);
         else waiting.add(craft);
+        
     }
 
     public boolean tryCraft(String username, String recipeLine) {
@@ -68,11 +69,18 @@ public class CraftController {
 
     public ArrayList<Craft> getPlayerCrafts(String username) {
         ArrayList<Craft> result = new ArrayList<>();
+
         for(Craft c : crafts) {
             if(c.getUsername().equals(username)) {
                 result.add(c);
             }
         }
+        for(Craft c : waiting) {
+            if(c.getUsername().equals(username)) {
+                result.add(c);
+            }
+        }
+
         return result;
     }
 
