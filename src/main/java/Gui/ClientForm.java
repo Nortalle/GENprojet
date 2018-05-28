@@ -1,8 +1,6 @@
 package Gui;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import Client.*;
 import Game.Resources;
@@ -41,6 +39,7 @@ public class ClientForm {
     private cli_gui_Gare cli_gui_gare;
     private Gui.cli_gui_craft cli_gui_craft;
     private JTextArea logTextArea;
+    private CliGuiInventory cliGuiInventory;
 
     public ClientForm() {
         Client.setClientLogComponent(logTextArea);
@@ -77,6 +76,7 @@ public class ClientForm {
         cli_gui_gare.update();
         cli_gui_mine.update();
         cli_gui_craft.update();
+        cliGuiInventory.update();
         updateResources();
     }
 }
