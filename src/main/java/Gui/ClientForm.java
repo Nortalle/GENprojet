@@ -41,6 +41,7 @@ public class ClientForm {
     private Gui.cli_gui_craft cli_gui_craft;
     private JTextArea logTextArea;
     private CliGuiInventory cliGuiInventory;
+    private CliGuiTrain cliGuiTrain;
 
     public ClientForm() {
         Client.setClientLogComponent(logTextArea);
@@ -79,6 +80,7 @@ public class ClientForm {
         cli_gui_mine.update();
         cli_gui_craft.update();
         cliGuiInventory.update();
+        cliGuiTrain.update();
     }
 
     public void updateExceptList() {
