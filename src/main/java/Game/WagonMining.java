@@ -53,20 +53,6 @@ public class WagonMining  {
         currentMine.fromJson((JsonObject) from.get("currentMine"));
     }
 
-    public static JsonArray listToJson(ArrayList<WagonMining> wagonMining) {
-        JsonArray list = new JsonArray();
-        for(WagonMining wm : wagonMining) list.add(wm.toJson());
-
-        return list;
-    }
-
-    public static ArrayList<WagonMining> listFromJson(JsonArray from) {
-        ArrayList<WagonMining> trainStations = new ArrayList<>();
-        for(JsonElement j : from) trainStations.add(new WagonMining((JsonObject) j));
-
-        return trainStations;
-    }
-
     public Wagon getWagon() {
         return wagon;
     }

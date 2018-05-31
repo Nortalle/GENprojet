@@ -43,20 +43,6 @@ public class UpgradeWagon {
         remainingTime = from.get("remainingTime").getAsInt();
     }
 
-    public static JsonArray listToJson(ArrayList<UpgradeWagon> upgrades) {
-        JsonArray list = new JsonArray();
-        for(UpgradeWagon upgrade : upgrades) list.add(upgrade.toJson());
-
-        return list;
-    }
-
-    public static ArrayList<UpgradeWagon> listFromJson(JsonArray from) {
-        ArrayList<UpgradeWagon> upgrades = new ArrayList<>();
-        for(JsonElement j : from) upgrades.add(new UpgradeWagon((JsonObject) j));
-
-        return upgrades;
-    }
-
     public void decreaseRemainingTime() {
         remainingTime--;
     }

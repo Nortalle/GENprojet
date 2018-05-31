@@ -43,20 +43,6 @@ public class CreateWagon {
         remainingTime = from.get("remainingTime").getAsInt();
     }
 
-    public static JsonArray listToJson(ArrayList<CreateWagon> createWagons) {
-        JsonArray list = new JsonArray();
-        for(CreateWagon createWagon : createWagons) list.add(createWagon.toJson());
-
-        return list;
-    }
-
-    public static ArrayList<CreateWagon> listFromJson(JsonArray from) {
-        ArrayList<CreateWagon> createWagons = new ArrayList<>();
-        for(JsonElement j : from) createWagons.add(new CreateWagon((JsonObject) j));
-
-        return createWagons;
-    }
-
     public void decreaseRemainingTime() {
         remainingTime--;
     }

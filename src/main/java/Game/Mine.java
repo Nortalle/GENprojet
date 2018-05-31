@@ -50,20 +50,6 @@ public class Mine {
         place = from.get("place").getAsInt();
     }
 
-    public static JsonArray listToJson(ArrayList<Mine> mines) {
-        JsonArray list = new JsonArray();
-        for(Mine m : mines) list.add(m.toJson());
-
-        return list;
-    }
-
-    public static ArrayList<Mine> listFromJson(JsonArray from) {
-        ArrayList<Mine> mines = new ArrayList<>();
-        for(JsonElement j : from) mines.add(new Mine((JsonObject) j));
-
-        return mines;
-    }
-
     public int getId() {
         return id;
     }

@@ -127,28 +127,28 @@ public class Client {
         writer.println(OTrainProtocol.GET_OBJECTS);
         writer.flush();
         String answer = readLine();
-        return ResourceAmount.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), ra -> new ResourceAmount(ra));
     }
 
     public ArrayList<Craft> getCrafts() {
         writer.println(OTrainProtocol.GET_PROD_QUEUE);
         writer.flush();
         String answer = readLine();
-        return Craft.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer),craft -> new Craft(craft));
     }
 
     public ArrayList<UpgradeWagon> getUpgrades() {
         writer.println(OTrainProtocol.GET_UPGRADE_QUEUE);
         writer.flush();
         String answer = readLine();
-        return UpgradeWagon.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), uw -> new UpgradeWagon(uw));
     }
 
     public ArrayList<CreateWagon> getCreations() {
         writer.println(OTrainProtocol.GET_CREATION_QUEUE);
         writer.flush();
         String answer = readLine();
-        return CreateWagon.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), cw -> new CreateWagon(cw));
     }
 
     public Train getTrain() {
@@ -173,21 +173,21 @@ public class Client {
         writer.println(stationId);
         writer.flush();
         String answer = readLine();
-        return Train.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), train -> new Train(train));
     }
 
     private void updateWagonMining() {
         writer.println(OTrainProtocol.MINE_INFO);
         writer.flush();
         String answer = readLine();
-        wagonMining = WagonMining.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+        wagonMining = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), wm -> new WagonMining(wm));
     }
 
     public ArrayList<TrainStation> getStations() {
         writer.println(OTrainProtocol.GET_GARES);
         writer.flush();
         String answer = readLine();
-        return TrainStation.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), station -> new TrainStation(station));
     }
 
     public String changeStation(int stationId) {

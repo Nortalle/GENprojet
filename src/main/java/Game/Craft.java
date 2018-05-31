@@ -62,20 +62,6 @@ public class Craft {
         remainingTime = from.get("remainingTime").getAsInt();
     }
 
-    public static JsonArray listToJson(ArrayList<Craft> crafts) {
-        JsonArray list = new JsonArray();
-        for(Craft c : crafts) list.add(c.toJson());
-
-        return list;
-    }
-
-    public static ArrayList<Craft> listFromJson(JsonArray from) {
-        ArrayList<Craft> crafts = new ArrayList<>();
-        for(JsonElement j : from) crafts.add(new Craft((JsonObject) j));
-
-        return crafts;
-    }
-
     @Override
     public String toString() {
         return Recipe.getAllRecipes().get(recipeIndex).getName() + " : " + remainingTime;

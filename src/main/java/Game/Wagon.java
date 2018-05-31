@@ -49,24 +49,6 @@ public class Wagon {
         type = WagonStats.WagonType.values()[from.get("typeID").getAsInt()];
     }
 
-    public static JsonArray listToJson(ArrayList<Wagon> wagons) {
-        JsonArray list = new JsonArray();
-        for(Wagon w : wagons) {
-            list.add(w.toJson());
-        }
-
-        return list;
-    }
-
-    public static ArrayList<Wagon> listFromJson(JsonArray from) {
-        ArrayList<Wagon> wagons = new ArrayList<>();
-        for(JsonElement j : from) {
-            wagons.add(new Wagon((JsonObject) j));
-        }
-
-        return wagons;
-    }
-
     public void levelUp(){
         if(level < WagonStats.LEVEL_MAX){
             level++;
