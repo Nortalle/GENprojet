@@ -19,7 +19,7 @@ public class WagonStats {
         CRAFT
     }
 
-    public static final int LEVEL_MAX = 20;
+    public static final int LEVEL_MAX = 6;
 
     // --- LOCO --- //
     //public static final int LOCO_ID = 1;

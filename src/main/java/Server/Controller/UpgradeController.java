@@ -32,18 +32,26 @@ public class UpgradeController {
 
                         current.levelUp();
 
-                        dataBase.updateWagon(current.)
+                        dataBase.updateWagonLevel(current.getId(), current.getLevel());
+
+                        toRemove.add(upgrade);
+
                     }
                 }
 
+                for(UpgradeWagon upgrade : toRemove) upgrades.remove(upgrade);
             }
         }, INTERVAL_MS, INTERVAL_MS);
     }
 
     public boolean tryUpgrade(String username, String wagonId) {
-        Wagon wagon_to_upgrade = dataBase.getWagon(Integer.valueOf(wagonId));
+        Wagon wagonToUpgrade = dataBase.getWagon(Integer.valueOf(wagonId));
 
-        ArrayList<ResourceAmount> resourceAmounts = WagonStats.getUpgradeCost(wagon_to_upgrade);
+        if(wagonToUpgrade.getLevel() > WagonStats.LEVEL_MAX){
+            return false;
+        }
+
+        ArrayList<ResourceAmount> resourceAmounts = WagonStats.getUpgradeCost(wagonToUpgrade);
 
         if (resourceAmounts.equals(null)) {
             return false;
@@ -56,7 +64,7 @@ public class UpgradeController {
 
         for (ResourceAmount ra : resourceAmounts)
             dataBase.updatePlayerObjects(username, ra.getRessource().ordinal(), -ra.getQuantity());
-        addUpgrade(new UpgradeWagon(username, wagon_to_upgrade, 5));
+        addUpgrade(new UpgradeWagon(username, wagonToUpgrade, 5));
 
         return true;
     }
