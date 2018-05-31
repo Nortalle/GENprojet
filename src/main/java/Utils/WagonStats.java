@@ -67,17 +67,22 @@ public class WagonStats {
         return "unknown";
     }
 
+    public static int getLocoSpeed(Wagon loco) {
+        if(loco.getType() != WagonType.LOCO) return 1;// if not a loco, not zero because distance/speed
+        return LOCO_SPEED[loco.getLevel() - 1];
+    }
+
     public static int getMiningTime(int type, int level) {
         return MINING_TIME[type - 2][level - 1];
     }
 
 
     public static int getMiningTime(Wagon wagon) {
-        return MINING_TIME[wagon.getType().ordinal() - 2][wagon.getLevel() - 1];
+        return MINING_TIME[wagon.getType().ordinal() - 1][wagon.getLevel() - 1];
     }
 
     public static boolean canMine(Wagon wagon, Mine mine) {// need tests
-        for(int i : CAN_MINE[wagon.getType().ordinal() - 2]) {
+        for(int i : CAN_MINE[wagon.getType().ordinal() - 1]) {
             if(i == mine.getResource()) return true;
         }
         return false;

@@ -34,6 +34,9 @@ public class Wagon {
         wagon.add("id", new JsonPrimitive(id));
         wagon.add("weight", new JsonPrimitive(weight));
         wagon.add("level", new JsonPrimitive(level));
+        if(type == null){
+            type = WagonStats.WagonType.LOCO;
+        }
         wagon.add("typeID", new JsonPrimitive(type.ordinal()));
 
         return wagon;
