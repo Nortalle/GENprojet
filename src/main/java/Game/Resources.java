@@ -21,8 +21,7 @@ public class Resources {
     private static final int PETROL_ID = 4;
     private static final int FER_ID = 5;
     private static final int CUIVRE_ID = 6;
-    private static final int ACIER_ID = 7;
-    private static final int OR_ID = 8;
+    private static final int OR_ID = 7;
 
     private int scrum;//unité monétaire du jeu
     private int eau;
@@ -31,7 +30,6 @@ public class Resources {
     private int petrol;
     private int fer;
     private int cuivre;
-    private int acier;
     private int or;
 
     /**
@@ -56,8 +54,7 @@ public class Resources {
         petrol = resources[4];
         fer = resources[5];
         cuivre = resources[6];
-        acier = resources[7];
-        or = resources[8];
+        or = resources[7];
     }
 
     public Resources(JsonObject json){
@@ -86,7 +83,6 @@ public class Resources {
         resources.add("petrol", new JsonPrimitive(petrol));
         resources.add("fer", new JsonPrimitive(fer));
         resources.add("cuivre", new JsonPrimitive(cuivre));
-        resources.add("acier", new JsonPrimitive(acier));
         resources.add("or", new JsonPrimitive(or));
 
         return resources;
@@ -112,7 +108,6 @@ public class Resources {
         petrol = from.get("petrol").getAsInt();
         fer = from.get("fer").getAsInt();
         cuivre = from.get("cuivre").getAsInt();
-        acier = from.get("acier").getAsInt();
         or = from.get("or").getAsInt();
     }
 
@@ -173,14 +168,6 @@ public class Resources {
         this.cuivre = cuivre;
     }
 
-    public int getAcier() {
-        return acier;
-    }
-
-    public void setAcier(int acier) {
-        this.acier = acier;
-    }
-
     public int getOr() {
         return or;
     }
@@ -201,12 +188,11 @@ public class Resources {
         petrol = all;
         fer = all;
         cuivre = all;
-        acier = all;
         or = all;
     }
 
     public int[] toArray() {
-        int array[] = {scrum, eau, bois, chardon, petrol, fer, cuivre, acier, or};
+        int array[] = {scrum, eau, bois, chardon, petrol, fer, cuivre, or};
         return array;
     }
 }

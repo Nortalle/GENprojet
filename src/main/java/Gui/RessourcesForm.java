@@ -54,7 +54,6 @@ public class RessourcesForm {
         oil_i.setText(Integer.toString(resources.getPetrol()));
         iron_ore_i.setText(Integer.toString(resources.getFer()));
         copper_ore_i.setText(Integer.toString(resources.getCuivre()));
-        steel_i.setText(Integer.toString(resources.getAcier()));
         gold_ore_i.setText(Integer.toString(resources.getOr()));
 
     }
