@@ -64,6 +64,12 @@ public class Wagon {
         return wagons;
     }
 
+    public void levelUp(){
+        if(level < WagonStats.LEVEL_MAX){
+            level++;
+        }
+    }
+
     @Override
     public String toString() {
         return WagonStats.getName(type) + "-" + id;

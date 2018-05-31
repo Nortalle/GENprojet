@@ -19,6 +19,8 @@ public class WagonStats {
         CRAFT
     }
 
+    public static final int LEVEL_MAX = 20;
+
     // --- LOCO --- //
     //public static final int LOCO_ID = 1;
     public static final String LOCO_NAME = "Loco";
@@ -101,7 +103,7 @@ public class WagonStats {
      */
     public static ArrayList<ResourceAmount> getUpgradeCost(Wagon w){
 
-        if(w.getLevel() < 1 || w.getLevel() > 100) {
+        if(w.getLevel() < 1 || w.getLevel() > LEVEL_MAX) {
             return null;
         }
 
