@@ -23,26 +23,31 @@ public class CraftController {
                 DataBase db = Server.getInstance().getDataBase();
                 ArrayList<Craft> toRemove = new ArrayList<>();
                 HashMap<String, Integer> nbrCrafts = new HashMap<>();
-                for(Craft c : crafts) {
-                    if(nbrCrafts.merge(c.getUsername(), 1, (a, b) -> a + b) > WagonStats.getMaxParallelCraft(db.getTrain(c.getUsername()))) continue;
-                    c.decreaseRemainingTime();
-                    if(c.getRemainingTime() <= 0) {
-                        // insert in DB
-                        ResourceAmount finalProduct = Recipe.getAllRecipes().get(c.getRecipeIndex()).getFinalProduct();
-                        int finalAmount = finalProduct.getQuantity();
-                        finalAmount = db.canUpdatePlayerObjects(c.getUsername(), finalAmount);
-                        db.updatePlayerObjects(c.getUsername(), finalProduct.getRessource().ordinal(), finalAmount);
-                        toRemove.add(c);
+                synchronized (crafts) {
+                    for (Craft c : crafts) {
+                        if (nbrCrafts.merge(c.getUsername(), 1, (a, b) -> a + b) > WagonStats.getMaxParallelCraft(db.getTrain(c.getUsername())))
+                            continue;
+                        c.decreaseRemainingTime();
+                        if (c.getRemainingTime() <= 0) {
+                            // insert in DB
+                            ResourceAmount finalProduct = Recipe.getAllRecipes().get(c.getRecipeIndex()).getFinalProduct();
+                            int finalAmount = finalProduct.getQuantity();
+                            finalAmount = db.canUpdatePlayerObjects(c.getUsername(), finalAmount);
+                            db.updatePlayerObjects(c.getUsername(), finalProduct.getRessource().ordinal(), finalAmount);
+                            toRemove.add(c);
+                        }
                     }
-                }
 
-                for(Craft c : toRemove) crafts.remove(c);
+                    for (Craft c : toRemove) crafts.remove(c);
+                }
             }
         }, INTERVAL_MS, INTERVAL_MS);
     }
 
     public void addCraft(Craft craft) {
-        crafts.add(craft);
+        synchronized (crafts) {
+            crafts.add(craft);
+        }
     }
 
     public boolean tryCraft(String username, String recipeLine) {
@@ -62,9 +67,11 @@ public class CraftController {
 
     public ArrayList<Craft> getPlayerCrafts(String username) {
         ArrayList<Craft> result = new ArrayList<>();
-        for(Craft c : crafts) {
-            if(c.getUsername().equals(username)) {
-                result.add(c);
+        synchronized (crafts) {
+            for (Craft c : crafts) {
+                if (c.getUsername().equals(username)) {
+                    result.add(c);
+                }
             }
         }
         return result;
