@@ -1,6 +1,7 @@
 import Game.Mine;
 import Game.Resources;
 import Game.TrainStation;
+import Game.Wagon;
 import Server.DataBase;
 import Server.Server;
 import Utils.Ressource;
@@ -73,4 +74,47 @@ public class TestDataBase {
         TrainStation tsNext = dataBase.getTrainStation(stationId);
         assertEquals(tsPrev.getMines().size() + 2, tsNext.getMines().size());
     }
+
+    //TEST ON WAGON
+
+    @Test
+    public void addWagon(){
+        dataBase.insertPlayer(username, password);
+        int id = dataBase.addWagon(username, 1000, 1, 1);
+        Wagon w = new Wagon(id, 1000, 1, 1);
+        Wagon w1 = dataBase.getWagon(id);
+        String usernamefromDB = dataBase.getUsernameByWagonId(id);
+        assertEquals(w.getId(), w1.getId());
+        assertEquals(w.getTypeID(), w1.getTypeID());
+        assertEquals(w.getLevel(), w1.getLevel());
+        assertEquals(w.getWeight(), w1.getWeight());
+        assertEquals(username, usernamefromDB);
+
+    }
+
+
+    @Test
+    public void updateWagon(){
+        dataBase.insertPlayer(username, password);
+        int id = dataBase.addWagon(username, 1000, 1, 1);
+        boolean changeWorked = dataBase.updateWagon(username, 1200, 2, 2, id);
+        Wagon w = dataBase.getWagon(id);
+        assertTrue(changeWorked);
+        assertEquals(1200, w.getWeight());
+        assertEquals(2, w.getLevel());
+        assertEquals(2, w.getTypeID());
+    }
+
+    @Test
+    public void updateWagonLevel(){
+        dataBase.insertPlayer(username, password);
+        int id = dataBase.addWagon(username, 1000, 1, 1);
+        boolean changeWorked = dataBase.updateWagonLevel(id, 10);
+        Wagon w = dataBase.getWagon(id);
+        assertTrue(changeWorked);
+        assertEquals(10, w.getLevel());
+    }
+
+
+
 }

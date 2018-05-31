@@ -344,6 +344,11 @@ public class DataBase {
         return train;
     }
 
+    /**
+     *
+     * @param stationId id of the train station
+     * @return a list of all the trains in the station
+     */
     public ArrayList<Train> getAllTrainsAtStation(int stationId){
         ArrayList<Train> trains = new ArrayList<>();
         try {
@@ -403,6 +408,21 @@ public class DataBase {
             ps.setObject(3, level);
             ps.setObject(4, type);
             ps.setObject(5, id);
+            int status = ps.executeUpdate();
+            if(status != 0){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateWagonLevel(int id, int level){
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE Wagon SET `niveau`=? WHERE `id`=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, level);
+            ps.setObject(2, id);
             int status = ps.executeUpdate();
             if(status != 0){
                 return true;
