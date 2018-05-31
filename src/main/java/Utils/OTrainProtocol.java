@@ -19,7 +19,7 @@ public class OTrainProtocol {
 
 
     /* Train related commands */
-    // gets the train informations
+    // gets the train information
     public static final String GET_TRAIN_STATUS = "GET_TRAIN_STATUS";
     // gets all trains at station
     public static final String GET_TRAINS_AT = "GET_TRAINS_AT";
@@ -47,6 +47,12 @@ public class OTrainProtocol {
     public static final String CRAFT = "CRAFT";
     // removes the craft from prod queue
     public static final String CANCEL_CRAFT = "CANCEL_CRAFT";
+
+    /* Upgrade related commands */
+    // get the list of production
+    public static final String GET_UPGRADE_QUEUE = "GET_UPGRADE_QUEUE";
+    // adds the object to the prod queue
+    public static final String UPGRADE = "UPGRADE";
 
     /* Connection related commands */
     // connects to the server
