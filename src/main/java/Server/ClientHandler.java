@@ -48,7 +48,7 @@ ClientHandler implements Runnable {
                     writer.println(db.getTrain(username).toJson());
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_OBJECTS)) {
-                    writer.println(ResourceAmount.listToJson(db.getPlayerObjects(username)));
+                    writer.println(JsonUtility.listToJson(db.getPlayerObjects(username), ra -> ra.toJson()));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_TRAINS_AT)) {
                     int stationId = Integer.valueOf(readLine());

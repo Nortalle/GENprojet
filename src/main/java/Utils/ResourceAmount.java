@@ -50,18 +50,4 @@ public class ResourceAmount {
         ressource = Ressource.Type.values()[from.get("ressource").getAsInt()];
         quantity = from.get("quantity").getAsInt();
     }
-
-    public static JsonArray listToJson(ArrayList<ResourceAmount> resourceAmounts) {
-        JsonArray list = new JsonArray();
-        for(ResourceAmount ra : resourceAmounts) list.add(ra.toJson());
-
-        return list;
-    }
-
-    public static ArrayList<ResourceAmount> listFromJson(JsonArray from) {
-        ArrayList<ResourceAmount> resourceAmounts = new ArrayList<>();
-        for(JsonElement j : from) resourceAmounts.add(new ResourceAmount((JsonObject) j));
-
-        return resourceAmounts;
-    }
 }
