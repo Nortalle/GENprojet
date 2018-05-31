@@ -145,7 +145,7 @@ public class Recipe {
 
     static Recipe ROBOTIC_ARM_RCPT;
     static {
-        ROBOTIC_ARM_RCPT = new Recipe("Robotic Arm", new ResourceAmount(Ressource.Type.ROBOTIC_ARM,1), 60);
+        ROBOTIC_ARM_RCPT = new Recipe("Robotic Arm", new ResourceAmount(Ressource.Type.ROBOTIC_ARM_T1,1), 60);
         ROBOTIC_ARM_RCPT.addCost(new ResourceAmount(Ressource.Type.STEEL_INGOT, 2));
         ROBOTIC_ARM_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 12));
         ROBOTIC_ARM_RCPT.addCost(new ResourceAmount(Ressource.Type.RIVET, 1));
@@ -170,10 +170,42 @@ public class Recipe {
         PLASTIC_SHEET_RCPT.addCost(new ResourceAmount(Ressource.Type.PLASTIC, 1));
     }
 
+    static Recipe SAW_T1_RCPT;
+    static {
+        SAW_T1_RCPT = new Recipe("Saw T1", new ResourceAmount(Ressource.Type.SAW_T1,1), 60);
+        SAW_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.STEEL_INGOT, 5));
+    }
 
+    static Recipe PUMP_T1_RCPT;
+    static {
+        PUMP_T1_RCPT = new Recipe("Pump T1", new ResourceAmount(Ressource.Type.PUMP_T1,1), 120);
+        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 6));
+        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_WHEEL, 1));
+        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_TUBE, 12));
+        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 9));
+        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.RIVET, 5));
+    }
 
+    static Recipe PROCESSOR_T1_RCPT;
+    static {
+        PROCESSOR_T1_RCPT = new Recipe("Processeur T1", new ResourceAmount(Ressource.Type.PROCESSOR_T1,1), 180);
+        PROCESSOR_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_CABLE, 8));
+        PROCESSOR_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.PLASTIC_SHEET, 5));
+        PROCESSOR_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.GOLD_SHEET, 2));
+    }
 
+    static Recipe GOLD_INGOT_RCPT;
+    static {
+        GOLD_INGOT_RCPT = new Recipe("Gold Ingot", new ResourceAmount(Ressource.Type.GOLD_INGOT,1), 10);
+        GOLD_INGOT_RCPT.addCost(new ResourceAmount(Ressource.Type.GOLD_ORE, 10));
+        GOLD_INGOT_RCPT.addCost(new ResourceAmount(Ressource.Type.CHARCOAL, 1));
+    }
 
+    static Recipe GOLD_SHEET_RCPT;
+    static {
+        GOLD_SHEET_RCPT = new Recipe("2x Gold Sheet", new ResourceAmount(Ressource.Type.GOLD_SHEET,2), 10);
+        GOLD_SHEET_RCPT.addCost(new ResourceAmount(Ressource.Type.GOLD_INGOT, 1));
+    }
 
 }
 
