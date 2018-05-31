@@ -1,9 +1,11 @@
 import Game.Mine;
 import Game.Resources;
 import Game.TrainStation;
+import Game.Wagon;
 import Server.DataBase;
 import Server.Server;
 import Utils.Ressource;
+import Utils.WagonStats;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,4 +75,47 @@ public class TestDataBase {
         TrainStation tsNext = dataBase.getTrainStation(stationId);
         assertEquals(tsPrev.getMines().size() + 2, tsNext.getMines().size());
     }
+
+    //TEST ON WAGON
+
+    @Test
+    public void addWagon(){
+        dataBase.insertPlayer(username, password);
+        int id = dataBase.addWagon(username, 1000, 1, WagonStats.WagonType.DRILL.ordinal());
+        Wagon w = new Wagon(id, 1000, 1, WagonStats.WagonType.DRILL);
+        Wagon w1 = dataBase.getWagon(id);
+        String usernamefromDB = dataBase.getUsernameByWagonId(id);
+        assertEquals(w.getId(), w1.getId());
+        assertEquals(w.getType().ordinal(), w1.getType().ordinal());
+        assertEquals(w.getLevel(), w1.getLevel());
+        assertEquals(w.getWeight(), w1.getWeight());
+        assertEquals(username, usernamefromDB);
+
+    }
+
+
+    @Test
+    public void updateWagon(){
+        dataBase.insertPlayer(username, password);
+        int id = dataBase.addWagon(username, 1000, 1, 1);
+        boolean changeWorked = dataBase.updateWagon(username, 1200, 2, 2, id);
+        Wagon w = dataBase.getWagon(id);
+        assertTrue(changeWorked);
+        assertEquals(1200, w.getWeight());
+        assertEquals(2, w.getLevel());
+        assertEquals(2, w.getType().ordinal());
+    }
+
+    @Test
+    public void updateWagonLevel(){
+        dataBase.insertPlayer(username, password);
+        int id = dataBase.addWagon(username, 1000, 1, 1);
+        boolean changeWorked = dataBase.updateWagonLevel(id, 10);
+        Wagon w = dataBase.getWagon(id);
+        assertTrue(changeWorked);
+        assertEquals(10, w.getLevel());
+    }
+
+
+
 }
