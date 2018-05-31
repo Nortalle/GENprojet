@@ -29,11 +29,12 @@ public class Ressource {
         RIVET,
         COPPER_CABLE,
         ROBOTIC_ARM,
-        PETROL_BARREL,
+        PETROL,
         PLASTIC_SHEET,
         GOLD_INGOT,
         GOLD_SHEET,
-        PROCESSOR
+        PROCESSOR,
+        PLASTIC
     }
 
     /**
@@ -78,7 +79,7 @@ public class Ressource {
             case PLANK:
                 return "Plank";
             case NAILS:
-                return "Nails";
+                return "Nail Box";
             case WOODEN_CRATE:
                 return "Wooden Crate";
             case STEEL_INGOT:
@@ -89,7 +90,7 @@ public class Ressource {
                 return "Copper Cable";
             case ROBOTIC_ARM:
                 return "Robotic Arm";
-            case PETROL_BARREL:
+            case PETROL:
                 return "Petrol Barrel";
             case PLASTIC_SHEET:
                 return "plastic Sheet";
@@ -99,7 +100,8 @@ public class Ressource {
                 return "Gold Sheet";
             case PROCESSOR:
                 return "Processor";
-
+            case PLASTIC:
+                return "Plastic";
             default:
                 return "Not a Resource";
         }

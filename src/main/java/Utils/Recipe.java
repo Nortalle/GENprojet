@@ -105,11 +105,75 @@ public class Recipe {
         DRILL_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 30));
     }
 
-    static Recipe DRILL_T1_RCPT;
+    static Recipe PLANK_RCPT;
     static {
-        DRILL_T1_RCPT = new Recipe("Drill T1", new ResourceAmount(Ressource.Type.DRILL_T1,1), 120);
-        DRILL_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 100));
-        DRILL_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 30));
+        PLANK_RCPT = new Recipe("Plank", new ResourceAmount(Ressource.Type.PLANK,1), 1);
+        PLANK_RCPT.addCost(new ResourceAmount(Ressource.Type.WOOD_LOG, 1));
     }
+
+    static Recipe NAILS_RCPT;
+    static {
+        NAILS_RCPT = new Recipe("5x Nail Boxes", new ResourceAmount(Ressource.Type.NAILS,5), 5);
+        NAILS_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_INGOT, 1));
+    }
+
+    static Recipe WOODEN_CRATE_RCPT;
+    static {
+        WOODEN_CRATE_RCPT = new Recipe("Wooden Crate", new ResourceAmount(Ressource.Type.WOODEN_CRATE,1), 3);
+        WOODEN_CRATE_RCPT.addCost(new ResourceAmount(Ressource.Type.PLANK, 5));
+        WOODEN_CRATE_RCPT.addCost(new ResourceAmount(Ressource.Type.NAILS, 10));
+    }
+
+    static Recipe STEEL_INGOT_RCPT;
+    static {
+        STEEL_INGOT_RCPT = new Recipe("Steel Ingot", new ResourceAmount(Ressource.Type.STEEL_INGOT,1), 4);
+        STEEL_INGOT_RCPT.addCost(new ResourceAmount(Ressource.Type.CHARCOAL, 1));
+        STEEL_INGOT_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_INGOT, 1));
+    }
+
+    static Recipe RIVET_RCPT;
+    static {
+        RIVET_RCPT = new Recipe("5x Rivet", new ResourceAmount(Ressource.Type.RIVET,5), 5);
+        RIVET_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_INGOT, 1));
+    }
+
+    static Recipe COPPER_CABLE_RCPT;
+    static {
+        COPPER_CABLE_RCPT = new Recipe("3x Copper Cable", new ResourceAmount(Ressource.Type.COPPER_CABLE,3), 5);
+        COPPER_CABLE_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_INGOT, 1));
+    }
+
+    static Recipe ROBOTIC_ARM_RCPT;
+    static {
+        ROBOTIC_ARM_RCPT = new Recipe("Robotic Arm", new ResourceAmount(Ressource.Type.ROBOTIC_ARM,1), 60);
+        ROBOTIC_ARM_RCPT.addCost(new ResourceAmount(Ressource.Type.STEEL_INGOT, 2));
+        ROBOTIC_ARM_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 12));
+        ROBOTIC_ARM_RCPT.addCost(new ResourceAmount(Ressource.Type.RIVET, 1));
+        ROBOTIC_ARM_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_CABLE, 16));
+    }
+
+    static Recipe PETROL_RCPT;
+    static {
+        PETROL_RCPT = new Recipe("Petrol", new ResourceAmount(Ressource.Type.PETROL,1), 5);
+        PETROL_RCPT.addCost(new ResourceAmount(Ressource.Type.OIL, 10));
+    }
+
+    static Recipe PLASTIC_RCPT;
+    static {
+        PLASTIC_RCPT = new Recipe("Plastic", new ResourceAmount(Ressource.Type.PLASTIC,1), 10);
+        PLASTIC_RCPT.addCost(new ResourceAmount(Ressource.Type.PETROL, 1));
+    }
+
+    static Recipe PLASTIC_SHEET_RCPT;
+    static {
+        PLASTIC_SHEET_RCPT = new Recipe("3x Plastic Sheet", new ResourceAmount(Ressource.Type.PLASTIC_SHEET,3), 5);
+        PLASTIC_SHEET_RCPT.addCost(new ResourceAmount(Ressource.Type.PLASTIC, 1));
+    }
+
+
+
+
+
+
 }
 
