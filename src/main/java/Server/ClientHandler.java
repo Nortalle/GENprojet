@@ -96,6 +96,12 @@ ClientHandler implements Runnable {
                 } else if(line.equals(OTrainProtocol.GET_PROD_QUEUE)) {
                     writer.println(Craft.listToJson(Server.getInstance().getCraftController().getPlayerCrafts(username)));
                     writer.flush();
+                } else if(line.equals(OTrainProtocol.UPGRADE)) {
+                    writer.println(OTrainProtocol.FAILURE);// TODO
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_UPGRADE_QUEUE)) {
+                    writer.println(OTrainProtocol.FAILURE);// TODO
+                    writer.flush();
                 }
 
                 line = readLine();
