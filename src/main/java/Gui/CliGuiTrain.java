@@ -56,7 +56,7 @@ public class CliGuiTrain {
     public void updateWagonsPanel() {
         wagonsPanel.removeAll();
         for(Wagon w : train.getWagons()) {
-            wagonsPanel.add(new JLabel("" + WagonStats.getName(w.getTypeID()) + " "));
+            wagonsPanel.add(new JLabel("" + WagonStats.getName(w.getType()) + " "));
             wagonsPanel.add(new JLabel("" + w.getLevel()));
         }
     }

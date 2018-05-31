@@ -89,7 +89,7 @@ public class cli_gui_Mine {
     public void updateWagonsList() {
         select_wagon.removeAllItems();
         for(Wagon w : train.getWagons()){
-            if(w.getTypeID() == WagonStats.DRILL_ID || w.getTypeID() == WagonStats.SAW_ID || w.getTypeID() == WagonStats.PUMP_ID){
+            if(w.getType() == WagonStats.WagonType.DRILL || w.getType() == WagonStats.WagonType.SAW || w.getType() == WagonStats.WagonType.PUMP){
                 select_wagon.addItem(w);
             }
         }
