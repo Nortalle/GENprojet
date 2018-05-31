@@ -262,7 +262,7 @@ public class DataBase {
         int MIN = 0;
         int currentAmount = getPlayerCurrentCargoAmount(username);
         int newAmount =  currentAmount + amount;
-        if(newAmount > MAX) maxChange = MAX - currentAmount;
+        if(newAmount > MAX) maxChange = MAX - currentAmount;// TODO TEST < 0
         if(newAmount < MIN) maxChange = MIN - currentAmount;
 
         return maxChange;
@@ -911,7 +911,7 @@ public class DataBase {
         int MIN = 0;
         int currentAmount = getMine(id).getAmount();
         int newAmount =  currentAmount + changeAmount;
-        if(newAmount > MAX) maxChange = MAX - currentAmount;
+        if(newAmount > MAX) maxChange = MAX - currentAmount;// TODO TEST < 0
         if(newAmount < MIN) maxChange = MIN - currentAmount;
 
         return maxChange;

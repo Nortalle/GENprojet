@@ -50,7 +50,7 @@ public class WagonStats {
     // --- CARGO WAGON --- //
     //public static final int CARGO_ID = 5;
     public static final String CARGO_NAME = "Cargo wagon";
-    public static final int BASE_CARGO_CAPACITY = 1000;
+    public static final int BASE_CARGO_CAPACITY = 500;
     public static final int CARGO_CAPACITY[] = {100, 200, 400, 600, 1000};
 
     // --- CRAFT WAGON --- //
