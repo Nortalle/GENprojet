@@ -13,28 +13,30 @@ public class Ressource {
         OIL,
         IRON_ORE,
         COPPER_ORE,
-        STEEL,// TODO DELETE
         GOLD_ORE,
         IRON_INGOT,
         COPPER_INGOT,
         IRON_PLATE,
         IRON_WHEEL,
         COPPER_GEAR,
-        COPPER_TUBE,
-        DRILL_T1,// FROM HERE
+        COPPER_TUBE,// FROM HERE
         PLANK,
         NAILS,
         WOODEN_CRATE,
         STEEL_INGOT,
         RIVET,
         COPPER_CABLE,
-        ROBOTIC_ARM,
         PETROL,
         PLASTIC_SHEET,
         GOLD_INGOT,
         GOLD_SHEET,
-        PROCESSOR,
-        PLASTIC
+        PLASTIC,
+        SAW_T1,
+        PUMP_T1,
+        ROBOTIC_ARM_T1,
+        DRILL_T1,
+        PROCESSOR_T1
+
     }
 
     /**
@@ -46,8 +48,6 @@ public class Ressource {
         switch (t){
             case SCRUM:
                 return "Scrum";
-            case STEEL:
-                return "Steel";
             case WATER:
                 return "Water";
             case OIL:
@@ -88,8 +88,8 @@ public class Ressource {
                 return "Rivet";
             case COPPER_CABLE:
                 return "Copper Cable";
-            case ROBOTIC_ARM:
-                return "Robotic Arm";
+            case ROBOTIC_ARM_T1:
+                return "Robotic Arm T1";
             case PETROL:
                 return "Petrol Barrel";
             case PLASTIC_SHEET:
@@ -98,10 +98,14 @@ public class Ressource {
                 return "Gold Ingot";
             case GOLD_SHEET:
                 return "Gold Sheet";
-            case PROCESSOR:
-                return "Processor";
+            case PROCESSOR_T1:
+                return "Processor T1";
             case PLASTIC:
                 return "Plastic";
+            case SAW_T1:
+                return "Saw T1";
+            case PUMP_T1:
+                return "Pump T1";
             default:
                 return "Not a Resource";
         }
@@ -114,7 +118,7 @@ public class Ressource {
     public static int[] getBaseResources() {
         int baseResources[] = {Type.SCRUM.ordinal(), Type.WATER.ordinal(), Type.WOOD_LOG.ordinal(),
                                 Type.CHARCOAL.ordinal(), Type.OIL.ordinal(), Type.IRON_ORE.ordinal(),
-                                Type.COPPER_ORE.ordinal(), Type.STEEL.ordinal(), Type.GOLD_ORE.ordinal()};
+                                Type.COPPER_ORE.ordinal(), Type.STEEL_INGOT.ordinal(), Type.GOLD_ORE.ordinal()};
         return baseResources;
     }
 }
