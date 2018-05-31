@@ -33,8 +33,8 @@ public class MinesTest {
         mines.add(new Mine(id, s1, amount, placeId));
         mines.add(new Mine(id, s2, amount, placeId));
         mines.add(new Mine(id, s3, amount, placeId));
-        String json = JsonUtility.toJson(JsonUtility.listToJson(mines, mine -> mine.toJson()));
-        ArrayList<Mine> newMines = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(json), mine -> new Mine(mine));
+        String json = JsonUtility.toJson(JsonUtility.listToJson(mines, Mine::toJson));// TODO EVERYWHERE
+        ArrayList<Mine> newMines = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(json), Mine::new);// TODO EVERYWHERE
         for(Mine m : newMines) System.out.println("- " + m.getResource());
         assertEquals(mines.get(1).getResource(), newMines.get(1).getResource());
     }
