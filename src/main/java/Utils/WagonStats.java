@@ -19,11 +19,12 @@ public class WagonStats {
         CRAFT
     }
 
-    public static final int LEVEL_MAX = 6;
+    public static final int LEVEL_MAX = 20;// min is 1
 
     // --- LOCO --- //
     //public static final int LOCO_ID = 1;
     public static final String LOCO_NAME = "Loco";
+    public static final int LOCO_BASE_SPEED = 2;// units of distance / seconds
     public static final int LOCO_SPEED[] = {4, 5, 7, 10, 15};// units of distance / seconds
 
     // --- DRILL WAGON --- //
@@ -36,6 +37,10 @@ public class WagonStats {
     //public static final int PUMP_ID = 4;
     public static final String PUMP_NAME = "Pump wagon";
     // -- mining levels -- //
+    // resources per seconds // TODO
+    public static final int DRILL_BASE_MINING_TIME = 10;// DRILL
+    public static final int SAW_BASE_MINING_TIME = 5;// SAW
+    public static final int PUMP_BASE_MINING_TIME = 20;// PUMP
     public static final int MINING_TIME[][] = {{10,9,8,7,6}, {5,4,3,2,1}, {20,19,18,17,16}};// DRILL; SAW; PUMP
     // -- what can mine what -- //
     public static final int CAN_MINE[][] = {{CHARCOAL.ordinal(), IRON_ORE.ordinal(), COPPER_ORE.ordinal(), STEEL_INGOT.ordinal(), GOLD_ORE.ordinal()},
@@ -45,11 +50,13 @@ public class WagonStats {
     // --- CARGO WAGON --- //
     //public static final int CARGO_ID = 5;
     public static final String CARGO_NAME = "Cargo wagon";
+    public static final int BASE_CARGO_CAPACITY = 1000;
     public static final int CARGO_CAPACITY[] = {100, 200, 400, 600, 1000};
 
     // --- CRAFT WAGON --- //
     //public static final int CRAFT_ID = 6;
     public static final String CRAFT_NAME = "Craft wagon";
+    public static final int BASE_CRAFT_PARALLEL = 1;
     public static final int CRAFT_PARALLEL[] = {1, 2, 3, 4, 5};
 
 
@@ -69,16 +76,22 @@ public class WagonStats {
 
     public static int getLocoSpeed(Wagon loco) {
         if(loco.getType() != WagonType.LOCO) return 1;// if not a loco, not zero because distance/speed
-        return LOCO_SPEED[loco.getLevel() - 1];
+        return linearValuePerLevel(loco.getLevel(), LOCO_BASE_SPEED);
     }
-
-    public static int getMiningTime(int type, int level) {
-        return MINING_TIME[type - 2][level - 1];
-    }
-
 
     public static int getMiningTime(Wagon wagon) {
-        return MINING_TIME[wagon.getType().ordinal() - 1][wagon.getLevel() - 1];
+        switch(wagon.getType()) {
+            case DRILL:
+                return linearReductionValuePerLevel(wagon.getLevel() / 2, DRILL_BASE_MINING_TIME);
+            case SAW:
+                return linearReductionValuePerLevel(wagon.getLevel() / 4, SAW_BASE_MINING_TIME);
+            case PUMP:
+                return linearReductionValuePerLevel(wagon.getLevel(), PUMP_BASE_MINING_TIME);
+            default:
+                return 1;// ERROR
+        }
+
+        //return MINING_TIME[wagon.getType().ordinal() - 1][wagon.getLevel() - 1];
     }
 
     public static boolean canMine(Wagon wagon, Mine mine) {// need tests
@@ -90,13 +103,13 @@ public class WagonStats {
 
     public static int getMaxCapacity(Train train) {
         int capacity = 0;
-        for(Wagon w : train.getWagons()) if(w.getType() == WagonType.CARGO) capacity += CARGO_CAPACITY[w.getLevel() - 1];
+        for(Wagon w : train.getWagons()) if(w.getType() == WagonType.CARGO) capacity += linearValuePerLevel(w.getLevel(), BASE_CARGO_CAPACITY);//CARGO_CAPACITY[w.getLevel() - 1];
         return capacity;
     }
 
     public static int getMaxParallelCraft(Train train) {
         int parallelCraft = 0;
-        for(Wagon w : train.getWagons()) if(w.getType() == WagonType.CRAFT) parallelCraft += CRAFT_PARALLEL[w.getLevel() - 1];
+        for(Wagon w : train.getWagons()) if(w.getType() == WagonType.CRAFT) parallelCraft += linearValuePerLevel(w.getLevel(), BASE_CRAFT_PARALLEL);//CRAFT_PARALLEL[w.getLevel() - 1];
         return parallelCraft;
     }
 
@@ -168,6 +181,14 @@ public class WagonStats {
 
     private static int costPerLevel(int level, int baseCost){
         return (int)(Math.pow(2, level-1) * baseCost);
+    }
+
+    private static int linearValuePerLevel(int level, int baseValue) {
+        return level * baseValue;
+    }
+
+    private static int linearReductionValuePerLevel(int level, int baseValue) {
+        return Math.max(baseValue - level, 1);
     }
 
     public static int getUpgradeTime(int level) {
