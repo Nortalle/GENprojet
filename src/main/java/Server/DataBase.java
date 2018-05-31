@@ -245,7 +245,7 @@ public class DataBase {
             resultSet = ps.executeQuery();
             if(resultSet.next()) {
                 int type = resultSet.getInt(3);
-                int amount = resultSet.getInt(4);
+                int amount = resultSet.getInt(4);// TODO AND TEST IF ZERO RETURN NULL
                 return new ResourceAmount(Ressource.Type.values()[type], amount);
             }
         } catch (SQLException e) {

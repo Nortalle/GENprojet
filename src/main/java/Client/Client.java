@@ -1,9 +1,6 @@
 package Client;
 
-import Game.Craft;
-import Game.Train;
-import Game.TrainStation;
-import Game.WagonMining;
+import Game.*;
 import Gui.LoginForm;
 import Server.ClientHandler;
 import Utils.JsonUtility;
@@ -140,6 +137,13 @@ public class Client {
         return Craft.listFromJson((JsonArray) JsonUtility.fromJson(answer));
     }
 
+    public ArrayList<UpgradeWagon> getUpgrades() {
+        writer.println(OTrainProtocol.GET_UPGRADE_QUEUE);
+        writer.flush();
+        String answer = readLine();
+        return UpgradeWagon.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+    }
+
     public Train getTrain() {
         updateTrainStatus();
         return train;
@@ -204,6 +208,13 @@ public class Client {
     public String startCraft(int recipeIndex) {
         writer.println(OTrainProtocol.CRAFT);
         writer.println(recipeIndex);
+        writer.flush();
+        return readLine();
+    }
+
+    public String startUpgrade(int wagonId) {
+        writer.println(OTrainProtocol.UPGRADE);
+        writer.println(wagonId);
         writer.flush();
         return readLine();
     }

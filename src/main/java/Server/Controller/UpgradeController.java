@@ -12,7 +12,7 @@ import java.util.TimerTask;
 
 public class UpgradeController {
 
-    private ArrayList<UpgradeWagon> upgrades = new ArrayList<UpgradeWagon>();
+    private ArrayList<UpgradeWagon> upgrades = new ArrayList<>();
     private final int INTERVAL_MS = 1000;
     private DataBase dataBase;
 
@@ -27,7 +27,7 @@ public class UpgradeController {
                 for(UpgradeWagon upgrade : upgrades ){
                     upgrade.decreaseRemainingTime();
 
-                    if(upgrade.getRemaintingTime() <= 0){
+                    if(upgrade.getRemainingTime() <= 0){
                         Wagon current = upgrade.getWagon_to_upgrade();
 
                         current.levelUp();
@@ -62,9 +62,10 @@ public class UpgradeController {
             if (playerObject.getQuantity() < ra.getQuantity()) return false;
         }
 
-        for (ResourceAmount ra : resourceAmounts)
-            dataBase.updatePlayerObjects(username, ra.getRessource().ordinal(), -ra.getQuantity());
-        addUpgrade(new UpgradeWagon(username, wagonToUpgrade, 5));
+        for (ResourceAmount ra : resourceAmounts) dataBase.updatePlayerObjects(username, ra.getRessource().ordinal(), -ra.getQuantity());
+
+        int time = WagonStats.getUpgradeTime(wagonToUpgrade.getLevel());// TODO
+        addUpgrade(new UpgradeWagon(username, wagonToUpgrade, time));
 
         return true;
     }
@@ -73,10 +74,10 @@ public class UpgradeController {
         upgrades.add(upgrade);
     }
 
-    public ArrayList<UpgradeWagon> getPlayerCrafts(String username) {
+    public ArrayList<UpgradeWagon> getPlayerUpgrades(String username) {
         ArrayList<UpgradeWagon> result = new ArrayList<>();
-        for (UpgradeWagon uw : upgrades) {
-            if (uw.getUsername().equals(username)) {
+        for(UpgradeWagon uw : upgrades) {
+            if(uw.getUsername().equals(username)) {
                 result.add(uw);
             }
         }

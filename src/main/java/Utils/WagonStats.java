@@ -116,11 +116,12 @@ public class WagonStats {
 
         switch (w.getType()) {
             case LOCO:
-                ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 185)));
+                /*ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 185)));
                 ra.add(new ResourceAmount(Ressource.Type.IRON_WHEEL, costPerLevel(w.getLevel(), 24)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_TUBE, costPerLevel(w.getLevel(), 55)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_GEAR, costPerLevel(w.getLevel(), 36)));
-                ra.add(new ResourceAmount(Ressource.Type.STEEL, costPerLevel(w.getLevel(), 98)));
+                ra.add(new ResourceAmount(Ressource.Type.STEEL, costPerLevel(w.getLevel(), 98)));*/
+                ra.add(new ResourceAmount(Ressource.Type.IRON_WHEEL, costPerLevel(w.getLevel(), 2)));
                 break;
             case DRILL:
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 45)));
@@ -166,6 +167,10 @@ public class WagonStats {
     }
 
     private static int costPerLevel(int level, int baseCost){
-        return    (int)(Math.pow(2, level-1) * baseCost);
+        return (int)(Math.pow(2, level-1) * baseCost);
+    }
+
+    public static int getUpgradeTime(int level) {
+        return costPerLevel(level, 5);// TODO
     }
 }

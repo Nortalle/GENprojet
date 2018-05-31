@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class UpgradeWagon {
     private String username;
     private Wagon wagon_to_upgrade;
-    private int remainingTime_S;
+    private int remainingTime;
 
     public UpgradeWagon(JsonObject json){ fromJson(json);}
 
@@ -19,17 +19,17 @@ public class UpgradeWagon {
         fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
-    public UpgradeWagon(String username, Wagon wagon, int remainingTime_S) {
+    public UpgradeWagon(String username, Wagon wagon, int remainingTime) {
         this.username = username;
         this.wagon_to_upgrade = wagon;
-        this.remainingTime_S = remainingTime_S;
+        this.remainingTime = remainingTime;
     }
 
     public JsonObject toJson() {
         JsonObject craft = new JsonObject();
         craft.add("username", new JsonPrimitive(username));
         craft.add("wagon_to_upgrade", wagon_to_upgrade.toJson());
-        craft.add("remainingTime", new JsonPrimitive(remainingTime_S));
+        craft.add("remainingTime", new JsonPrimitive(remainingTime));
 
         return craft;
     }
@@ -37,7 +37,7 @@ public class UpgradeWagon {
     public void fromJson(JsonObject from) {
         username = from.get("username").getAsString();
         wagon_to_upgrade.fromJson(from.get("wagon_to_upgrade").getAsJsonObject());
-        remainingTime_S = from.get("remainingTime").getAsInt();
+        remainingTime = from.get("remainingTime").getAsInt();
     }
 
     public static JsonArray listToJson(ArrayList<UpgradeWagon> upgrades) {
@@ -55,7 +55,7 @@ public class UpgradeWagon {
     }
 
     public void decreaseRemainingTime() {
-        remainingTime_S--;
+        remainingTime--;
     }
 
     public String getUsername() {
@@ -66,7 +66,12 @@ public class UpgradeWagon {
         return wagon_to_upgrade;
     }
 
-    public int getRemaintingTime() {
-        return remainingTime_S;
+    public int getRemainingTime() {
+        return remainingTime;
+    }
+
+    @Override
+    public String toString() {
+        return wagon_to_upgrade.toString();// TODO
     }
 }

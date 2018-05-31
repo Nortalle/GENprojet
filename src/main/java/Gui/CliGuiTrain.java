@@ -2,6 +2,7 @@ package Gui;
 
 import Client.Client;
 import Game.Train;
+import Game.UpgradeWagon;
 import Game.Wagon;
 import Utils.ResourceAmount;
 import Utils.WagonStats;
@@ -10,6 +11,8 @@ import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class CliGuiTrain {
@@ -46,6 +49,15 @@ public class CliGuiTrain {
             @Override
             public void popupMenuCanceled(PopupMenuEvent e) {}
         });
+        upgradeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(selectedWagon == null) return;
+                Client.getInstance().startUpgrade(selectedWagon.getId());
+
+                updateExceptList();
+            }
+        });
     }
 
     private void init() {
@@ -61,6 +73,7 @@ public class CliGuiTrain {
         updateInfoPanel();
         updateWagonsPanel();
         updateUpgradeCostPanel();
+        updateUpgradeQueuePanel();
         updateWagonsList();
     }
 
@@ -68,6 +81,7 @@ public class CliGuiTrain {
         updateInfoPanel();
         updateWagonsPanel();
         updateUpgradeCostPanel();
+        updateUpgradeQueuePanel();
     }
 
     public void updateInfoPanel() {
@@ -98,4 +112,34 @@ public class CliGuiTrain {
         for(ResourceAmount cost : costs) upgradeCostPanel.add(new JLabel(cost.toString()));
         upgradeCostPanel.revalidate();
     }
+
+    public void updateUpgradeQueuePanel() {
+        ArrayList<UpgradeWagon> upgrades = Client.getInstance().getUpgrades();
+        upgradeQueuePanel.removeAll();
+        upgradeQueuePanel.setLayout(new GridLayout(0, 2));
+        for(UpgradeWagon uw : upgrades) {
+            upgradeQueuePanel.add(new JLabel(uw.toString()));
+            JProgressBar bar = new JProgressBar();
+            int max = WagonStats.getUpgradeTime(uw.getWagon_to_upgrade().getLevel());// TODO
+            bar.setMaximum(max);
+            bar.setValue(max - uw.getRemainingTime());
+            upgradeQueuePanel.add(bar);
+        }
+    }
+
+    /*
+    public void updateOrderQueue() {
+        ArrayList<Craft> crafts = Client.getInstance().getCrafts();
+        orderQueuePanel.removeAll();
+        orderQueuePanel.setLayout(new GridLayout(0, 2));
+        for(Craft c : crafts) {
+            orderQueuePanel.add(new JLabel(c.toString()));
+            JProgressBar bar = new JProgressBar();
+            int max = Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime();
+            bar.setMaximum(max);
+            bar.setValue(max - c.getRemainingTime());
+            orderQueuePanel.add(bar);
+        }
+    }
+     */
 }

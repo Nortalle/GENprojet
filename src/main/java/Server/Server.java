@@ -1,9 +1,6 @@
 package Server;
 
-import Server.Controller.CraftController;
-import Server.Controller.MineController;
-import Server.Controller.MineRegeneration;
-import Server.Controller.Travel;
+import Server.Controller.*;
 import Utils.OTrainProtocol;
 
 import java.io.IOException;
@@ -21,6 +18,7 @@ public class Server {
     private MineRegeneration regenerationController;
     private MineController mineController;
     private CraftController craftController;
+    private UpgradeController upgradeController;
 
     private Server(){}
 
@@ -36,6 +34,7 @@ public class Server {
         regenerationController = new MineRegeneration();
         mineController = new MineController();
         craftController = new CraftController();
+        upgradeController = new UpgradeController();
     }
 
     public void startServer() {
@@ -82,6 +81,10 @@ public class Server {
 
     public CraftController getCraftController() {
         return craftController;
+    }
+
+    public UpgradeController getUpgradeController() {
+        return upgradeController;
     }
 
     public DataBase getDataBase() {

@@ -97,10 +97,15 @@ ClientHandler implements Runnable {
                     writer.println(Craft.listToJson(Server.getInstance().getCraftController().getPlayerCrafts(username)));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.UPGRADE)) {
-                    writer.println(OTrainProtocol.FAILURE);// TODO
+                    String wagonLine = readLine();
+                    if(Server.getInstance().getUpgradeController().tryUpgrade(username, wagonLine)) {
+                        writer.println(OTrainProtocol.SUCCESS);
+                    } else {
+                        writer.println(OTrainProtocol.FAILURE);
+                    }
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_UPGRADE_QUEUE)) {
-                    writer.println(OTrainProtocol.FAILURE);// TODO
+                    writer.println(UpgradeWagon.listToJson(Server.getInstance().getUpgradeController().getPlayerUpgrades(username)));
                     writer.flush();
                 }
 
