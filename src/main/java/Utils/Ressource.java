@@ -99,7 +99,6 @@ public class Ressource {
                 return "unknown";
             case PROCESSOR:
                 return "unknown";
-
             default:
                 return "Not a Resource";
         }
