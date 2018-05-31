@@ -75,6 +75,31 @@ public class Ressource {
                 return "Copper Tube";
             case DRILL_T1:
                 return "Drill T1";
+            case PLANK:
+                return "unknown";
+            case NAILS:
+                return "unknown";
+            case WOODEN_CRATE:
+                return "unknown";
+            case STEEL_INGOT:
+                return "unknown";
+            case RIVET:
+                return "unknown";
+            case COPPER_CABLE:
+                return "unknown";
+            case ROBOTIC_ARM:
+                return "unknown";
+            case PETROL_BARREL:
+                return "unknown";
+            case PLASTIC_SHEET:
+                return "unknown";
+            case GOLD_INGOT:
+                return "unknown";
+            case GOLD_SHEET:
+                return "unknown";
+            case PROCESSOR:
+                return "unknown";
+
             default:
                 return "Not a Resource";
         }
