@@ -88,7 +88,7 @@ public class Train {
     @Override
     public String toString() {
         String result = "I'm Tom the train : ";
-        for(Wagon w : wagons) result += WagonStats.getName(w.getTypeID()) + " " + w.getLevel() + " | ";
+        for(Wagon w : wagons) result += WagonStats.getName(w.getType()) + " " + w.getLevel() + " | ";
         return result;
     }
 }

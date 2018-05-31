@@ -5,7 +5,6 @@ import Game.Train;
 import Game.Wagon;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static Utils.Ressource.Type.*;
 
@@ -70,12 +69,13 @@ public class WagonStats {
         return MINING_TIME[type - 2][level - 1];
     }
 
+
     public static int getMiningTime(Wagon wagon) {
-        return MINING_TIME[wagon.getTypeID() - 2][wagon.getLevel() - 1];
+        return MINING_TIME[wagon.getType().ordinal() - 2][wagon.getLevel() - 1];
     }
 
     public static boolean canMine(Wagon wagon, Mine mine) {// need tests
-        for(int i : CAN_MINE[wagon.getTypeID() - 2]) {
+        for(int i : CAN_MINE[wagon.getType().ordinal() - 2]) {
             if(i == mine.getResource()) return true;
         }
         return false;
@@ -83,13 +83,13 @@ public class WagonStats {
 
     public static int getMaxCapacity(Train train) {
         int capacity = 0;
-        for(Wagon w : train.getWagons()) if(w.getTypeID() == WagonType.CARGO.ordinal()) capacity += CARGO_CAPACITY[w.getLevel() - 1];
+        for(Wagon w : train.getWagons()) if(w.getType() == WagonType.CARGO) capacity += CARGO_CAPACITY[w.getLevel() - 1];
         return capacity;
     }
 
     public static int getMaxParallelCraft(Train train) {
         int parallelCraft = 0;
-        for(Wagon w : train.getWagons()) if(w.getTypeID() == WagonType.CRAFT.ordinal()) parallelCraft += CRAFT_PARALLEL[w.getLevel() - 1];
+        for(Wagon w : train.getWagons()) if(w.getType() == WagonType.CRAFT) parallelCraft += CRAFT_PARALLEL[w.getLevel() - 1];
         return parallelCraft;
     }
 
@@ -107,7 +107,7 @@ public class WagonStats {
 
         ArrayList<ResourceAmount> ra = new ArrayList<>();
 
-        switch (w.getTypeID()) {
+        switch (w.getType()) {
             case LOCO:
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 185)));
                 ra.add(new ResourceAmount(Ressource.Type.IRON_WHEEL, costPerLevel(w.getLevel(), 24)));

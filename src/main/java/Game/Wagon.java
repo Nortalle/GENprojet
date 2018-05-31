@@ -73,7 +73,7 @@ public class Wagon {
         return id;
     }
 
-    public WagonStats.WagonType getTypeID() {
+    public WagonStats.WagonType getType() {
         return type;
     }
 

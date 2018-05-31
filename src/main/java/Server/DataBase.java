@@ -56,25 +56,25 @@ public class DataBase {
             //DEFAULT LOCO + DRILL + CARGO//
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
-            ps.setObject(2, WagonStats.LOCO_ID);
+            ps.setObject(2, WagonStats.WagonType.LOCO);
             status = ps.executeUpdate();
             if(status == 0) return false;
 
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
-            ps.setObject(2, WagonStats.DRILL_ID);
+            ps.setObject(2, WagonStats.WagonType.DRILL);
             status = ps.executeUpdate();
             if(status == 0) return false;
 
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
-            ps.setObject(2, WagonStats.CARGO_ID);
+            ps.setObject(2, WagonStats.WagonType.CARGO);
             status = ps.executeUpdate();
             if(status == 0) return false;
 
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
-            ps.setObject(2, WagonStats.CRAFT_ID);
+            ps.setObject(2, WagonStats.WagonType.CRAFT);
             status = ps.executeUpdate();
             if(status == 0) return false;
             // //
@@ -464,7 +464,7 @@ public class DataBase {
                 int level = resultSet.getInt("niveau");
                 int typeID = resultSet.getInt("typeID");
 
-                Wagon wagon = new Wagon(id, weight, level, typeID);
+                Wagon wagon = new Wagon(id, weight, level, WagonStats.WagonType.values()[typeID]);
                 result.add(wagon);
             }
         } catch (SQLException e) {
@@ -486,7 +486,7 @@ public class DataBase {
                 int level = resultSet.getInt("niveau");
                 int typeID = resultSet.getInt("typeID");
 
-                wagon = new Wagon(id, weight, level, typeID);
+                wagon = new Wagon(id, weight, level, WagonStats.WagonType.values()[typeID]);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -500,7 +500,7 @@ public class DataBase {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=? AND `typeID`=?");
             ps.setObject(1, username);
-            ps.setObject(2, WagonStats.LOCO_ID);
+            ps.setObject(2, WagonStats.WagonType.LOCO);
             resultSet = ps.executeQuery();
             if(resultSet.next()) {
                 int idWagon = resultSet.getInt("id");
@@ -508,7 +508,7 @@ public class DataBase {
                 int level = resultSet.getInt("niveau");
                 int typeID = resultSet.getInt("typeID");
 
-                wagon = new Wagon(idWagon, weight, level, typeID);
+                wagon = new Wagon(idWagon, weight, level,  WagonStats.WagonType.values()[typeID]);
             }
         } catch (SQLException e) {
             e.printStackTrace();
