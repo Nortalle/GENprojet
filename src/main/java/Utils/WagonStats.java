@@ -65,6 +65,11 @@ public class WagonStats {
         return "unknown";
     }
 
+    public static int getLocoSpeed(Wagon loco) {
+        if(loco.getType() != WagonType.LOCO) return 1;// if not a loco, not zero because distance/speed
+        return LOCO_SPEED[loco.getLevel() - 1];
+    }
+
     public static int getMiningTime(int type, int level) {
         return MINING_TIME[type - 2][level - 1];
     }
