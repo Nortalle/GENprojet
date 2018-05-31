@@ -76,29 +76,29 @@ public class Ressource {
             case DRILL_T1:
                 return "Drill T1";
             case PLANK:
-                return "unknown";
+                return "Plank";
             case NAILS:
-                return "unknown";
+                return "Nails";
             case WOODEN_CRATE:
-                return "unknown";
+                return "Wooden Crate";
             case STEEL_INGOT:
-                return "unknown";
+                return "Steel Ingot";
             case RIVET:
-                return "unknown";
+                return "Rivet";
             case COPPER_CABLE:
-                return "unknown";
+                return "Copper Cable";
             case ROBOTIC_ARM:
-                return "unknown";
+                return "Robotic Arm";
             case PETROL_BARREL:
-                return "unknown";
+                return "Petrol Barrel";
             case PLASTIC_SHEET:
-                return "unknown";
+                return "plastic Sheet";
             case GOLD_INGOT:
-                return "unknown";
+                return "Gold Ingot";
             case GOLD_SHEET:
-                return "unknown";
+                return "Gold Sheet";
             case PROCESSOR:
-                return "unknown";
+                return "Processor";
 
             default:
                 return "Not a Resource";
