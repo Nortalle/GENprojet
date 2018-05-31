@@ -63,8 +63,10 @@ public class CliGuiTrain {
     private void init() {
         infoNamePanel.setLayout(new GridLayout(0, 1));
         infoValuePanel.setLayout(new GridLayout(0, 1));
-        wagonsPanel.setLayout(new GridLayout(0, 2));
+        //wagonsPanel.setLayout(new GridLayout(0, 2));
+
         infoNamePanel.add(new JLabel("size : "));
+        infoNamePanel.add(new JLabel("speed : "));
         infoNamePanel.add(new JLabel("max cargo : "));
         infoNamePanel.add(new JLabel("max parallel crafts : "));
     }
@@ -87,17 +89,44 @@ public class CliGuiTrain {
     public void updateInfoPanel() {
         infoValuePanel.removeAll();
         infoValuePanel.add(new JLabel("" + train.getSize()));
+        infoValuePanel.add(new JLabel("" + WagonStats.getLocoSpeed(train)));
         infoValuePanel.add(new JLabel("" + WagonStats.getMaxCapacity(train)));
         infoValuePanel.add(new JLabel("" + WagonStats.getMaxParallelCraft(train)));
     }
 
     public void updateWagonsPanel() {
         wagonsPanel.removeAll();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTHWEST;
         for(Wagon w : train.getWagons()) {
-            wagonsPanel.add(new JLabel("" + WagonStats.getName(w.getType()) + " "));
-            wagonsPanel.add(new JLabel("" + w.getLevel()));
+            gbc.gridx = 1;
+            wagonsPanel.add(new JLabel("" + WagonStats.getName(w.getType()) + " "), gbc);
+            gbc.gridx = 2;
+            wagonsPanel.add(new JLabel("" + w.getLevel()), gbc);
         }
+        gbc.weighty = 1.0;
+        gbc.weightx = 1.0;
+        wagonsPanel.add(new JLabel(""), gbc);
     }
+
+    /*
+    public void updateAvailableCrafts(){
+        ArrayList<ResourceAmount> playerObjects = Client.getInstance().getAllObjects();
+
+        availableCrafts.removeAll();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.gridx = 1;
+        for(Recipe r : Recipe.getAllRecipes()) {
+            if(canCraft(r, playerObjects)) {
+                availableCrafts.add(new JLabel(r.toString()), gbc);
+            }
+        }
+        gbc.weighty = 1.0;
+        gbc.weightx = 1.0;
+        availableCrafts.add(new JLabel(""), gbc);
+    }
+     */
 
     public void updateWagonsList() {
         upgradeList.removeAllItems();

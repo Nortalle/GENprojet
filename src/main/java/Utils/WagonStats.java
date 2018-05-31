@@ -74,6 +74,19 @@ public class WagonStats {
         return "unknown";
     }
 
+    public static int getLocoSpeed(Train train) {
+        Wagon loco = null;
+        for(Wagon w : train.getWagons()) {
+            if(w.getType() == WagonType.LOCO) {
+                loco = w;
+                break;
+            }
+        }
+        if(loco == null) return 1;// if no loco, not zero because distance/speed
+
+        return linearValuePerLevel(loco.getLevel(), LOCO_BASE_SPEED);
+    }
+
     public static int getLocoSpeed(Wagon loco) {
         if(loco.getType() != WagonType.LOCO) return 1;// if not a loco, not zero because distance/speed
         return linearValuePerLevel(loco.getLevel(), LOCO_BASE_SPEED);
