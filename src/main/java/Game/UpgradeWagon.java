@@ -36,6 +36,7 @@ public class UpgradeWagon {
 
     public void fromJson(JsonObject from) {
         username = from.get("username").getAsString();
+        if(wagon_to_upgrade == null)wagon_to_upgrade = new Wagon();
         wagon_to_upgrade.fromJson(from.get("wagon_to_upgrade").getAsJsonObject());
         remainingTime = from.get("remainingTime").getAsInt();
     }
