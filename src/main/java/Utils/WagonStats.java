@@ -38,9 +38,9 @@ public class WagonStats {
     public static final String PUMP_NAME = "Pump wagon";
     // -- mining levels -- //
     // resources per seconds // TODO
-    public static final int DRILL_BASE_MINING_TIME = 10;// DRILL
-    public static final int SAW_BASE_MINING_TIME = 5;// SAW
-    public static final int PUMP_BASE_MINING_TIME = 20;// PUMP
+    public static final int DRILL_BASE_MINING_TIME = 2;// DRILL
+    public static final int SAW_BASE_MINING_TIME = 4;// SAW
+    public static final int PUMP_BASE_MINING_TIME = 1;// PUMP
     public static final int MINING_TIME[][] = {{10,9,8,7,6}, {5,4,3,2,1}, {20,19,18,17,16}};// DRILL; SAW; PUMP
     // -- what can mine what -- //
     public static final int CAN_MINE[][] = {{CHARCOAL.ordinal(), IRON_ORE.ordinal(), COPPER_ORE.ordinal(), STEEL_INGOT.ordinal(), GOLD_ORE.ordinal()},
@@ -74,9 +74,35 @@ public class WagonStats {
         return "unknown";
     }
 
+    public static int getLocoSpeed(Train train) {
+        Wagon loco = null;
+        for(Wagon w : train.getWagons()) {
+            if(w.getType() == WagonType.LOCO) {
+                loco = w;
+                break;
+            }
+        }
+        if(loco == null) return 1;// if no loco, not zero because distance/speed
+
+        return linearValuePerLevel(loco.getLevel(), LOCO_BASE_SPEED);
+    }
+
     public static int getLocoSpeed(Wagon loco) {
         if(loco.getType() != WagonType.LOCO) return 1;// if not a loco, not zero because distance/speed
         return linearValuePerLevel(loco.getLevel(), LOCO_BASE_SPEED);
+    }
+
+    public static int getMiningAmount(Wagon wagon) {
+        switch(wagon.getType()) {
+            case DRILL:
+                return linearValuePerLevel(wagon.getLevel(), DRILL_BASE_MINING_TIME);
+            case SAW:
+                return linearValuePerLevel(wagon.getLevel(), SAW_BASE_MINING_TIME);
+            case PUMP:
+                return linearValuePerLevel(wagon.getLevel(), PUMP_BASE_MINING_TIME);
+            default:
+                return 0;// ERROR
+        }
     }
 
     public static int getMiningTime(Wagon wagon) {

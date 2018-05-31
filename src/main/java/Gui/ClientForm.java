@@ -33,7 +33,6 @@ public class ClientForm {
     private JLabel oil_i;
     private JLabel iron_ore_i;
     private JLabel copper_ore_i;
-    private JLabel steel_i;
     private JLabel gold_ore_i;
     private JLabel scrum_i;
     private JPanel RessourcesPanel;
@@ -57,7 +56,7 @@ public class ClientForm {
         tabs.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                updateExceptList();
+                update();
             }
         });
     }
@@ -72,7 +71,6 @@ public class ClientForm {
         oil_i.setText(Integer.toString(resources.getPetrol()));
         iron_ore_i.setText(Integer.toString(resources.getFer()));
         copper_ore_i.setText(Integer.toString(resources.getCuivre()));
-        steel_i.setText(Integer.toString(resources.getAcier()));
         gold_ore_i.setText(Integer.toString(resources.getOr()));
 
     }

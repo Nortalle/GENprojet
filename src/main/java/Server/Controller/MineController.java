@@ -12,7 +12,7 @@ import java.util.TimerTask;
 public class MineController {
 
     private ArrayList<WagonMining> wagonMining = new ArrayList<>();
-    private ArrayList<Integer> ETMs = new ArrayList<>();
+    //private ArrayList<Integer> ETMs = new ArrayList<>();
 
     private final int INTERVAL_MS = 1000;
 
@@ -25,12 +25,12 @@ public class MineController {
                 for(int i = 0; i < wagonMining.size(); ++i) {
                     WagonMining wm = wagonMining.get(i);
                     String username = db.getUsernameByWagonId(wm.getWagon().getId());
-                    int ETM = ETMs.get(i);
-                    ETMs.set(i, --ETM);
-                    if(ETM == 0) {
+                    //int ETM = ETMs.get(i);
+                    //ETMs.set(i, --ETM);
+                    //if(ETM == 0) {
                         // TODO TEST IF TRAIN IS STILL AT STATION WHERE MINE IS
-                        ETMs.set(i, WagonStats.getMiningTime(wm.getWagon()));
-                        int miningAmount = 1;
+                        //ETMs.set(i, WagonStats.getMiningTime(wm.getWagon()));
+                        int miningAmount = WagonStats.getMiningAmount(wm.getWagon());
                         miningAmount = -db.canChangeMineAmount(wm.getCurrentMine().getId(), -miningAmount);
                         miningAmount = db.canUpdatePlayerObjects(username, miningAmount);
                         if(miningAmount != 0) {
@@ -40,7 +40,7 @@ public class MineController {
                                 }
                             }
                         }
-                    }
+                    //}
                 }
             }
         }, INTERVAL_MS, INTERVAL_MS);
@@ -71,10 +71,10 @@ public class MineController {
 
         if(found) {
             wagonMining.set(i,wm);
-            ETMs.set(i, WagonStats.getMiningTime(wm.getWagon()));
+            //ETMs.set(i, WagonStats.getMiningTime(wm.getWagon()));
         } else {
             wagonMining.add(wm);
-            ETMs.add(WagonStats.getMiningTime(wm.getWagon()));
+            //ETMs.add(WagonStats.getMiningTime(wm.getWagon()));
         }
 
     }
@@ -87,7 +87,7 @@ public class MineController {
         for(int i = 0; i < wagonMining.size(); i++) {
             if(wagonMining.get(i).getWagon().getId() == id) {
                 wagonMining.remove(i);
-                ETMs.remove(i);
+                //ETMs.remove(i);
                 return true;
             }
         }
