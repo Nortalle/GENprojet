@@ -4,6 +4,7 @@ import Client.Client;
 import Game.Train;
 import Game.UpgradeWagon;
 import Game.Wagon;
+import Utils.GuiUtility;
 import Utils.ResourceAmount;
 import Utils.WagonRecipe;
 import Utils.WagonStats;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 public class CliGuiTrain {
     private JPanel mainPanel;
     private JPanel trainInfoPanel;
-    private JPanel wagonsPanel;
     private JComboBox upgradeList;
     private JPanel upgradeCostPanel;
     private JPanel upgradePanel;
@@ -32,6 +32,9 @@ public class CliGuiTrain {
     private JButton createButton;
     private JPanel createQueuePanel;
     private JPanel createPanel;
+    private JPanel wagonsPanel;
+    private JPanel wagonsNamePanel;
+    private JPanel wagonsLevelPanel;
 
     private Train train;
     private Wagon selectedWagon;
@@ -119,18 +122,8 @@ public class CliGuiTrain {
     }
 
     public void updateWagonsPanel() {
-        wagonsPanel.removeAll();
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.NORTHWEST;
-        for(Wagon w : train.getWagons()) {
-            gbc.gridx = 1;
-            wagonsPanel.add(new JLabel("" + WagonStats.getName(w.getType()) + " "), gbc);
-            gbc.gridx = 2;
-            wagonsPanel.add(new JLabel("" + w.getLevel()), gbc);
-        }
-        gbc.weighty = 1.0;
-        gbc.weightx = 1.0;
-        wagonsPanel.add(Box.createVerticalGlue(), gbc);
+        GuiUtility.listInPanel(wagonsNamePanel, train.getWagons(), w -> WagonStats.getName(w.getType()) + " ");
+        GuiUtility.listInPanel(wagonsLevelPanel, train.getWagons(), w -> "" + w.getLevel());
     }
 
     public void updateWagonsList() {
@@ -141,16 +134,7 @@ public class CliGuiTrain {
     public void updateUpgradeCostPanel() {
         if(selectedWagon == null) return;
         ArrayList<ResourceAmount> costs = WagonStats.getUpgradeCost(selectedWagon);
-        upgradeCostPanel.removeAll();
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.NORTHWEST;
-        for(ResourceAmount cost : costs) upgradeCostPanel.add(new JLabel(cost.toString()), gbc);
-
-        gbc.weighty = 1.0;
-        gbc.weightx = 1.0;
-        upgradeCostPanel.add(Box.createVerticalGlue(), gbc);
-        upgradeCostPanel.revalidate();
+        GuiUtility.listInPanel(upgradeCostPanel, costs, ra -> ra.toString());
     }
 
     public void updateUpgradeQueuePanel() {
@@ -175,16 +159,7 @@ public class CliGuiTrain {
     public void updateCreateCostPanel() {
         if(selectedWagonRecipe == null) return;
         ArrayList<ResourceAmount> costs = selectedWagonRecipe.getCost();
-        createCostPanel.removeAll();
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.NORTHWEST;
-        for(ResourceAmount cost : costs) createCostPanel.add(new JLabel(cost.toString()), gbc);
-
-        gbc.weighty = 1.0;
-        gbc.weightx = 1.0;
-        createCostPanel.add(Box.createVerticalGlue(), gbc);
-        createCostPanel.revalidate();
+        GuiUtility.listInPanel(createCostPanel, costs, ra -> ra.toString());
     }
 
     public void updateCreateQueuePanel() {
