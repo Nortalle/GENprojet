@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 public class cli_gui_craft {
     private JPanel panel1;
-    private JTextField quantity_text_field;
     private JComboBox recipeDropdown;
     private JPanel costPanel;
     private JPanel availableCrafts;
