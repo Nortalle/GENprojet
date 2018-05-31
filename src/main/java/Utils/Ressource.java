@@ -13,7 +13,7 @@ public class Ressource {
         OIL,
         IRON_ORE,
         COPPER_ORE,
-        STEEL,
+        STEEL,// TODO DELETE
         GOLD_ORE,
         IRON_INGOT,
         COPPER_INGOT,
@@ -21,7 +21,19 @@ public class Ressource {
         IRON_WHEEL,
         COPPER_GEAR,
         COPPER_TUBE,
-        DRILL_T1
+        DRILL_T1,// FROM HERE
+        PLANK,
+        NAILS,
+        WOODEN_CRATE,
+        STEEL_INGOT,
+        RIVET,
+        COPPER_CABLE,
+        ROBOTIC_ARM,
+        PETROL_BARREL,
+        PLASTIC_SHEET,
+        GOLD_INGOT,
+        GOLD_SHEET,
+        PROCESSOR
     }
 
     /**
@@ -63,8 +75,33 @@ public class Ressource {
                 return "Copper Tube";
             case DRILL_T1:
                 return "Drill T1";
+            case PLANK:
+                return "Plank";
+            case NAILS:
+                return "Nails";
+            case WOODEN_CRATE:
+                return "Wooden Crate";
+            case STEEL_INGOT:
+                return "Steel Ingot";
+            case RIVET:
+                return "Rivet";
+            case COPPER_CABLE:
+                return "Copper Cable";
+            case ROBOTIC_ARM:
+                return "Robotic Arm";
+            case PETROL_BARREL:
+                return "Petrol Barrel";
+            case PLASTIC_SHEET:
+                return "plastic Sheet";
+            case GOLD_INGOT:
+                return "Gold Ingot";
+            case GOLD_SHEET:
+                return "Gold Sheet";
+            case PROCESSOR:
+                return "Processor";
+
             default:
-                return "Not a Ressource";
+                return "Not a Resource";
         }
     }
 

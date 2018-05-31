@@ -10,7 +10,7 @@ public class Wagon {
     private int id;
     private int weight;
     private int level;
-    private int typeID;
+    private WagonStats.WagonType type;
 
     public Wagon() {}
 
@@ -22,11 +22,11 @@ public class Wagon {
         fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
-    public Wagon(int id , int weight, int level, int typeID) {
+    public Wagon(int id , int weight, int level, WagonStats.WagonType type) {
         this.id = id;
         this.weight = weight;
         this.level = level;
-        this.typeID = typeID;
+        this.type = type;
     }
 
     public JsonObject toJson() {
@@ -34,7 +34,7 @@ public class Wagon {
         wagon.add("id", new JsonPrimitive(id));
         wagon.add("weight", new JsonPrimitive(weight));
         wagon.add("level", new JsonPrimitive(level));
-        wagon.add("typeID", new JsonPrimitive(typeID));
+        wagon.add("typeID", new JsonPrimitive(type.ordinal()));
 
         return wagon;
     }
@@ -43,34 +43,38 @@ public class Wagon {
         id = from.get("id").getAsInt();
         weight = from.get("weight").getAsInt();
         level = from.get("level").getAsInt();
-        typeID = from.get("typeID").getAsInt();
+        type = WagonStats.WagonType.values()[from.get("typeID").getAsInt()];
     }
 
     public static JsonArray listToJson(ArrayList<Wagon> wagons) {
         JsonArray list = new JsonArray();
-        for(Wagon w : wagons) list.add(w.toJson());
+        for(Wagon w : wagons) {
+            list.add(w.toJson());
+        }
 
         return list;
     }
 
     public static ArrayList<Wagon> listFromJson(JsonArray from) {
         ArrayList<Wagon> wagons = new ArrayList<>();
-        for(JsonElement j : from) wagons.add(new Wagon((JsonObject) j));
+        for(JsonElement j : from) {
+            wagons.add(new Wagon((JsonObject) j));
+        }
 
         return wagons;
     }
 
     @Override
     public String toString() {
-        return WagonStats.getName(typeID) + "-" + id;
+        return WagonStats.getName(type) + "-" + id;
     }
 
     public int getId() {
         return id;
     }
 
-    public int getTypeID() {
-        return typeID;
+    public WagonStats.WagonType getType() {
+        return type;
     }
 
     public int getLevel() {
