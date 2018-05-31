@@ -1,6 +1,7 @@
 package Gui;
 
 import Client.Client;
+import Game.CreateWagon;
 import Game.Train;
 import Game.UpgradeWagon;
 import Game.Wagon;
@@ -77,6 +78,15 @@ public class CliGuiTrain {
             public void actionPerformed(ActionEvent e) {
                 if(selectedWagon == null) return;
                 Client.getInstance().startUpgrade(selectedWagon.getId());
+
+                updateExceptList();
+            }
+        });
+        createButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(selectedWagonRecipe == null) return;
+                Client.getInstance().startCreation(selectedWagonRecipe.getRecipeIndex());
 
                 updateExceptList();
             }
@@ -163,16 +173,16 @@ public class CliGuiTrain {
     }
 
     public void updateCreateQueuePanel() {
-        /*ArrayList<UpgradeWagon> upgrades = Client.getInstance().getUpgrades();
-        upgradeQueuePanel.removeAll();
-        upgradeQueuePanel.setLayout(new GridLayout(0, 2));
-        for(UpgradeWagon uw : upgrades) {
-            upgradeQueuePanel.add(new JLabel(uw.toString()));
+        ArrayList<CreateWagon> upgrades = Client.getInstance().getCreations();
+        createQueuePanel.removeAll();
+        createQueuePanel.setLayout(new GridLayout(0, 2));
+        for(CreateWagon cw : upgrades) {
+            createQueuePanel.add(new JLabel(cw.toString()));
             JProgressBar bar = new JProgressBar();
-            int max = WagonStats.getUpgradeTime(uw.getWagon_to_upgrade().getLevel());
+            int max = WagonRecipe.getAllRecipes().get(cw.getWagonRecipeIndex()).getProductionTime();
             bar.setMaximum(max);
-            bar.setValue(max - uw.getRemainingTime());
-            upgradeQueuePanel.add(bar);
-        }*/
+            bar.setValue(max - cw.getRemainingTime());
+            createQueuePanel.add(bar);
+        }
     }
 }

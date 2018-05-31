@@ -107,6 +107,17 @@ ClientHandler implements Runnable {
                 } else if(line.equals(OTrainProtocol.GET_UPGRADE_QUEUE)) {
                     writer.println(UpgradeWagon.listToJson(Server.getInstance().getUpgradeController().getPlayerUpgrades(username)));
                     writer.flush();
+                } else if(line.equals(OTrainProtocol.CREATION)) {
+                    String wagonRecipeLine = readLine();
+                    if(Server.getInstance().getCreateController().tryCreateWagon(username, wagonRecipeLine)) {
+                        writer.println(OTrainProtocol.SUCCESS);
+                    } else {
+                        writer.println(OTrainProtocol.FAILURE);
+                    }
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_CREATION_QUEUE)) {
+                    writer.println(CreateWagon.listToJson(Server.getInstance().getCreateController().getPlayerCreateWagons(username)));
+                    writer.flush();
                 }
 
                 line = readLine();

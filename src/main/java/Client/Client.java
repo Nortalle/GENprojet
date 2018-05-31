@@ -144,6 +144,13 @@ public class Client {
         return UpgradeWagon.listFromJson((JsonArray) JsonUtility.fromJson(answer));
     }
 
+    public ArrayList<CreateWagon> getCreations() {
+        writer.println(OTrainProtocol.GET_CREATION_QUEUE);
+        writer.flush();
+        String answer = readLine();
+        return CreateWagon.listFromJson((JsonArray) JsonUtility.fromJson(answer));
+    }
+
     public Train getTrain() {
         updateTrainStatus();
         return train;
@@ -215,6 +222,13 @@ public class Client {
     public String startUpgrade(int wagonId) {
         writer.println(OTrainProtocol.UPGRADE);
         writer.println(wagonId);
+        writer.flush();
+        return readLine();
+    }
+
+    public String startCreation(int wagonRecipeIndex) {
+        writer.println(OTrainProtocol.CREATION);
+        writer.println(wagonRecipeIndex);
         writer.flush();
         return readLine();
     }

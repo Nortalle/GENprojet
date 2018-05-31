@@ -54,6 +54,12 @@ public class OTrainProtocol {
     // adds the object to the prod queue
     public static final String UPGRADE = "UPGRADE";
 
+    /* Creation related commands */
+    // get the list of production
+    public static final String GET_CREATION_QUEUE = "GET_CREATION_QUEUE";
+    // adds the object to the prod queue
+    public static final String CREATION = "CREATION";
+
     /* Connection related commands */
     // connects to the server
     public static final String CONNECT = "CONNECT";

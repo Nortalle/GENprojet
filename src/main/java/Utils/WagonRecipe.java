@@ -60,9 +60,9 @@ public class WagonRecipe {
 
     static WagonRecipe WAGON_DRILL_RCPT;
     static {
-        WAGON_DRILL_RCPT = new WagonRecipe("Drill Wagon", new Wagon(-1, 1000, 1, WagonStats.WagonType.DRILL), 120);
-        WAGON_DRILL_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 10));
-        WAGON_DRILL_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_WHEEL, 8));
+        WAGON_DRILL_RCPT = new WagonRecipe("Drill Wagon", new Wagon(-1, 1000, 1, WagonStats.WagonType.DRILL), 15);
+        WAGON_DRILL_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 4));
+        WAGON_DRILL_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_WHEEL, 2));
         /*
         WAGON_DRILL_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 45));
         WAGON_DRILL_RCPT.addCost(new ResourceAmount(Ressource.Type.WOOD_LOG, 20));

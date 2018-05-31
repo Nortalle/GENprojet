@@ -19,6 +19,7 @@ public class Server {
     private MineController mineController;
     private CraftController craftController;
     private UpgradeController upgradeController;
+    private CreateController createController;
 
     private Server(){}
 
@@ -35,6 +36,7 @@ public class Server {
         mineController = new MineController();
         craftController = new CraftController();
         upgradeController = new UpgradeController();
+        createController = new CreateController();
     }
 
     public void startServer() {
@@ -85,6 +87,10 @@ public class Server {
 
     public UpgradeController getUpgradeController() {
         return upgradeController;
+    }
+
+    public CreateController getCreateController() {
+        return createController;
     }
 
     public DataBase getDataBase() {
