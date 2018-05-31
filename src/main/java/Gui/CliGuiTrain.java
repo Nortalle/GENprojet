@@ -5,6 +5,7 @@ import Game.Train;
 import Game.UpgradeWagon;
 import Game.Wagon;
 import Utils.ResourceAmount;
+import Utils.WagonRecipe;
 import Utils.WagonStats;
 
 import javax.swing.*;
@@ -26,9 +27,15 @@ public class CliGuiTrain {
     private JPanel infoValuePanel;
     private JButton upgradeButton;
     private JPanel upgradeQueuePanel;
+    private JComboBox createList;
+    private JPanel createCostPanel;
+    private JButton createButton;
+    private JPanel createQueuePanel;
+    private JPanel createPanel;
 
     private Train train;
     private Wagon selectedWagon;
+    private WagonRecipe selectedWagonRecipe;
 
     public CliGuiTrain() {
         train = Client.getInstance().getTrain();
@@ -49,6 +56,19 @@ public class CliGuiTrain {
             @Override
             public void popupMenuCanceled(PopupMenuEvent e) {}
         });
+        createList.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                selectedWagonRecipe = (WagonRecipe) createList.getSelectedItem();
+                updateExceptList();
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
         upgradeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -63,7 +83,6 @@ public class CliGuiTrain {
     private void init() {
         infoNamePanel.setLayout(new GridLayout(0, 1));
         infoValuePanel.setLayout(new GridLayout(0, 1));
-        //wagonsPanel.setLayout(new GridLayout(0, 2));
 
         infoNamePanel.add(new JLabel("size : "));
         infoNamePanel.add(new JLabel("speed : "));
@@ -76,7 +95,10 @@ public class CliGuiTrain {
         updateWagonsPanel();
         updateUpgradeCostPanel();
         updateUpgradeQueuePanel();
+        updateCreateCostPanel();
+        updateCreateQueuePanel();
         updateWagonsList();
+        updateCreateList();
     }
 
     public void updateExceptList() {
@@ -84,6 +106,8 @@ public class CliGuiTrain {
         updateWagonsPanel();
         updateUpgradeCostPanel();
         updateUpgradeQueuePanel();
+        updateCreateCostPanel();
+        updateCreateQueuePanel();
     }
 
     public void updateInfoPanel() {
@@ -106,27 +130,8 @@ public class CliGuiTrain {
         }
         gbc.weighty = 1.0;
         gbc.weightx = 1.0;
-        wagonsPanel.add(new JLabel(""), gbc);
+        wagonsPanel.add(Box.createVerticalGlue(), gbc);
     }
-
-    /*
-    public void updateAvailableCrafts(){
-        ArrayList<ResourceAmount> playerObjects = Client.getInstance().getAllObjects();
-
-        availableCrafts.removeAll();
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.NORTHWEST;
-        gbc.gridx = 1;
-        for(Recipe r : Recipe.getAllRecipes()) {
-            if(canCraft(r, playerObjects)) {
-                availableCrafts.add(new JLabel(r.toString()), gbc);
-            }
-        }
-        gbc.weighty = 1.0;
-        gbc.weightx = 1.0;
-        availableCrafts.add(new JLabel(""), gbc);
-    }
-     */
 
     public void updateWagonsList() {
         upgradeList.removeAllItems();
@@ -137,8 +142,14 @@ public class CliGuiTrain {
         if(selectedWagon == null) return;
         ArrayList<ResourceAmount> costs = WagonStats.getUpgradeCost(selectedWagon);
         upgradeCostPanel.removeAll();
-        upgradeCostPanel.setLayout(new GridLayout(0, 1));
-        for(ResourceAmount cost : costs) upgradeCostPanel.add(new JLabel(cost.toString()));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        for(ResourceAmount cost : costs) upgradeCostPanel.add(new JLabel(cost.toString()), gbc);
+
+        gbc.weighty = 1.0;
+        gbc.weightx = 1.0;
+        upgradeCostPanel.add(Box.createVerticalGlue(), gbc);
         upgradeCostPanel.revalidate();
     }
 
@@ -149,26 +160,44 @@ public class CliGuiTrain {
         for(UpgradeWagon uw : upgrades) {
             upgradeQueuePanel.add(new JLabel(uw.toString()));
             JProgressBar bar = new JProgressBar();
-            int max = WagonStats.getUpgradeTime(uw.getWagon_to_upgrade().getLevel());// TODO
+            int max = WagonStats.getUpgradeTime(uw.getWagon_to_upgrade().getLevel());
             bar.setMaximum(max);
             bar.setValue(max - uw.getRemainingTime());
             upgradeQueuePanel.add(bar);
         }
     }
 
-    /*
-    public void updateOrderQueue() {
-        ArrayList<Craft> crafts = Client.getInstance().getCrafts();
-        orderQueuePanel.removeAll();
-        orderQueuePanel.setLayout(new GridLayout(0, 2));
-        for(Craft c : crafts) {
-            orderQueuePanel.add(new JLabel(c.toString()));
-            JProgressBar bar = new JProgressBar();
-            int max = Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime();
-            bar.setMaximum(max);
-            bar.setValue(max - c.getRemainingTime());
-            orderQueuePanel.add(bar);
-        }
+    public void updateCreateList() {
+        createList.removeAllItems();
+        for(WagonRecipe wr : WagonRecipe.getAllRecipes()) createList.addItem(wr);
     }
-     */
+
+    public void updateCreateCostPanel() {
+        if(selectedWagonRecipe == null) return;
+        ArrayList<ResourceAmount> costs = selectedWagonRecipe.getCost();
+        createCostPanel.removeAll();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        for(ResourceAmount cost : costs) createCostPanel.add(new JLabel(cost.toString()), gbc);
+
+        gbc.weighty = 1.0;
+        gbc.weightx = 1.0;
+        createCostPanel.add(Box.createVerticalGlue(), gbc);
+        createCostPanel.revalidate();
+    }
+
+    public void updateCreateQueuePanel() {
+        /*ArrayList<UpgradeWagon> upgrades = Client.getInstance().getUpgrades();
+        upgradeQueuePanel.removeAll();
+        upgradeQueuePanel.setLayout(new GridLayout(0, 2));
+        for(UpgradeWagon uw : upgrades) {
+            upgradeQueuePanel.add(new JLabel(uw.toString()));
+            JProgressBar bar = new JProgressBar();
+            int max = WagonStats.getUpgradeTime(uw.getWagon_to_upgrade().getLevel());
+            bar.setMaximum(max);
+            bar.setValue(max - uw.getRemainingTime());
+            upgradeQueuePanel.add(bar);
+        }*/
+    }
 }
