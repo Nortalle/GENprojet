@@ -104,5 +104,12 @@ public class Recipe {
         DRILL_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 100));
         DRILL_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 30));
     }
+
+    static Recipe DRILL_T1_RCPT;
+    static {
+        DRILL_T1_RCPT = new Recipe("Drill T1", new ResourceAmount(Ressource.Type.DRILL_T1,1), 120);
+        DRILL_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 100));
+        DRILL_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 30));
+    }
 }
 
