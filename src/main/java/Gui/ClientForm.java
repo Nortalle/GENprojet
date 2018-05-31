@@ -1,6 +1,8 @@
 package Gui;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import Client.*;
 import Game.Resources;
@@ -50,6 +52,12 @@ public class ClientForm {
         updateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 update();
+            }
+        });
+        tabs.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                updateExceptList();
             }
         });
     }
