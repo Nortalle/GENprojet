@@ -116,9 +116,8 @@ public class Ressource {
      * @return the basic resources of the game
      */
     public static int[] getBaseResources() {
-        int baseResources[] = {Type.SCRUM.ordinal(), Type.WATER.ordinal(), Type.WOOD_LOG.ordinal(),
-                                Type.CHARCOAL.ordinal(), Type.OIL.ordinal(), Type.IRON_ORE.ordinal(),
-                                Type.COPPER_ORE.ordinal(), Type.STEEL_INGOT.ordinal(), Type.GOLD_ORE.ordinal()};
+        int baseResources[] = {Type.SCRUM.ordinal(), Type.WATER.ordinal(), Type.WOOD_LOG.ordinal(), Type.CHARCOAL.ordinal(),
+                                Type.OIL.ordinal(), Type.IRON_ORE.ordinal(), Type.COPPER_ORE.ordinal(), Type.GOLD_ORE.ordinal()};
         return baseResources;
     }
 }

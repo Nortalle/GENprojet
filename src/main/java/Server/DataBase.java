@@ -179,7 +179,7 @@ public class DataBase {
     }
 
     public int[] getPlayerResourcesViaObjects(String username) {
-        int resources[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+        int resources[] = {0, 0, 0, 0, 0, 0, 0, 0};
         for(int i : Ressource.getBaseResources()) {
             ResourceAmount ra = getPlayerObjectOfType(username, i);
             if(ra == null) continue;
