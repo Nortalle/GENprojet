@@ -56,25 +56,25 @@ public class DataBase {
             //DEFAULT LOCO + DRILL + CARGO//
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
-            ps.setObject(2, WagonStats.WagonType.LOCO);
+            ps.setObject(2, WagonStats.WagonType.LOCO.ordinal());
             status = ps.executeUpdate();
             if(status == 0) return false;
 
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
-            ps.setObject(2, WagonStats.WagonType.DRILL);
+            ps.setObject(2, WagonStats.WagonType.DRILL.ordinal());
             status = ps.executeUpdate();
             if(status == 0) return false;
 
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
-            ps.setObject(2, WagonStats.WagonType.CARGO);
+            ps.setObject(2, WagonStats.WagonType.CARGO.ordinal());
             status = ps.executeUpdate();
             if(status == 0) return false;
 
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
-            ps.setObject(2, WagonStats.WagonType.CRAFT);
+            ps.setObject(2, WagonStats.WagonType.CRAFT.ordinal());
             status = ps.executeUpdate();
             if(status == 0) return false;
             // //

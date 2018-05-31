@@ -5,6 +5,7 @@ import Game.Wagon;
 import Server.DataBase;
 import Server.Server;
 import Utils.Ressource;
+import Utils.WagonStats;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,12 +81,12 @@ public class TestDataBase {
     @Test
     public void addWagon(){
         dataBase.insertPlayer(username, password);
-        int id = dataBase.addWagon(username, 1000, 1, 1);
-        Wagon w = new Wagon(id, 1000, 1, 1);
+        int id = dataBase.addWagon(username, 1000, 1, WagonStats.WagonType.DRILL.ordinal());
+        Wagon w = new Wagon(id, 1000, 1, WagonStats.WagonType.DRILL);
         Wagon w1 = dataBase.getWagon(id);
         String usernamefromDB = dataBase.getUsernameByWagonId(id);
         assertEquals(w.getId(), w1.getId());
-        assertEquals(w.getTypeID(), w1.getTypeID());
+        assertEquals(w.getType().ordinal(), w1.getType().ordinal());
         assertEquals(w.getLevel(), w1.getLevel());
         assertEquals(w.getWeight(), w1.getWeight());
         assertEquals(username, usernamefromDB);
@@ -102,7 +103,7 @@ public class TestDataBase {
         assertTrue(changeWorked);
         assertEquals(1200, w.getWeight());
         assertEquals(2, w.getLevel());
-        assertEquals(2, w.getTypeID());
+        assertEquals(2, w.getType().ordinal());
     }
 
     @Test

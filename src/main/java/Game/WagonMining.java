@@ -38,7 +38,7 @@ public class WagonMining  {
 
     public JsonObject toJson() {
         JsonObject miningWagon = new JsonObject();
-        if(currentMine == null) wagon = new Wagon();
+        if(wagon == null) wagon = new Wagon();
         miningWagon.add("wagon", wagon.toJson());
         if(currentMine == null) currentMine = new Mine();
         miningWagon.add("currentMine", currentMine.toJson());

@@ -71,11 +71,11 @@ public class WagonStats {
 
 
     public static int getMiningTime(Wagon wagon) {
-        return MINING_TIME[wagon.getType().ordinal() - 2][wagon.getLevel() - 1];
+        return MINING_TIME[wagon.getType().ordinal() - 1][wagon.getLevel() - 1];
     }
 
     public static boolean canMine(Wagon wagon, Mine mine) {// need tests
-        for(int i : CAN_MINE[wagon.getType().ordinal() - 2]) {
+        for(int i : CAN_MINE[wagon.getType().ordinal() - 1]) {
             if(i == mine.getResource()) return true;
         }
         return false;
