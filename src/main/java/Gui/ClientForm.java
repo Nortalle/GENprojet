@@ -138,15 +138,6 @@ public class ClientForm {
         cliGuiTrain.update();
     }
 
-    public void updateExceptList() {
-        Client.getInstance().getTrain();
-        syncResources();
-        cli_gui_gare.updateExceptList();
-        cli_gui_mine.updateExceptList();
-        cli_gui_craft.updateExceptList();
-        cliGuiInventory.update();// no list for the moment
-    }
-
     /* PARTIE POUR GERER L'AUTOUPDATE*/
 
     private Updater u;
