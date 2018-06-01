@@ -308,15 +308,10 @@ public class DataBase {
                 ps.setObject(3, typeId);
             }
 
-            // can do better
-            if(newAmount == 0) {
-                PreparedStatement deletePs = connection.prepareStatement("DELETE FROM ObjetsParJoueur WHERE nomJoueur=? AND objetId=?;", Statement.RETURN_GENERATED_KEYS);
-                ps.setObject(1, username);
-                ps.setObject(2, typeId);
-                int status = ps.executeUpdate();
-                if(status == 0) return true;
-                else return false;
-            }
+            // clean
+            System.out.println("cleaning");
+            PreparedStatement deletePs = connection.prepareStatement("DELETE FROM ObjetsParJoueur WHERE objetAmount=0;", Statement.RETURN_GENERATED_KEYS);
+            deletePs.executeUpdate();
 
             int status = ps.executeUpdate();
             if(status != 0){
