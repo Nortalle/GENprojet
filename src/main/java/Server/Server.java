@@ -32,7 +32,6 @@ public class Server {
 
     public void init() {
         dataBase = new DataBase();
-        dataBase.deleteUser(ADMIN_USERNAME);
         dataBase.insertAdmin(ADMIN_USERNAME, ADMIN_PASSWORD);
         dataBase.insertTrainStation(0, 0, 100, 100);// make sure the starting station exist
         travelController = new Travel();

@@ -293,16 +293,29 @@ public class DataBase {
         try {
             PreparedStatement ps;
             ResourceAmount existingEntry = getPlayerObjectOfType(username, typeId);
+            int newAmount;
             if(existingEntry == null) {
                 ps = connection.prepareStatement("INSERT INTO ObjetsParJoueur VALUES(default,?,?,?);", Statement.RETURN_GENERATED_KEYS);
                 ps.setObject(1, username);
                 ps.setObject(2, typeId);
                 ps.setObject(3, amount);
+                newAmount = amount;
             } else {
+                newAmount = existingEntry.getQuantity() + amount;
                 ps = connection.prepareStatement("UPDATE ObjetsParJoueur SET objetAmount=? WHERE nomJoueur=? AND objetId=?;", Statement.RETURN_GENERATED_KEYS);
-                ps.setObject(1, existingEntry.getQuantity() + amount);
+                ps.setObject(1, newAmount);
                 ps.setObject(2, username);
                 ps.setObject(3, typeId);
+            }
+
+            // can do better
+            if(newAmount == 0) {
+                PreparedStatement deletePs = connection.prepareStatement("DELETE FROM ObjetsParJoueur WHERE nomJoueur=? AND objetId=?;", Statement.RETURN_GENERATED_KEYS);
+                ps.setObject(1, username);
+                ps.setObject(2, typeId);
+                int status = ps.executeUpdate();
+                if(status == 0) return true;
+                else return false;
             }
 
             int status = ps.executeUpdate();
