@@ -24,6 +24,26 @@ public class DataBase {
         }
     }
 
+    public boolean insertAdmin(String username, String password) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Utilisateur VALUES(?,?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, password);
+            int status = ps.executeUpdate();
+            if(status == 0) return false;
+
+            ps = connection.prepareStatement("INSERT INTO Admin VALUES(?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            status = ps.executeUpdate();
+            if(status == 0) return false;
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * @param username new player
      * @param password password

@@ -20,6 +20,8 @@ public class Server {
     private CraftController craftController;
     private UpgradeController upgradeController;
     private CreateController createController;
+    private static final String ADMIN_USERNAME = "admin";
+    private static final String ADMIN_PASSWORD = "admin";
 
     private Server(){}
 
@@ -30,6 +32,8 @@ public class Server {
 
     public void init() {
         dataBase = new DataBase();
+        dataBase.deleteUser(ADMIN_USERNAME);
+        dataBase.insertAdmin(ADMIN_USERNAME, ADMIN_PASSWORD);
         dataBase.insertTrainStation(0, 0, 100, 100);// make sure the starting station exist
         travelController = new Travel();
         regenerationController = new MineRegeneration();
