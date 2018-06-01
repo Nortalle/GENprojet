@@ -58,7 +58,7 @@ public class CliGuiTrain {
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 selectedWagon = (Wagon) upgradeList.getSelectedItem();
                 selectedWagonIndex = upgradeList.getSelectedIndex();
-                updateExceptList();
+                update();
             }
 
             @Override
@@ -71,7 +71,7 @@ public class CliGuiTrain {
             @Override
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 selectedWagonRecipe = (WagonRecipe) createList.getSelectedItem();
-                updateExceptList();
+                update();
             }
 
             @Override
@@ -83,7 +83,7 @@ public class CliGuiTrain {
                 if(selectedWagon == null) return;
                 Client.getInstance().startUpgrade(selectedWagon.getId());
 
-                updateExceptList();
+                update();
             }
         });
         createButton.addActionListener(new ActionListener() {
@@ -92,7 +92,7 @@ public class CliGuiTrain {
                 if(selectedWagonRecipe == null) return;
                 Client.getInstance().startCreation(selectedWagonRecipe.getRecipeIndex());
 
-                updateExceptList();
+                update();
             }
         });
     }
@@ -116,16 +116,6 @@ public class CliGuiTrain {
         updateCreateQueuePanel();
         updateWagonsList();
         updateCreateList();
-    }
-
-    public void updateExceptList() {
-        /*updateInfoPanel();
-        updateWagonsPanel();
-        updateUpgradeCostPanel();
-        updateUpgradeQueuePanel();
-        updateCreateCostPanel();
-        updateCreateQueuePanel();*/
-        update();
     }
 
     public void updateInfoPanel() {

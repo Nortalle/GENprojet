@@ -43,7 +43,7 @@ public class cli_gui_Gare {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
                 String line = Client.getInstance().changeStation(viewingStation.getId());
-                if(line.equals(OTrainProtocol.SUCCESS)) updateExceptList();
+                if(line.equals(OTrainProtocol.SUCCESS)) update();
 
             }
         });
@@ -51,13 +51,13 @@ public class cli_gui_Gare {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
                 viewingStationIndex = select_station.getSelectedIndex();
-                updateExceptList();
+                update();
             }
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = Client.getInstance().getTrain().getTrainStation();
-                updateExceptList();
+                update();
             }
         });
         select_station.addPopupMenuListener(new PopupMenuListener() {
@@ -78,13 +78,6 @@ public class cli_gui_Gare {
         updateTrainsAtStation();
         updateMines();
         updateStationList();
-    }
-
-    public void updateExceptList(){
-        updateStationInfo();
-        updateEtaBar();
-        updateTrainsAtStation();
-        updateMines();
     }
 
     public void updateStationInfo() {

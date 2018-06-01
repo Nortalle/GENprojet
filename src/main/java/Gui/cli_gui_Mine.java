@@ -86,11 +86,6 @@ public class cli_gui_Mine {
         updateWagonsList();
     }
 
-    public void updateExceptList() {
-        updateMinesPanel();
-        updateCurrentlyMiningWagons();
-    }
-
     public void updateMinesPanel() {
         availableMinesPanel.setLayout(new GridLayout(0,1));
         availableMinesPanel.removeAll();
