@@ -3,7 +3,6 @@ package Server;
 import Game.*;
 import Utils.JsonUtility;
 import Utils.OTrainProtocol;
-import Utils.ResourceAmount;
 
 import java.io.*;
 import java.net.Socket;
@@ -31,9 +30,49 @@ ClientHandler implements Runnable {
     }
 
     public void run() {
-        try {
-            waitForAuthentication();
+        waitForAuthentication();
 
+        if(username.equals("admin")) handleAdmin();
+        else handleClient();
+    }
+
+    private String readLine() throws IOException {
+        String line = reader.readLine();
+        LOG.info("Client (" + username + ") : " + line);
+        return line;
+    }
+
+    private void waitForAuthentication() {
+        try {
+            boolean logged = false;
+            boolean signedUp;
+            while(!logged) {
+                String request = readLine();
+                while(!request.equals(OTrainProtocol.CONNECT) && !request.equals(OTrainProtocol.SIGN_UP)) request = readLine();
+                username = readLine();
+                String password = readLine();
+                if(request.equals(OTrainProtocol.CONNECT)) {
+                    logged = db.checkLogin(username, password);
+                    writer.println(logged ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
+                    writer.flush();
+                } else if(request.equals(OTrainProtocol.SIGN_UP)) {
+                    if(username == null || password == null || username.equals("")) {
+                        signedUp = false;
+                    } else {
+                        signedUp = db.insertPlayer(username, password);
+                    }
+                    writer.println(signedUp ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
+                    writer.flush();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Server.getInstance().removeHandler(this);
+        }
+    }
+
+    private void handleClient() {
+        try {
             String line = readLine();
             while (running && line != null) {
                 //work...
@@ -125,43 +164,29 @@ ClientHandler implements Runnable {
             }
         } catch (IOException e) {
             e.printStackTrace();
-
             Server.getInstance().removeHandler(this);
         }
     }
 
-    private String readLine() throws IOException {
-        String line = reader.readLine();
-        LOG.info("Client (" + username + ") : " + line);
-        return line;
-    }
-
-    private void waitForAuthentication() {
+    private void handleAdmin() {
         try {
-            boolean logged = false;
-            boolean signedUp;
-            while(!logged) {
-                String request = readLine();
-                while(!request.equals(OTrainProtocol.CONNECT) && !request.equals(OTrainProtocol.SIGN_UP)) request = readLine();
-                username = readLine();
-                String password = readLine();
-                if(request.equals(OTrainProtocol.CONNECT)) {
-                    logged = db.checkLogin(username, password);
-                    writer.println(logged ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
+            String line = readLine();
+            while (running && line != null) {
+                //work...
+
+                if(line.equals(OTrainProtocol.SUCCESS)) {
+                    writer.println("if");
                     writer.flush();
-                } else if(request.equals(OTrainProtocol.SIGN_UP)) {
-                    if(username == null || password == null || username.equals("")) {
-                        signedUp = false;
-                    } else {
-                        signedUp = db.insertPlayer(username, password);
-                    }
-                    writer.println(signedUp ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
+                } else if(line.equals(OTrainProtocol.FAILURE)) {
+                    writer.println("else if");
                     writer.flush();
                 }
+
+                line = readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
+            Server.getInstance().removeHandler(this);
         }
-
     }
 }
