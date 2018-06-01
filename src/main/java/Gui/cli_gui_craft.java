@@ -6,6 +6,7 @@ import Client.SyncClock;
 import Game.Craft;
 import Utils.Recipe;
 import Utils.ResourceAmount;
+import Utils.WagonStats;
 import javafx.util.Pair;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class cli_gui_craft {
     private JPanel panel1;
@@ -28,9 +30,7 @@ public class cli_gui_craft {
 
     // pour l'update local
     ArrayList<Pair<JLabel,JProgressBar>> craftUI = new ArrayList<>();
-
-    private Updater u;
-    private int nbAssemblers = 0;
+    ArrayList<Craft> crafts = new ArrayList<>();
     // END pour l'update local
 
     public cli_gui_craft() {
@@ -41,26 +41,13 @@ public class cli_gui_craft {
         recipeDropdown.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                SyncClock.getInstance().addUpdater(new Updater() {
-                    @Override
-                    public void sync() {
-                        syncUpdateOrderQueue();
-                    }
 
-                    @Override
-                    public void localUpdate() {
-                        localUpdateOrderQueue();
-                    }
-                });
             }
 
             @Override
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 selectedRecipe = (Recipe) recipeDropdown.getSelectedItem();
                 updateCraftCost();
-                if(u != null){
-                    SyncClock.getInstance().removeUpdater(u);
-                }
             }
 
             @Override
@@ -74,6 +61,19 @@ public class cli_gui_craft {
                 Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
 
                 update();
+            }
+        });
+
+        // ajout du auto updater
+        SyncClock.getInstance().addUpdater(new Updater() {
+            @Override
+            public void sync() {
+                syncUpdateOrderQueue();
+            }
+
+            @Override
+            public void localUpdate() {
+                localUpdateOrderQueue();
             }
         });
     }
@@ -93,29 +93,45 @@ public class cli_gui_craft {
     }
 
     public void localUpdateOrderQueue(){
-
-        for(Pair<JLabel,JProgressBar> p : craftUI){
-            p.getValue().setValue(p.getValue().getValue() + 1); // incrémente la barre
-            if(p.getValue().getValue() >= p.getValue().getMaximum()){
-
-                orderQueuePanel.remove(p.getKey());
-                orderQueuePanel.remove(p.getValue());
-
-                craftUI.remove(p);
-            }
-        }
-    }
-
-    public void syncUpdateOrderQueue() {
-        ArrayList<Craft> crafts = Client.getInstance().getCrafts();
+        //System.out.println("COUCOU");
         orderQueuePanel.removeAll();
         orderQueuePanel.setLayout(new GridLayout(0, 2));
 
-        //TODO updater le nombre d'assembleurs en vigeur
+        int cntAssemblyCount = 0;
+
+        for(Craft c : crafts) {
+            if(c.getRemainingTime() > 0){
+                if(WagonStats.getMaxParallelCraft(Client.getInstance().getTrainLocal()) > cntAssemblyCount){
+                    cntAssemblyCount++;
+                    c.decreaseRemainingTime();
+                }
+
+                JLabel lab = new JLabel(c.toString());
+                JProgressBar bar = new JProgressBar();
+                int max = Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime();
+                bar.setMaximum(max);
+                bar.setValue(max - c.getRemainingTime());
+
+                orderQueuePanel.add(lab);
+                orderQueuePanel.add(bar);
+            } else {
+                // pas sensé l'afficher
+            }
+        }
+        orderQueuePanel.updateUI();
+    }
+
+    public synchronized void syncUpdateOrderQueue() {
+        crafts = Client.getInstance().getCraftsSync();
+
+        orderQueuePanel.removeAll();
+        orderQueuePanel.setLayout(new GridLayout(0, 2));
 
         // vide la liste des objets ui
-        for(Object o : craftUI) {
-            craftUI.remove(o);
+        Iterator<Pair<JLabel,JProgressBar>> iter = craftUI.iterator();
+        while(iter.hasNext()) {
+            iter.next();
+            iter.remove();
         }
 
         for(Craft c : crafts) {
@@ -127,12 +143,10 @@ public class cli_gui_craft {
 
             orderQueuePanel.add(lab);
             orderQueuePanel.add(bar);
-
-            craftUI.add(new Pair(lab, bar));
         }
     }
 
-    public void updateAvailableCrafts(){
+    public synchronized void updateAvailableCrafts(){
         ArrayList<ResourceAmount> playerObjects = Client.getInstance().getAllObjects();
 
         availableCrafts.removeAll();

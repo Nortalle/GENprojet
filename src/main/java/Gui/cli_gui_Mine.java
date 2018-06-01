@@ -30,7 +30,7 @@ public class cli_gui_Mine {
     private int wagonIndex = 0;
 
     public cli_gui_Mine() {
-        train = Client.getInstance().getTrain();
+        train = Client.getInstance().getTrainSync();
         update();
 
         startMiningButton.addActionListener(new ActionListener() {

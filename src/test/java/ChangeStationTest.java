@@ -1,10 +1,7 @@
 import Client.Client;
-import Game.TrainStation;
 import Server.Server;
 import Server.DataBase;
-import Utils.JsonUtility;
 import Utils.OTrainProtocol;
-import com.google.gson.JsonArray;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,7 +50,7 @@ public class ChangeStationTest {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         String line = client.changeStation(stationId);
         System.out.println(line);
-        assertEquals(dataBase.getTrainStation(stationId).toString(), client.getTrain().getTrainStation().toString());
+        assertEquals(dataBase.getTrainStation(stationId).toString(), client.getTrainSync().getTrainStation().toString());
     }
 
     @Test
@@ -83,6 +80,6 @@ public class ChangeStationTest {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         String line = client.changeStation(stationId);
         System.out.println(line);
-        assertTrue(client.getTrain().getTrainStationETA() > 0);
+        assertTrue(client.getTrainSync().getTrainStationETA() > 0);
     }
 }

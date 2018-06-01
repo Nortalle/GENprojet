@@ -44,7 +44,7 @@ public class CliGuiTrain {
     private int selectedWagonIndex = 0;
 
     public CliGuiTrain() {
-        train = Client.getInstance().getTrain();
+        train = Client.getInstance().getTrainSync();
         init();
         update();
         selectedWagon = (Wagon) upgradeList.getSelectedItem();
@@ -125,7 +125,7 @@ public class CliGuiTrain {
         int totalCargo = 0;
         for(ResourceAmount ra : Client.getInstance().getAllObjects()) totalCargo += ra.getQuantity();
         infoValuePanel.add(new JLabel(totalCargo + "/" + WagonStats.getMaxCapacity(train)));
-        int totalCrafts = Client.getInstance().getCrafts().size();
+        int totalCrafts = Client.getInstance().getCraftsSync().size();
         int maxCrafts = WagonStats.getMaxParallelCraft(train);
         int currentCrafts = Math.min(totalCrafts, maxCrafts);
         int waitingCrafts = totalCrafts - currentCrafts;

@@ -37,7 +37,7 @@ public class cli_gui_Gare {
     public cli_gui_Gare() {
 
         update();
-        viewingStation = Client.getInstance().getTrain().getTrainStation();// maybe useless
+        viewingStation = Client.getInstance().getTrainSync().getTrainStation();// maybe useless
 
         button_travel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -56,7 +56,7 @@ public class cli_gui_Gare {
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                viewingStation = Client.getInstance().getTrain().getTrainStation();
+                viewingStation = Client.getInstance().getTrainSync().getTrainStation();
                 update();
             }
         });
@@ -81,14 +81,14 @@ public class cli_gui_Gare {
     }
 
     public void updateStationInfo() {
-        if(viewingStation == null) viewingStation = Client.getInstance().getTrain().getTrainStation();
+        if(viewingStation == null) viewingStation = Client.getInstance().getTrainSync().getTrainStation();
         label_stationName.setText(viewingStation.toString());
         label_stationCoords.setText(viewingStation.getPosX() + ";" + viewingStation.getPosY());
         stationInfosLabel.setText(viewingStation.getInfos());
     }
 
     public void updateEtaBar() {
-        Train train = Client.getInstance().getTrain();
+        Train train = Client.getInstance().getTrainSync();
         int totalTime = train.getTrainStationTotalETA();
         int eta = train.getTrainStationETA();
         progressBar1.setMaximum(totalTime);

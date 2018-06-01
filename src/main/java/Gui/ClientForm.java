@@ -1,15 +1,11 @@
 package Gui;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import Client.*;
 import Game.Resources;
 import Game.WagonMining;
 import Utils.WagonStats;
-
-import java.awt.event.*;
 
 public class ClientForm {
     private JPanel panel_main;
@@ -61,7 +57,9 @@ public class ClientForm {
         });
 
         updateButton.addActionListener(e -> update());
-        tabs.addChangeListener(e -> update());
+        tabs.addChangeListener(e -> {
+            update();
+        });
     }
 
     /**
@@ -129,7 +127,7 @@ public class ClientForm {
     }
 
     public void update() {
-        Client.getInstance().getTrain();
+        Client.getInstance().getTrainSync();
         syncResources();
         cli_gui_gare.update();
         cli_gui_mine.update();

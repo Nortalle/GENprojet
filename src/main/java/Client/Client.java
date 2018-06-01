@@ -28,6 +28,7 @@ public class Client {
     private String username;
     private Train train;
     private ArrayList<WagonMining> wagonMining;
+    private ArrayList<Craft> crafts;
 
     public static Client getInstance() {
         if(instance == null) instance = new Client();
@@ -130,11 +131,16 @@ public class Client {
         return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), ra -> new ResourceAmount(ra));
     }
 
-    public ArrayList<Craft> getCrafts() {
+    public ArrayList<Craft> getCraftsSync() {
         writer.println(OTrainProtocol.GET_PROD_QUEUE);
         writer.flush();
         String answer = readLine();
-        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer),craft -> new Craft(craft));
+        crafts = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer),craft -> new Craft(craft));
+        return crafts;
+    }
+
+    public ArrayList<Craft> getCrafts() {
+        return crafts;
     }
 
     public ArrayList<UpgradeWagon> getUpgrades() {
@@ -151,8 +157,12 @@ public class Client {
         return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), cw -> new CreateWagon(cw));
     }
 
-    public Train getTrain() {
+    public Train getTrainSync() {
         updateTrainStatus();
+        return train;
+    }
+
+    public Train getTrainLocal(){
         return train;
     }
 
