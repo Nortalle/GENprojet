@@ -14,6 +14,7 @@ import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class cli_gui_Mine {
     private JComboBox select_mine;
@@ -116,11 +117,15 @@ public class cli_gui_Mine {
     }
 
     public void updateWagonsList() {
-        select_wagon.removeAllItems();
+        ArrayList<Wagon> canMineWagons = new ArrayList<>();
         for(Wagon w : train.getWagons()){
             if(w.getType() == WagonStats.WagonType.DRILL || w.getType() == WagonStats.WagonType.SAW || w.getType() == WagonStats.WagonType.PUMP){
-                select_wagon.addItem(w);
+                canMineWagons.add(w);
             }
+        }
+        select_wagon.removeAllItems();
+        for(Wagon w : canMineWagons){
+            select_wagon.addItem(w);
         }
         select_wagon.setSelectedIndex(wagonIndex);
     }
