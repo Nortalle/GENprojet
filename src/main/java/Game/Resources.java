@@ -55,6 +55,16 @@ public class Resources {
         fer = resources[5];
         cuivre = resources[6];
         or = resources[7];
+        /*
+        scrum_gain_rate = resources[8];
+        eau_gain_rate = resources[9];
+        bois_gain_rate = resources[10];
+        chardon_gain_rate = resources[11];
+        petrol_gain_rate = resources[12];
+        fer_gain_rate = resources[13];
+        cuivre_gain_rate = resources[14];
+        or_gain_rate = resources[15];
+        */
     }
 
     public Resources(JsonObject json){
@@ -67,6 +77,7 @@ public class Resources {
      * @param json : json of the resources
      */
     public Resources(String json){
+
         fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
@@ -109,6 +120,16 @@ public class Resources {
         fer = from.get("fer").getAsInt();
         cuivre = from.get("cuivre").getAsInt();
         or = from.get("or").getAsInt();
+        /*
+        scrum = from.get("scrum_gain_rate").getAsInt();
+        eau = from.get("eau_gain_rate").getAsInt();
+        bois = from.get("bois_gain_rate").getAsInt();
+        chardon = from.get("chardon_gain_rate").getAsInt();
+        petrol = from.get("petrol_gain_rate").getAsInt();
+        fer = from.get("fer_gain_rate").getAsInt();
+        cuivre = from.get("_gain_rate").getAsInt();
+        or = from.get("or_gain_rate").getAsInt();
+        */
     }
 
 
@@ -176,6 +197,71 @@ public class Resources {
         this.or = or;
     }
 
+    /*
+    public int getScrumRate() {
+        return scrum_gain_rate;
+    }
+
+    public void setScrumRate(int scrum_gain_rate) {
+        this.scrum_gain_rate = scrum_gain_rate;
+    }
+
+    public int getEauRate() {
+        return eau_gain_rate;
+    }
+
+    public void setEauRate(int eau_gain_rate) {
+        this.eau_gain_rate = eau_gain_rate;
+    }
+
+    public int getBoisRate() {
+        return bois_gain_rate;
+    }
+
+    public void setBoisRate(int bois_gain_rate) {
+        this.bois_gain_rate = bois_gain_rate;
+    }
+
+    public int getCharbonRate() {
+        return chardon_gain_rate;
+    }
+
+    public void setChardonRate(int charbon_gain_rate) {
+        this.chardon_gain_rate = charbon_gain_rate;
+    }
+
+    public int getPetrolRate() {
+        return petrol_gain_rate;
+    }
+
+    public void setPetrolRate(int petrol_gain_rate) {
+        this.petrol_gain_rate = petrol_gain_rate;
+    }
+
+    public int getFerRate() {
+        return fer_gain_rate;
+    }
+
+    public void setFerRate(int fer_gain_rate) {
+        this.fer_gain_rate = fer_gain_rate;
+    }
+
+    public int getCuivreRate() {
+        return cuivre_gain_rate;
+    }
+
+    public void setCuivreRate(int cuivre_gain_rate) {
+        this.cuivre_gain_rate = cuivre_gain_rate;
+    }
+
+    public int getOrRate() {
+        return or_gain_rate;
+    }
+
+    public void setOrRate(int or_gain_rate) {
+        this.or_gain_rate = or_gain_rate;
+    }
+    */
     /**
      * Sets all the resources to the given value
      * @param all : value to set all the ressources
