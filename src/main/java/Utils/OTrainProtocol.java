@@ -8,6 +8,12 @@ public class OTrainProtocol {
 
     public static final int PORT = 4444;
 
+    /* ---------{ Server accept connection }--------- */
+    // connect as admin
+    public static final String ADMIN = "ADMIN";
+    // connect as player
+    public static final String PLAYER = "PLAYER";
+
     /* ---------{ Client side commands }--------- */
 
     // get the list of stations
