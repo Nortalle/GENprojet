@@ -9,9 +9,12 @@ import Utils.OTrainProtocol;
 import Utils.WagonStats;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class cli_gui_Mine {
     private JComboBox select_mine;
@@ -23,6 +26,8 @@ public class cli_gui_Mine {
     private JButton stopMiningButton;
 
     private Train train;
+    private int mineIndex = 0;
+    private int wagonIndex = 0;
 
     public cli_gui_Mine() {
         train = Client.getInstance().getTrain();
@@ -48,6 +53,30 @@ public class cli_gui_Mine {
                 }
             }
         });
+        select_mine.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                mineIndex = select_mine.getSelectedIndex();
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
+        select_wagon.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                wagonIndex = select_wagon.getSelectedIndex();
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
     }
 
     public void update(){
@@ -55,11 +84,6 @@ public class cli_gui_Mine {
         updateCurrentlyMiningWagons();
         updateMinesList();
         updateWagonsList();
-    }
-
-    public void updateExceptList() {
-        updateMinesPanel();
-        updateCurrentlyMiningWagons();
     }
 
     public void updateMinesPanel() {
@@ -84,14 +108,20 @@ public class cli_gui_Mine {
         for(Mine m : train.getTrainStation().getMines()) {
             select_mine.addItem(m);
         }
+        select_mine.setSelectedIndex(mineIndex);
     }
 
     public void updateWagonsList() {
-        select_wagon.removeAllItems();
+        ArrayList<Wagon> canMineWagons = new ArrayList<>();
         for(Wagon w : train.getWagons()){
             if(w.getType() == WagonStats.WagonType.DRILL || w.getType() == WagonStats.WagonType.SAW || w.getType() == WagonStats.WagonType.PUMP){
-                select_wagon.addItem(w);
+                canMineWagons.add(w);
             }
         }
+        select_wagon.removeAllItems();
+        for(Wagon w : canMineWagons){
+            select_wagon.addItem(w);
+        }
+        select_wagon.setSelectedIndex(wagonIndex);
     }
 }

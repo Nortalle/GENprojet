@@ -32,6 +32,7 @@ public class cli_gui_Gare {
     private JLabel stationInfosLabel;
 
     private TrainStation viewingStation;
+    private int viewingStationIndex = 0;
 
     public cli_gui_Gare() {
 
@@ -42,20 +43,21 @@ public class cli_gui_Gare {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
                 String line = Client.getInstance().changeStation(viewingStation.getId());
-                if(line.equals(OTrainProtocol.SUCCESS)) updateExceptList();
+                if(line.equals(OTrainProtocol.SUCCESS)) update();
 
             }
         });
         button_view.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
-                updateExceptList();
+                viewingStationIndex = select_station.getSelectedIndex();
+                update();
             }
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = Client.getInstance().getTrain().getTrainStation();
-                updateExceptList();
+                update();
             }
         });
         select_station.addPopupMenuListener(new PopupMenuListener() {
@@ -76,13 +78,6 @@ public class cli_gui_Gare {
         updateTrainsAtStation();
         updateMines();
         updateStationList();
-    }
-
-    public void updateExceptList(){
-        updateStationInfo();
-        updateEtaBar();
-        updateTrainsAtStation();
-        updateMines();
     }
 
     public void updateStationInfo() {
@@ -120,5 +115,6 @@ public class cli_gui_Gare {
     public void updateStationList() {
         select_station.removeAllItems();
         for(TrainStation ts : Client.getInstance().getStations()) select_station.addItem(ts);
+        if(select_station != null) select_station.setSelectedIndex(viewingStationIndex);
     }
 }
