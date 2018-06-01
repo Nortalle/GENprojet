@@ -41,12 +41,15 @@ public class CliGuiTrain {
     private Wagon selectedWagon;
     private WagonRecipe selectedWagonRecipe;
 
+    private int selectedWagonIndex = 0;
+
     public CliGuiTrain() {
         train = Client.getInstance().getTrain();
         init();
         update();
         selectedWagon = (Wagon) upgradeList.getSelectedItem();
         updateUpgradeCostPanel();
+
         upgradeList.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
@@ -54,7 +57,8 @@ public class CliGuiTrain {
             @Override
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 selectedWagon = (Wagon) upgradeList.getSelectedItem();
-                updateExceptList();
+                selectedWagonIndex = upgradeList.getSelectedIndex();
+                update();
             }
 
             @Override
@@ -67,7 +71,7 @@ public class CliGuiTrain {
             @Override
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 selectedWagonRecipe = (WagonRecipe) createList.getSelectedItem();
-                updateExceptList();
+                update();
             }
 
             @Override
@@ -79,7 +83,7 @@ public class CliGuiTrain {
                 if(selectedWagon == null) return;
                 Client.getInstance().startUpgrade(selectedWagon.getId());
 
-                updateExceptList();
+                update();
             }
         });
         createButton.addActionListener(new ActionListener() {
@@ -88,7 +92,7 @@ public class CliGuiTrain {
                 if(selectedWagonRecipe == null) return;
                 Client.getInstance().startCreation(selectedWagonRecipe.getRecipeIndex());
 
-                updateExceptList();
+                update();
             }
         });
     }
@@ -99,8 +103,8 @@ public class CliGuiTrain {
 
         infoNamePanel.add(new JLabel("size : "));
         infoNamePanel.add(new JLabel("speed : "));
-        infoNamePanel.add(new JLabel("max cargo : "));
-        infoNamePanel.add(new JLabel("max parallel crafts : "));
+        infoNamePanel.add(new JLabel("cargo : "));
+        infoNamePanel.add(new JLabel("crafts : "));
     }
 
     public void update() {
@@ -114,21 +118,18 @@ public class CliGuiTrain {
         updateCreateList();
     }
 
-    public void updateExceptList() {
-        updateInfoPanel();
-        updateWagonsPanel();
-        updateUpgradeCostPanel();
-        updateUpgradeQueuePanel();
-        updateCreateCostPanel();
-        updateCreateQueuePanel();
-    }
-
     public void updateInfoPanel() {
         infoValuePanel.removeAll();
         infoValuePanel.add(new JLabel("" + train.getSize()));
         infoValuePanel.add(new JLabel("" + WagonStats.getLocoSpeed(train)));
-        infoValuePanel.add(new JLabel("" + WagonStats.getMaxCapacity(train)));
-        infoValuePanel.add(new JLabel("" + WagonStats.getMaxParallelCraft(train)));
+        int totalCargo = 0;
+        for(ResourceAmount ra : Client.getInstance().getAllObjects()) totalCargo += ra.getQuantity();
+        infoValuePanel.add(new JLabel(totalCargo + "/" + WagonStats.getMaxCapacity(train)));
+        int totalCrafts = Client.getInstance().getCrafts().size();
+        int maxCrafts = WagonStats.getMaxParallelCraft(train);
+        int currentCrafts = Math.min(totalCrafts, maxCrafts);
+        int waitingCrafts = totalCrafts - currentCrafts;
+        infoValuePanel.add(new JLabel(currentCrafts + "(" + waitingCrafts + ")" + "/" + maxCrafts));
     }
 
     public void updateWagonsPanel() {
@@ -139,6 +140,7 @@ public class CliGuiTrain {
     public void updateWagonsList() {
         upgradeList.removeAllItems();
         for(Wagon w : train.getWagons()) upgradeList.addItem(w);
+        if(selectedWagon != null) upgradeList.setSelectedIndex(selectedWagonIndex);
     }
 
     public void updateUpgradeCostPanel() {
@@ -164,6 +166,7 @@ public class CliGuiTrain {
     public void updateCreateList() {
         createList.removeAllItems();
         for(WagonRecipe wr : WagonRecipe.getAllRecipes()) createList.addItem(wr);
+        if(selectedWagonRecipe != null) createList.setSelectedItem(selectedWagonRecipe);
     }
 
     public void updateCreateCostPanel() {
