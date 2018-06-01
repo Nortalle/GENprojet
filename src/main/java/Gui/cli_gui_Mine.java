@@ -9,6 +9,8 @@ import Utils.OTrainProtocol;
 import Utils.WagonStats;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +25,8 @@ public class cli_gui_Mine {
     private JButton stopMiningButton;
 
     private Train train;
+    private int mineIndex = 0;
+    private int wagonIndex = 0;
 
     public cli_gui_Mine() {
         train = Client.getInstance().getTrain();
@@ -47,6 +51,30 @@ public class cli_gui_Mine {
                     update();
                 }
             }
+        });
+        select_mine.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                mineIndex = select_mine.getSelectedIndex();
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
+        select_wagon.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                wagonIndex = select_wagon.getSelectedIndex();
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {}
         });
     }
 
@@ -84,6 +112,7 @@ public class cli_gui_Mine {
         for(Mine m : train.getTrainStation().getMines()) {
             select_mine.addItem(m);
         }
+        select_mine.setSelectedIndex(mineIndex);
     }
 
     public void updateWagonsList() {
@@ -93,5 +122,6 @@ public class cli_gui_Mine {
                 select_wagon.addItem(w);
             }
         }
+        select_wagon.setSelectedIndex(wagonIndex);
     }
 }

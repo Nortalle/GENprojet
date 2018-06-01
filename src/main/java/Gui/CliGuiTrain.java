@@ -119,12 +119,13 @@ public class CliGuiTrain {
     }
 
     public void updateExceptList() {
-        updateInfoPanel();
+        /*updateInfoPanel();
         updateWagonsPanel();
         updateUpgradeCostPanel();
         updateUpgradeQueuePanel();
         updateCreateCostPanel();
-        updateCreateQueuePanel();
+        updateCreateQueuePanel();*/
+        update();
     }
 
     public void updateInfoPanel() {

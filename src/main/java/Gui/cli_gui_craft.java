@@ -56,6 +56,7 @@ public class cli_gui_craft {
     public void updateRecipeDropdown(){
         recipeDropdown.removeAllItems();
         for(Recipe r : Recipe.getAllRecipes()) recipeDropdown.addItem(r);
+        if(selectedRecipe != null) recipeDropdown.setSelectedItem(selectedRecipe);
     }
 
     public void updateCraftCost(){

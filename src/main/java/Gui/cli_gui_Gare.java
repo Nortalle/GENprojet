@@ -32,6 +32,7 @@ public class cli_gui_Gare {
     private JLabel stationInfosLabel;
 
     private TrainStation viewingStation;
+    private int viewingStationIndex = 0;
 
     public cli_gui_Gare() {
 
@@ -49,6 +50,7 @@ public class cli_gui_Gare {
         button_view.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
+                viewingStationIndex = select_station.getSelectedIndex();
                 updateExceptList();
             }
         });
@@ -120,5 +122,6 @@ public class cli_gui_Gare {
     public void updateStationList() {
         select_station.removeAllItems();
         for(TrainStation ts : Client.getInstance().getStations()) select_station.addItem(ts);
+        if(select_station != null) select_station.setSelectedIndex(viewingStationIndex);
     }
 }
