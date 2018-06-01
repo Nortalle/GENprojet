@@ -261,8 +261,9 @@ public class DataBase {
         int MAX = WagonStats.getMaxCapacity(train);
         int MIN = 0;
         int currentAmount = getPlayerCurrentCargoAmount(username);
+        if(currentAmount > MAX || currentAmount < MIN) return 0;
         int newAmount =  currentAmount + amount;
-        if(newAmount > MAX) maxChange = MAX - currentAmount;// TODO TEST < 0
+        if(newAmount > MAX) maxChange = MAX - currentAmount;
         if(newAmount < MIN) maxChange = MIN - currentAmount;
 
         return maxChange;
@@ -910,8 +911,9 @@ public class DataBase {
         int MAX = 1000;// int MAX = getMine(id).getMax(); lorsqu'il y aura le MAX dans la database
         int MIN = 0;
         int currentAmount = getMine(id).getAmount();
+        if(currentAmount > MAX || currentAmount < MIN) return 0;
         int newAmount =  currentAmount + changeAmount;
-        if(newAmount > MAX) maxChange = MAX - currentAmount;// TODO TEST < 0
+        if(newAmount > MAX) maxChange = MAX - currentAmount;
         if(newAmount < MIN) maxChange = MIN - currentAmount;
 
         return maxChange;

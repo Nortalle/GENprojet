@@ -99,8 +99,8 @@ public class CliGuiTrain {
 
         infoNamePanel.add(new JLabel("size : "));
         infoNamePanel.add(new JLabel("speed : "));
-        infoNamePanel.add(new JLabel("max cargo : "));
-        infoNamePanel.add(new JLabel("max parallel crafts : "));
+        infoNamePanel.add(new JLabel("cargo : "));
+        infoNamePanel.add(new JLabel("crafts : "));
     }
 
     public void update() {
@@ -127,8 +127,14 @@ public class CliGuiTrain {
         infoValuePanel.removeAll();
         infoValuePanel.add(new JLabel("" + train.getSize()));
         infoValuePanel.add(new JLabel("" + WagonStats.getLocoSpeed(train)));
-        infoValuePanel.add(new JLabel("" + WagonStats.getMaxCapacity(train)));
-        infoValuePanel.add(new JLabel("" + WagonStats.getMaxParallelCraft(train)));
+        int totalCargo = 0;
+        for(ResourceAmount ra : Client.getInstance().getAllObjects()) totalCargo += ra.getQuantity();
+        infoValuePanel.add(new JLabel(totalCargo + "/" + WagonStats.getMaxCapacity(train)));
+        int totalCrafts = Client.getInstance().getCrafts().size();
+        int maxCrafts = WagonStats.getMaxParallelCraft(train);
+        int currentCrafts = Math.min(totalCrafts, maxCrafts);
+        int waitingCrafts = totalCrafts - currentCrafts;
+        infoValuePanel.add(new JLabel(currentCrafts + "(" + waitingCrafts + ")" + "/" + maxCrafts));
     }
 
     public void updateWagonsPanel() {
