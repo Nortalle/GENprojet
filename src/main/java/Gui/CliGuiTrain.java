@@ -41,12 +41,15 @@ public class CliGuiTrain {
     private Wagon selectedWagon;
     private WagonRecipe selectedWagonRecipe;
 
+    private int selectedWagonIndex = 0;
+
     public CliGuiTrain() {
         train = Client.getInstance().getTrain();
         init();
         update();
         selectedWagon = (Wagon) upgradeList.getSelectedItem();
         updateUpgradeCostPanel();
+
         upgradeList.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
@@ -54,6 +57,7 @@ public class CliGuiTrain {
             @Override
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 selectedWagon = (Wagon) upgradeList.getSelectedItem();
+                selectedWagonIndex = upgradeList.getSelectedIndex();
                 updateExceptList();
             }
 
@@ -145,6 +149,7 @@ public class CliGuiTrain {
     public void updateWagonsList() {
         upgradeList.removeAllItems();
         for(Wagon w : train.getWagons()) upgradeList.addItem(w);
+        if(selectedWagon != null) upgradeList.setSelectedIndex(selectedWagonIndex);
     }
 
     public void updateUpgradeCostPanel() {
@@ -170,6 +175,7 @@ public class CliGuiTrain {
     public void updateCreateList() {
         createList.removeAllItems();
         for(WagonRecipe wr : WagonRecipe.getAllRecipes()) createList.addItem(wr);
+        if(selectedWagonRecipe != null) createList.setSelectedItem(selectedWagonRecipe);
     }
 
     public void updateCreateCostPanel() {
