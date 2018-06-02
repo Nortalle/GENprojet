@@ -20,6 +20,7 @@ public class Server {
     private CraftController craftController;
     private UpgradeController upgradeController;
     private CreateController createController;
+    private ReserveCargoController reserveCargoController;
     public static final String ADMINS_USERNAME[] = {"admin"};
     public static final String ADMINS_PASSWORD[] = {"admin"};
 
@@ -40,6 +41,7 @@ public class Server {
         craftController = new CraftController();
         upgradeController = new UpgradeController();
         createController = new CreateController();
+        reserveCargoController = new ReserveCargoController();
     }
 
     public void startServer() {
@@ -94,6 +96,10 @@ public class Server {
 
     public CreateController getCreateController() {
         return createController;
+    }
+
+    public ReserveCargoController getReserveCargoController() {
+        return reserveCargoController;
     }
 
     public DataBase getDataBase() {

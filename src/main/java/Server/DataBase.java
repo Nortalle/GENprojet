@@ -246,12 +246,12 @@ public class DataBase {
 
     /**
      * @param username player
-     * @return how many resources the player's train is carrying
+     * @return how many resources the player's train is carrying + reserved cargo
      */
     public int getPlayerCurrentCargoAmount(String username) {
         int currentCargo = 0;
         for(ResourceAmount ra : getPlayerObjects(username)) currentCargo += ra.getQuantity();
-        return currentCargo;
+        return currentCargo + Server.getInstance().getReserveCargoController().getReservedCargo(username);
     }
 
     /**
@@ -314,6 +314,26 @@ public class DataBase {
         int MAX = WagonStats.getMaxCapacity(train);
         int MIN = 0;
         int currentAmount = getPlayerCurrentCargoAmount(username);
+        if(currentAmount > MAX || currentAmount < MIN) return 0;
+        int newAmount =  currentAmount + amount;
+        if(newAmount > MAX) maxChange = MAX - currentAmount;
+        if(newAmount < MIN) maxChange = MIN - currentAmount;
+
+        return maxChange;
+    }
+
+    /**
+     * @param username player
+     * @param amount how much you want to add or remove
+     * @return how much you actually can add or remove
+     */
+    public int canUpdatePlayerObjectsOnReservedCargo(String username, int amount, int reservedCargo) {
+        int maxChange = amount;
+
+        Train train = getTrain(username);
+        int MAX = WagonStats.getMaxCapacity(train);
+        int MIN = 0;
+        int currentAmount = getPlayerCurrentCargoAmount(username) - reservedCargo;
         if(currentAmount > MAX || currentAmount < MIN) return 0;
         int newAmount =  currentAmount + amount;
         if(newAmount > MAX) maxChange = MAX - currentAmount;
