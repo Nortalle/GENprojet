@@ -14,6 +14,7 @@ public class Server {
     private LinkedList<ClientHandler> clientHandlers;
     private boolean running;
     private DataBase dataBase;
+    private static String dataBaseUrl;
     private Travel travelController;
     private MineRegeneration regenerationController;
     private MineController mineController;
@@ -32,7 +33,8 @@ public class Server {
     }
 
     public void init() {
-        dataBase = new DataBase();
+        if(dataBaseUrl == null) dataBase = new DataBase();
+        else dataBase = new DataBase(dataBaseUrl);
         for(int i = 0; i < ADMINS_USERNAME.length; i++) dataBase.insertAdmin(ADMINS_USERNAME[i], ADMINS_PASSWORD[i]);
         dataBase.insertTrainStation(0, 0, 100, 100);// make sure the starting station exist
         travelController = new Travel();
@@ -111,6 +113,7 @@ public class Server {
     }
 
     public static void main(String ... args) {
+        if(args.length > 0) dataBaseUrl = args[0];
         Server.getInstance().startServer();
     }
 }
