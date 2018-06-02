@@ -2,6 +2,7 @@ package Utils;
 
 import Game.Mine;
 import Game.Train;
+import Game.TrainStation;
 import Game.Wagon;
 
 import java.util.ArrayList;
@@ -90,6 +91,15 @@ public class WagonStats {
     public static int getLocoSpeed(Wagon loco) {
         if(loco.getType() != WagonType.LOCO) return 1;// if not a loco, not zero because distance/speed
         return linearValuePerLevel(loco.getLevel(), LOCO_BASE_SPEED);
+    }
+
+    public static int calculateTravelDistance(TrainStation ts1, TrainStation ts2) {
+        return Math.abs(ts2.getPosX() - ts1.getPosX()) + Math.abs(ts2.getPosY() - ts1.getPosY());
+    }
+
+    public static int calculateTravelETA(Wagon loco, TrainStation ts1, TrainStation ts2) {
+        if(loco.getType() != WagonType.LOCO) return 1;// error
+        return Math.max(1, calculateTravelDistance(ts1, ts2) / WagonStats.getLocoSpeed(loco));
     }
 
     public static int getMiningAmount(Wagon wagon) {

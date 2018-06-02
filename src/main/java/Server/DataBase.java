@@ -771,14 +771,15 @@ public class DataBase {
      * @return true is the player has been able to move, else false
      */
     public boolean sendTrainToNewStation(String username, int newTsId){
-        TrainStation ts = getTrainStation(newTsId);
-        if(ts == null) return false;
-        int currentTsId = getTrain(username).getTrainStation().getId();
-        if(ts.getId() == currentTsId) return false;
-        int eta = calculateTravelTime(currentTsId, newTsId);
+        TrainStation ts1 = getTrainStation(getTrain(username).getTrainStation().getId());
+        if(ts1 == null) return false;
+        TrainStation ts2 = getTrainStation(newTsId);
+        if(ts2 == null) return false;
+        if(ts1.getId() == ts2.getId()) return false;
         Wagon loco = getPlayerLoco(username);
         if(loco == null) return false;
-        eta = Math.max(1, eta / WagonStats.getLocoSpeed(loco));
+
+        int eta = WagonStats.calculateTravelETA(loco, ts1, ts2);
 
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
@@ -794,9 +795,8 @@ public class DataBase {
         return false;
     }
 
+
     // MINE REQUESTS
-
-
 
     /**
      * @param emplacement station where the mine will be added
