@@ -49,13 +49,16 @@ public class LoginForm {
                     label_info.setForeground(Color.GREEN);
                     label_info.setText("You are logged");
                     //
-                    client.setFrameContent(new ClientForm().getPanel_main(), new Dimension(900, 600));
-                }
-                else if(answer.equals(OTrainProtocol.FAILURE)) {
+                    answer = client.readLine();
+                    if(answer.equals(OTrainProtocol.PLAYER)) {
+                        client.setFrameContent(new ClientForm().getPanel_main(), new Dimension(900, 600));
+                    } else if(answer.equals(OTrainProtocol.ADMIN)) {
+                        // TODO
+                    }
+                } else if(answer.equals(OTrainProtocol.FAILURE)) {
                     label_info.setForeground(Color.RED);
                     label_info.setText("Wrong username/password");
-                }
-                else {
+                } else {
                     label_info.setForeground(Color.RED);
                     label_info.setText("ERROR");
                 }

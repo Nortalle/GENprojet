@@ -38,6 +38,7 @@ public class ChangeStationTest {
         dataBase.insertPlayer(username, password);
         String line = client.sendLogin(username, password);
         System.out.println(line);
+        client.readLine();
     }
 
     @Test
@@ -67,6 +68,7 @@ public class ChangeStationTest {
         for(int i = 0; i < clients.length; i++) {
             clients[i].connectServer();
             clients[i].sendLogin(users[i], users[i]);
+            clients[i].readLine();
         }
         int posX = 20;
         int posY = 10;

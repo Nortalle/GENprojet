@@ -51,6 +51,7 @@ class MineControllerTest {
         client = Client.getInstance();
         client.connectServer();
         client.sendLogin(user, user);
+        client.readLine();
     }
 
     @Test

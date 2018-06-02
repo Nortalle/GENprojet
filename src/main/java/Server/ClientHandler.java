@@ -32,9 +32,23 @@ ClientHandler implements Runnable {
 
     public void run() {
         waitForAuthentication();
+        boolean isAdmin = false;
+        for(String adminName : Server.ADMINS_USERNAME) {
+            if(username.equals(adminName)) {
+                isAdmin = true;
+                break;
+            }
+        }
 
-        if(username.equals("admin")) handleAdmin();
-        else handleClient();
+        if(isAdmin) {
+            writer.println(OTrainProtocol.ADMIN);
+            writer.flush();
+            handleAdmin();
+        } else {
+            writer.println(OTrainProtocol.PLAYER);
+            writer.flush();
+            handleClient();
+        }
     }
 
     private String readLine() throws IOException {
@@ -49,19 +63,22 @@ ClientHandler implements Runnable {
             boolean signedUp;
             while(!logged) {
                 String request = readLine();
+                // wait to get connection or sign up request
                 while(!request.equals(OTrainProtocol.CONNECT) && !request.equals(OTrainProtocol.SIGN_UP)) request = readLine();
+                // get username and password
                 username = readLine();
                 String password = readLine();
+
                 if(request.equals(OTrainProtocol.CONNECT)) {
+                    // check if input are correct for login
                     logged = db.checkLogin(username, password);
                     writer.println(logged ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
                     writer.flush();
+
                 } else if(request.equals(OTrainProtocol.SIGN_UP)) {
-                    if(username == null || password == null || username.equals("")) {
-                        signedUp = false;
-                    } else {
-                        signedUp = db.insertPlayer(username, password);
-                    }
+                    // check if input are correct for sign up
+                    if(username == null || password == null || username.equals("")) signedUp = false;
+                    else signedUp = db.insertPlayer(username, password);
                     writer.println(signedUp ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
                     writer.flush();
                 }
