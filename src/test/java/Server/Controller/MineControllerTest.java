@@ -58,9 +58,11 @@ class MineControllerTest {
     public void testAddRemoveToMine(){
         // add
         assertEquals(OTrainProtocol.SUCCESS, client.startMining(wagonId, mineId));
+        client.updateWagonMining();
         assertEquals(1, client.getWagonMining().size());
         // remove
         assertEquals(OTrainProtocol.SUCCESS, client.stopMining(wagonId));
+        client.updateWagonMining();
         assertEquals(0, client.getWagonMining().size());
     }
 
