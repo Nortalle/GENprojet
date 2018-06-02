@@ -41,8 +41,8 @@ public class CliGuiTrain {
         train = Client.getInstance().getTrain();
         init();
         update();
-        selectedWagon = (Wagon) upgradeList.getSelectedItem();
-        updateUpgradeCostPanel();
+        //selectedWagon = (Wagon) upgradeList.getSelectedItem();
+        //updateUpgradeCostPanel();
 
         upgradeList.addPopupMenuListener(new PopupMenuListener() {
             @Override
@@ -75,18 +75,18 @@ public class CliGuiTrain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(selectedWagon == null) return;
-                Client.getInstance().startUpgrade(selectedWagon.getId());
-
-                update();
+                String line = Client.getInstance().startUpgrade(selectedWagon.getId());
+                Client.getInstance().updateUpgradeWagons();// MANUAL UPDATE
+                if(line.equals(OTrainProtocol.SUCCESS)) update();
             }
         });
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(selectedWagonRecipe == null) return;
-                Client.getInstance().startCreation(selectedWagonRecipe.getRecipeIndex());
-
-                update();
+                String line = Client.getInstance().startCreation(selectedWagonRecipe.getRecipeIndex());
+                Client.getInstance().updateCreateWagons();// MANUAL UPDATE
+                if(line.equals(OTrainProtocol.SUCCESS)) update();
             }
         });
     }
@@ -121,7 +121,7 @@ public class CliGuiTrain {
         int reservedCargo = 0;
         for(Craft c : crafts) reservedCargo += Recipe.getAllRecipes().get(c.getRecipeIndex()).getFinalProduct().getQuantity();
         int totalCargo = 0;
-        for(ResourceAmount ra : Client.getInstance().getAllObjects()) totalCargo += ra.getQuantity();
+        for(ResourceAmount ra : Client.getInstance().getResourceAmounts()) totalCargo += ra.getQuantity();
         infoValuePanel.add(new JLabel(totalCargo + "(" + reservedCargo + ")" + "/" + WagonStats.getMaxCapacity(train)));
 
         int totalCrafts = crafts.size();
@@ -149,7 +149,7 @@ public class CliGuiTrain {
     }
 
     public void updateUpgradeQueuePanel() {
-        ArrayList<UpgradeWagon> upgrades = Client.getInstance().getUpgrades();
+        ArrayList<UpgradeWagon> upgrades = Client.getInstance().getUpgradeWagons();
         upgradeQueuePanel.removeAll();
         upgradeQueuePanel.setLayout(new GridLayout(0, 2));
         for(UpgradeWagon uw : upgrades) {
@@ -175,7 +175,7 @@ public class CliGuiTrain {
     }
 
     public void updateCreateQueuePanel() {
-        ArrayList<CreateWagon> upgrades = Client.getInstance().getCreations();
+        ArrayList<CreateWagon> upgrades = Client.getInstance().getCreateWagons();
         createQueuePanel.removeAll();
         createQueuePanel.setLayout(new GridLayout(0, 2));
         for(CreateWagon cw : upgrades) {

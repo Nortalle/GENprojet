@@ -6,6 +6,7 @@ import javax.swing.event.ChangeListener;
 
 import Client.*;
 import Game.Resources;
+import Utils.Ressource;
 
 import java.awt.event.*;
 import java.util.TimerTask;
@@ -47,7 +48,7 @@ public class ClientForm {
 
     public ClientForm() {
         Client.setClientLogComponent(logTextArea);
-        updateResources();
+        update();
 
         updateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -69,16 +70,18 @@ public class ClientForm {
     }
 
     private void updateResources(){
-        String answer = Client.getInstance().getResources();
-        Resources resources = new Resources(answer);
-        scrum_i.setText(Integer.toString(resources.getScrum()));
-        eau_i.setText(Integer.toString(resources.getEau()));
-        bois_i.setText(Integer.toString(resources.getBois()));
-        coal_i.setText(Integer.toString(resources.getCharbon()));
-        oil_i.setText(Integer.toString(resources.getPetrol()));
-        iron_ore_i.setText(Integer.toString(resources.getFer()));
-        copper_ore_i.setText(Integer.toString(resources.getCuivre()));
-        gold_ore_i.setText(Integer.toString(resources.getOr()));
+        //String answer = Client.getInstance().getResources();
+        //Resources resources = new Resources(answer);
+        //Resources resources = Client.getInstance().getResources();
+        int resources[] = Ressource.getPlayerBaseResources(Client.getInstance().getResourceAmounts());
+        scrum_i.setText(Integer.toString(resources[0]));
+        eau_i.setText(Integer.toString(resources[1]));
+        bois_i.setText(Integer.toString(resources[2]));
+        coal_i.setText(Integer.toString(resources[3]));
+        oil_i.setText(Integer.toString(resources[4]));
+        iron_ore_i.setText(Integer.toString(resources[5]));
+        copper_ore_i.setText(Integer.toString(resources[6]));
+        gold_ore_i.setText(Integer.toString(resources[7]));
 
     }
 
@@ -87,7 +90,8 @@ public class ClientForm {
     }
 
     public void update() {
-        Client.getInstance().getTrain();
+        //Client.getInstance().getTrain();
+        Client.getInstance().updateAll();
         updateResources();
         cli_gui_gare.update();
         cli_gui_mine.update();

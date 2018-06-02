@@ -39,18 +39,16 @@ public class cli_gui_Mine {
                 Wagon wagon = (Wagon) select_wagon.getSelectedItem();
 
                 String line = Client.getInstance().startMining(wagon.getId(), mine.getId());
-                if(line.equals(OTrainProtocol.SUCCESS)) {
-                    update();
-                }
+                Client.getInstance().updateWagonMining();// MANUAL UPDATE
+                if(line.equals(OTrainProtocol.SUCCESS)) update();
             }
         });
         stopMiningButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String line = Client.getInstance().stopMining(((Wagon) select_wagon.getSelectedItem()).getId());
-                if(line.equals(OTrainProtocol.SUCCESS)) {
-                    update();
-                }
+                Client.getInstance().updateWagonMining();// MANUAL UPDATE
+                if(line.equals(OTrainProtocol.SUCCESS)) update();
             }
         });
         select_mine.addPopupMenuListener(new PopupMenuListener() {
@@ -114,7 +112,7 @@ public class cli_gui_Mine {
     public void updateWagonsList() {
         ArrayList<Wagon> canMineWagons = new ArrayList<>();
         for(Wagon w : train.getWagons()){
-            if(w.getType() == WagonStats.WagonType.DRILL || w.getType() == WagonStats.WagonType.SAW || w.getType() == WagonStats.WagonType.PUMP){
+            if(WagonStats.getWhatCanBeMine(w).length > 0){
                 canMineWagons.add(w);
             }
         }

@@ -43,6 +43,7 @@ public class cli_gui_Gare {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
                 String line = Client.getInstance().changeStation(viewingStation.getId());
+                Client.getInstance().updateAll();// MANUAL UPDATE
                 if(line.equals(OTrainProtocol.SUCCESS)) update();
 
             }
@@ -51,22 +52,23 @@ public class cli_gui_Gare {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
                 viewingStationIndex = select_station.getSelectedIndex();
+                Client.getInstance().updateAll();// MANUAL UPDATE
                 update();
             }
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = Client.getInstance().getTrain().getTrainStation();
+                Client.getInstance().updateAll();// MANUAL UPDATE
                 update();
             }
         });
         select_station.addPopupMenuListener(new PopupMenuListener() {
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                //select_station.removeAllItems();
-                //for(TrainStation ts : Client.getInstance().getStations()) select_station.addItem(ts);
-            }
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
 
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                // maybe update so we can remove view button
+            }
 
             public void popupMenuCanceled(PopupMenuEvent e) {}
         });
@@ -114,7 +116,7 @@ public class cli_gui_Gare {
 
     public void updateStationList() {
         select_station.removeAllItems();
-        for(TrainStation ts : Client.getInstance().getStations()) select_station.addItem(ts);
-        if(select_station != null) select_station.setSelectedIndex(viewingStationIndex);
+        for(TrainStation ts : Client.getInstance().getTrainStations()) select_station.addItem(ts);
+        if(select_station != null && select_station.getItemCount() > 0) select_station.setSelectedIndex(viewingStationIndex);
     }
 }

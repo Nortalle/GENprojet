@@ -45,7 +45,8 @@ public class ChangeStationTest {
     public void getNumberOfAllTrainStations(){
         int nbStation = dataBase.getAllTrainStations().size();
         if(nbStation < 1) fail("No stations, insert one or more");
-        assertEquals(nbStation, client.getStations().size());
+        client.updateTrainStations();
+        assertEquals(nbStation, client.getTrainStations().size());
 
     }
 

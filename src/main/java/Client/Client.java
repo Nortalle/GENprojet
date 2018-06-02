@@ -28,7 +28,13 @@ public class Client {
     private PrintWriter writer;
     private String username;
     private Train train;
-    private ArrayList<WagonMining> wagonMining;
+    private ArrayList<WagonMining> wagonMining = new ArrayList<>();
+    private ArrayList<ResourceAmount> resourceAmounts = new ArrayList<>();
+    private ArrayList<Craft> crafts = new ArrayList<>();
+    private ArrayList<UpgradeWagon> upgradeWagons = new ArrayList<>();
+    private ArrayList<CreateWagon> createWagons = new ArrayList<>();
+    private ArrayList<Train> trainsAtStation = new ArrayList<>();
+    private ArrayList<TrainStation> trainStations = new ArrayList<>();
 
     public static Client getInstance() {
         if(instance == null) instance = new Client();
@@ -129,77 +135,111 @@ public class Client {
         return readLine();
     }
 
-    public String getResources() {
+    public Resources getResources() {
         writer.println(OTrainProtocol.GET_RESSOURCES);
         writer.flush();
-        return readLine();
+        return new Resources(readLine());
     }
 
-    public ArrayList<ResourceAmount> getAllObjects() {
+    public void updateResourceAmount() {
         writer.println(OTrainProtocol.GET_OBJECTS);
         writer.flush();
         String answer = readLine();
-        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), ResourceAmount::new);
+        resourceAmounts = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), ResourceAmount::new);
     }
 
-    public ArrayList<Craft> getCrafts() {
+    public ArrayList<ResourceAmount> getResourceAmounts() {
+        return resourceAmounts;
+    }
+
+    public void updateCrafts() {
         writer.println(OTrainProtocol.GET_PROD_QUEUE);
         writer.flush();
         String answer = readLine();
-        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), Craft::new);
+        crafts =  JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), Craft::new);
     }
 
-    public ArrayList<UpgradeWagon> getUpgrades() {
+    public ArrayList<Craft> getCrafts() {
+        return crafts;
+    }
+
+    public void updateUpgradeWagons() {
         writer.println(OTrainProtocol.GET_UPGRADE_QUEUE);
         writer.flush();
         String answer = readLine();
-        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), UpgradeWagon::new);
+        upgradeWagons = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), UpgradeWagon::new);
     }
 
-    public ArrayList<CreateWagon> getCreations() {
+    public ArrayList<UpgradeWagon> getUpgradeWagons() {
+        return upgradeWagons;
+    }
+
+    public void updateCreateWagons() {
         writer.println(OTrainProtocol.GET_CREATION_QUEUE);
         writer.flush();
         String answer = readLine();
-        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), CreateWagon::new);
+        createWagons = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), CreateWagon::new);
     }
 
-    public Train getTrain() {
-        updateTrainStatus();
-        return train;
+    public ArrayList<CreateWagon> getCreateWagons() {
+        return createWagons;
     }
 
-    public ArrayList<WagonMining> getWagonMining() {
-        updateWagonMining();
-        return wagonMining;
-    }
-
-    private void updateTrainStatus() {
+    public void updateTrain() {
         writer.println(OTrainProtocol.GET_TRAIN_STATUS);
         writer.flush();
         String answer = readLine();
         train.fromJson((JsonObject) JsonUtility.fromJson(answer));
     }
 
-    public ArrayList<Train> getTrainsAtStation(int stationId) {
-        writer.println(OTrainProtocol.GET_TRAINS_AT);
-        writer.println(stationId);
-        writer.flush();
-        String answer = readLine();
-        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), Train::new);
+    public Train getTrain() {
+        updateTrain();
+        return train;
     }
 
-    private void updateWagonMining() {
+    public void updateWagonMining() {
         writer.println(OTrainProtocol.MINE_INFO);
         writer.flush();
         String answer = readLine();
         wagonMining = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), WagonMining::new);
     }
 
-    public ArrayList<TrainStation> getStations() {
+    public ArrayList<WagonMining> getWagonMining() {
+        return wagonMining;
+    }
+
+    public void updateTrainsAtStation(int stationId) {
+        writer.println(OTrainProtocol.GET_TRAINS_AT);
+        writer.println(stationId);
+        writer.flush();
+        String answer = readLine();
+        trainsAtStation = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), Train::new);
+    }
+
+    public ArrayList<Train> getTrainsAtStation(int stationId) {
+        return trainsAtStation;
+    }
+
+    public void updateTrainStations() {
         writer.println(OTrainProtocol.GET_GARES);
         writer.flush();
         String answer = readLine();
-        return JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), TrainStation::new);
+        trainStations = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), TrainStation::new);
+    }
+
+    public ArrayList<TrainStation> getTrainStations() {
+        return trainStations;
+    }
+
+    public void updateAll() {
+        updateTrain();
+        updateResourceAmount();
+        updateCrafts();
+        updateUpgradeWagons();
+        updateCreateWagons();
+        updateWagonMining();
+        updateTrainStations();
+        updateTrainsAtStation(train.getTrainStation().getId());
     }
 
     public String changeStation(int stationId) {

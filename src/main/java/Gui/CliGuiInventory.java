@@ -22,7 +22,7 @@ public class CliGuiInventory {
     public void updateObjectsList() {
         objectsPanel.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
-        for(ResourceAmount ra : Client.getInstance().getAllObjects()) {
+        for(ResourceAmount ra : Client.getInstance().getResourceAmounts()) {
             gbc.gridx = 0;
             gbc.anchor = GridBagConstraints.EAST;
             objectsPanel.add(new JLabel(ra.getQuantity() + " x "), gbc);

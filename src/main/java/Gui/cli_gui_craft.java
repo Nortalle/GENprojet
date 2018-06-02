@@ -2,6 +2,8 @@ package Gui;
 
 import Client.Client;
 import Game.Craft;
+import Utils.GuiUtility;
+import Utils.OTrainProtocol;
 import Utils.Recipe;
 import Utils.ResourceAmount;
 
@@ -46,9 +48,9 @@ public class cli_gui_craft {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(selectedRecipe == null) return;
-                Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
-
-                update();
+                String line = Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
+                Client.getInstance().updateCrafts();// MANUAL UPDATE
+                if(line.equals(OTrainProtocol.SUCCESS)) update();
             }
         });
     }
@@ -82,20 +84,15 @@ public class cli_gui_craft {
     }
 
     public void updateAvailableCrafts(){
-        ArrayList<ResourceAmount> playerObjects = Client.getInstance().getAllObjects();
-
-        availableCrafts.removeAll();
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.NORTHWEST;
-        gbc.gridx = 1;
+        ArrayList<ResourceAmount> playerObjects = Client.getInstance().getResourceAmounts();
+        ArrayList<Recipe> availableRecipes = new ArrayList<>();
         for(Recipe r : Recipe.getAllRecipes()) {
             if(canCraft(r, playerObjects)) {
-                availableCrafts.add(new JLabel(r.toString()), gbc);
+                availableRecipes.add(r);
             }
         }
-        gbc.weighty = 1.0;
-        gbc.weightx = 1.0;
-        availableCrafts.add(new JLabel(""), gbc);
+
+        GuiUtility.listInPanel(availableCrafts, availableRecipes, Recipe::toString);
     }
 
     public boolean canCraft(Recipe recipe, ArrayList<ResourceAmount> resourceAmounts) {
