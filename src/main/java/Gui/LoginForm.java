@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 public class LoginForm {
     private JPasswordField input_password;
@@ -16,14 +18,13 @@ public class LoginForm {
     private JPanel panel_main;
     private JPanel panel_buttons;
     private JLabel label_info;
-    private JButton changeIpButton;
-    private JLabel ipLabel;
+    private JTextField ipTextField;
 
     private Client client;
 
     public LoginForm() {
         client = Client.getInstance();
-        ipLabel.setText(client.getIP_ADDRESS());
+        ipTextField.setText(client.getIpAddress());
         //client.connectServer();
 
         button_sign_up.addActionListener(new ActionListener() {
@@ -67,14 +68,17 @@ public class LoginForm {
                 }
             }
         });
-        changeIpButton.addActionListener(new ActionListener() {
+
+        ipTextField.addFocusListener(new FocusListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                if(!client.askIp()) {
+            public void focusGained(FocusEvent e) {}
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if(!client.setIpAddress(ipTextField.getText())) {
                     label_info.setForeground(Color.RED);
                     label_info.setText("CANNOT CONNECT TO SERVER");
                 }
-                ipLabel.setText(client.getIP_ADDRESS());
             }
         });
     }

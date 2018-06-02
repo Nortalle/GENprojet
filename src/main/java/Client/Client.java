@@ -22,7 +22,7 @@ public class Client {
     static {LOG.addHandler(CLIENT_LOG);}
 
     private static Client instance;
-    private String IP_ADDRESS = "localhost";
+    private String ipAddress = "localhost";
     private Socket socket;
     private BufferedReader reader;
     private PrintWriter writer;
@@ -39,8 +39,13 @@ public class Client {
         CLIENT_LOG.setComponent(component);
     }
 
-    public String getIP_ADDRESS() {
-        return IP_ADDRESS;
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public boolean setIpAddress(String newIp) {
+        ipAddress = newIp;
+        return connectServer();
     }
 
     //GUI
@@ -48,7 +53,7 @@ public class Client {
 
     public boolean connectServer() {
         try {
-            socket = new Socket(IP_ADDRESS, OTrainProtocol.PORT);
+            socket = new Socket(ipAddress, OTrainProtocol.PORT);
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream());
             train = new Train();
@@ -57,12 +62,6 @@ public class Client {
             return false;
         }
         return true;
-    }
-
-    public boolean askIp() {
-        String ipInput = (String)JOptionPane.showInputDialog(null, "Enter server IP address", "Select IP", JOptionPane.PLAIN_MESSAGE, null, null, IP_ADDRESS);
-        if(ipInput != null) IP_ADDRESS = ipInput;
-        return connectServer();
     }
 
     public void disconnect() {
