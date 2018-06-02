@@ -39,7 +39,7 @@ public class TrainStation {
         trainStation.add("posY", new JsonPrimitive(posY));
         trainStation.add("nbOfPlatforms", new JsonPrimitive(nbOfPlatforms));
         trainStation.add("sizeOfPlatforms", new JsonPrimitive(sizeOfPlatforms));
-        trainStation.add("mines", JsonUtility.listToJson(mines, mine -> mine.toJson()));
+        trainStation.add("mines", JsonUtility.listToJson(mines, Mine::toJson));
 
         return trainStation;
     }
@@ -50,7 +50,7 @@ public class TrainStation {
         posY = from.get("posY").getAsInt();
         nbOfPlatforms = from.get("nbOfPlatforms").getAsInt();
         sizeOfPlatforms = from.get("sizeOfPlatforms").getAsInt();
-        mines = JsonUtility.listFromJson((JsonArray) from.get("mines"), mine -> new Mine(mine));
+        mines = JsonUtility.listFromJson((JsonArray) from.get("mines"), Mine::new);
     }
 
     public int getId() {

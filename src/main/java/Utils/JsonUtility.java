@@ -18,7 +18,7 @@ public class JsonUtility {
     /**
      *
      * @param ts the list of MyClass
-     * @param lambda myClass -> myClass.toJson()
+     * @param lambda MyClass::toJson
      * @param <T> MyClass
      * @return a json array
      */
@@ -32,7 +32,7 @@ public class JsonUtility {
     /**
      *
      * @param list the json array
-     * @param lambda myClass -> new MyClass(myClass)
+     * @param lambda MyClass::new
      * @param <T> MyClass
      * @return ArrayList of MyClass
      */

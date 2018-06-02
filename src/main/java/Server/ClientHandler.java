@@ -3,6 +3,7 @@ package Server;
 import Game.*;
 import Utils.JsonUtility;
 import Utils.OTrainProtocol;
+import Utils.ResourceAmount;
 
 import java.io.*;
 import java.net.Socket;
@@ -87,18 +88,17 @@ ClientHandler implements Runnable {
                     writer.println(db.getTrain(username).toJson());
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_OBJECTS)) {
-                    writer.println(JsonUtility.listToJson(db.getPlayerObjects(username), ra -> ra.toJson()));
+                    writer.println(JsonUtility.listToJson(db.getPlayerObjects(username), ResourceAmount::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_TRAINS_AT)) {
                     int stationId = Integer.valueOf(readLine());
-                    writer.println(JsonUtility.listToJson(db.getAllTrainsAtStation(stationId), train -> train.toJson()));
+                    writer.println(JsonUtility.listToJson(db.getAllTrainsAtStation(stationId), Train::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.MINE_INFO)) {
-                    writer.println(JsonUtility.listToJson(Server.getInstance().getMineController().getPlayerWagonMining(username), wm -> wm.toJson()));
+                    writer.println(JsonUtility.listToJson(Server.getInstance().getMineController().getPlayerWagonMining(username), WagonMining::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_GARES)) {
-                    ArrayList<TrainStation> trainStations = db.getAllTrainStations();
-                    writer.println(JsonUtility.listToJson(trainStations, station -> station.toJson()));
+                    writer.println(JsonUtility.listToJson(db.getAllTrainStations(), TrainStation::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
                     String newTsLine = readLine();
@@ -134,7 +134,7 @@ ClientHandler implements Runnable {
                     }
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_PROD_QUEUE)) {
-                    writer.println(JsonUtility.listToJson(Server.getInstance().getCraftController().getPlayerCrafts(username), craft -> craft.toJson()));
+                    writer.println(JsonUtility.listToJson(Server.getInstance().getCraftController().getPlayerCrafts(username), Craft::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.UPGRADE)) {
                     String wagonLine = readLine();
@@ -145,7 +145,7 @@ ClientHandler implements Runnable {
                     }
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_UPGRADE_QUEUE)) {
-                    writer.println(JsonUtility.listToJson(Server.getInstance().getUpgradeController().getPlayerUpgrades(username), uw -> uw.toJson()));
+                    writer.println(JsonUtility.listToJson(Server.getInstance().getUpgradeController().getPlayerUpgrades(username), UpgradeWagon::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.CREATION)) {
                     String wagonRecipeLine = readLine();
@@ -156,7 +156,7 @@ ClientHandler implements Runnable {
                     }
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_CREATION_QUEUE)) {
-                    writer.println(JsonUtility.listToJson(Server.getInstance().getCreateController().getPlayerCreateWagons(username), cw -> cw.toJson()));
+                    writer.println(JsonUtility.listToJson(Server.getInstance().getCreateController().getPlayerCreateWagons(username), CreateWagon::toJson));
                     writer.flush();
                 }
 
