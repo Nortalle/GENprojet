@@ -96,7 +96,6 @@ ClientHandler implements Runnable {
                 //work...
 
                 if(line.equals(OTrainProtocol.GET_RESSOURCES)) {
-                    //int r[] = db.getPlayerResources(username);
                     int r[] = db.getPlayerResourcesViaObjects(username);// temp solution
                     Resources resources = new Resources(r);
                     writer.println(resources.toJson());

@@ -779,7 +779,7 @@ public class DataBase {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Gare WHERE id=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, id);
             int status = ps.executeUpdate();
-            if(status == 0) return true;
+            if(status == 1) return true;
             else return false;
         } catch (SQLException e) {
             e.printStackTrace();

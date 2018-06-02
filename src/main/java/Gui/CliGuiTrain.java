@@ -1,14 +1,8 @@
 package Gui;
 
 import Client.Client;
-import Game.CreateWagon;
-import Game.Train;
-import Game.UpgradeWagon;
-import Game.Wagon;
-import Utils.GuiUtility;
-import Utils.ResourceAmount;
-import Utils.WagonRecipe;
-import Utils.WagonStats;
+import Game.*;
+import Utils.*;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -122,10 +116,15 @@ public class CliGuiTrain {
         infoValuePanel.removeAll();
         infoValuePanel.add(new JLabel("" + train.getSize()));
         infoValuePanel.add(new JLabel("" + WagonStats.getLocoSpeed(train)));
+
+        ArrayList<Craft> crafts = Client.getInstance().getCrafts();
+        int reservedCargo = 0;
+        for(Craft c : crafts) reservedCargo += Recipe.getAllRecipes().get(c.getRecipeIndex()).getFinalProduct().getQuantity();
         int totalCargo = 0;
         for(ResourceAmount ra : Client.getInstance().getAllObjects()) totalCargo += ra.getQuantity();
-        infoValuePanel.add(new JLabel(totalCargo + "/" + WagonStats.getMaxCapacity(train)));
-        int totalCrafts = Client.getInstance().getCrafts().size();
+        infoValuePanel.add(new JLabel(totalCargo + "(" + reservedCargo + ")" + "/" + WagonStats.getMaxCapacity(train)));
+
+        int totalCrafts = crafts.size();
         int maxCrafts = WagonStats.getMaxParallelCraft(train);
         int currentCrafts = Math.min(totalCrafts, maxCrafts);
         int waitingCrafts = totalCrafts - currentCrafts;
