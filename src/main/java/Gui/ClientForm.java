@@ -43,6 +43,7 @@ public class ClientForm {
     private JTextArea logTextArea;
     private CliGuiInventory cliGuiInventory;
     private CliGuiTrain cliGuiTrain;
+    private JButton disconnectButton;
 
     public ClientForm() {
         Client.setClientLogComponent(logTextArea);
@@ -57,6 +58,12 @@ public class ClientForm {
             @Override
             public void stateChanged(ChangeEvent e) {
                 update();
+            }
+        });
+        disconnectButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Client.getInstance().disconnect();
             }
         });
     }

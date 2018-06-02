@@ -16,11 +16,14 @@ public class LoginForm {
     private JPanel panel_main;
     private JPanel panel_buttons;
     private JLabel label_info;
+    private JButton changeIpButton;
+    private JLabel ipLabel;
 
     private Client client;
 
     public LoginForm() {
         client = Client.getInstance();
+        ipLabel.setText(client.getIP_ADDRESS());
         //client.connectServer();
 
         button_sign_up.addActionListener(new ActionListener() {
@@ -62,6 +65,16 @@ public class LoginForm {
                     label_info.setForeground(Color.RED);
                     label_info.setText("ERROR");
                 }
+            }
+        });
+        changeIpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!client.askIp()) {
+                    label_info.setForeground(Color.RED);
+                    label_info.setText("CANNOT CONNECT TO SERVER");
+                }
+                ipLabel.setText(client.getIP_ADDRESS());
             }
         });
     }

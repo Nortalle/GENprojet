@@ -108,7 +108,7 @@ public class cli_gui_Mine {
         for(Mine m : train.getTrainStation().getMines()) {
             select_mine.addItem(m);
         }
-        select_mine.setSelectedIndex(mineIndex);
+        if(select_mine.getItemCount() > 0) select_mine.setSelectedIndex(mineIndex);
     }
 
     public void updateWagonsList() {
@@ -122,6 +122,6 @@ public class cli_gui_Mine {
         for(Wagon w : canMineWagons){
             select_wagon.addItem(w);
         }
-        select_wagon.setSelectedIndex(wagonIndex);
+        if(select_wagon.getItemCount() > 0) select_wagon.setSelectedIndex(wagonIndex);
     }
 }

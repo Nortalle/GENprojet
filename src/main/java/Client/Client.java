@@ -22,6 +22,7 @@ public class Client {
     static {LOG.addHandler(CLIENT_LOG);}
 
     private static Client instance;
+    private String IP_ADDRESS = "localhost";
     private Socket socket;
     private BufferedReader reader;
     private PrintWriter writer;
@@ -38,19 +39,30 @@ public class Client {
         CLIENT_LOG.setComponent(component);
     }
 
+    public String getIP_ADDRESS() {
+        return IP_ADDRESS;
+    }
+
     //GUI
     private JFrame frame;
 
-    public void connectServer() {
-
+    public boolean connectServer() {
         try {
-            socket = new Socket("localhost", OTrainProtocol.PORT);
+            socket = new Socket(IP_ADDRESS, OTrainProtocol.PORT);
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream());
             train = new Train();
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+    }
+
+    public boolean askIp() {
+        String ipInput = (String)JOptionPane.showInputDialog(null, "Enter server IP address", "Select IP", JOptionPane.PLAIN_MESSAGE, null, null, IP_ADDRESS);
+        if(ipInput != null) IP_ADDRESS = ipInput;
+        return connectServer();
     }
 
     public void disconnect() {
@@ -58,8 +70,7 @@ public class Client {
             socket.close();
             reader.close();
             writer.close();
-            setFrameContent(new LoginForm().getPanel_main());
-            connectServer();
+            setConnectionPanel();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,16 +79,18 @@ public class Client {
     private void startingFrame() {
         frame = new JFrame("OTrain");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setConnectionPanel();
+    }
+
+    public void setConnectionPanel() {
         setFrameContent(new LoginForm().getPanel_main());
         frame.setVisible(true);
-
         connectServer();
     }
 
     public void setFrameContent(JPanel panel, Dimension d) {
         frame.setContentPane(panel);
         frame.setSize(d);
-        frame.setPreferredSize(d);
     }
 
     public void setFrameContent(JPanel panel) {
