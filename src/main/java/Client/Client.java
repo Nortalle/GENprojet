@@ -6,6 +6,7 @@ import Server.ClientHandler;
 import Utils.JsonUtility;
 import Utils.OTrainProtocol;
 import Utils.ResourceAmount;
+import Utils.Ressource;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -103,6 +104,15 @@ public class Client {
         frame.pack();
     }
 
+    public int getSpesificResource(Ressource.Type type) {
+        for(ResourceAmount ra : resourceAmounts) {
+            if(ra.getRessource() == type) {
+                return ra.getQuantity();
+            }
+        }
+        return 0;
+    }
+
     public String readLine() {
         String line = "ERROR";
         try {
@@ -135,6 +145,7 @@ public class Client {
         return readLine();
     }
 
+    @Deprecated
     public Resources getResources() {
         writer.println(OTrainProtocol.GET_RESSOURCES);
         writer.flush();
