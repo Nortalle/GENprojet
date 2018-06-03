@@ -145,13 +145,6 @@ public class Client {
         return readLine();
     }
 
-    @Deprecated
-    public Resources getResources() {
-        writer.println(OTrainProtocol.GET_RESSOURCES);
-        writer.flush();
-        return new Resources(readLine());
-    }
-
     public void updateResourceAmount() {
         writer.println(OTrainProtocol.GET_OBJECTS);
         writer.flush();
