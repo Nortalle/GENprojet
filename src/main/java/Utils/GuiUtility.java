@@ -16,10 +16,21 @@ public class GuiUtility {
      * @param <T> type of object
      */
     public static <T> void listInPanel(JPanel panel, ArrayList<T> list, ListToPanel<T> lambda) {
+        listInPanel(panel, list, lambda, GridBagConstraints.NORTHWEST);
+    }
+
+    /**
+     * @param panel panel where to add components
+     * @param list list of object to place in panel
+     * @param lambda function to apply to object to get the component to add
+     * @param anchor Alignment, default is GridBagConstraints.NORTHWEST
+     * @param <T> type of object
+     */
+    public static <T> void listInPanel(JPanel panel, ArrayList<T> list, ListToPanel<T> lambda, int anchor) {
         panel.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.anchor = anchor;
         for(T item : list) panel.add(lambda.toAdd(item), gbc);
         gbc.weighty = 1.0;
         gbc.weightx = 1.0;

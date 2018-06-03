@@ -1,6 +1,7 @@
 package Gui;
 
 import Client.Client;
+import Utils.GuiUtility;
 import Utils.ResourceAmount;
 import Utils.Ressource;
 
@@ -10,6 +11,8 @@ import java.awt.*;
 public class CliGuiInventory {
     private JPanel mainPanel;
     private JPanel objectsPanel;
+    private JPanel amountPanel;
+    private JPanel namePanel;
 
     public CliGuiInventory() {
         update();
@@ -20,16 +23,7 @@ public class CliGuiInventory {
     }
 
     public void updateObjectsList() {
-        objectsPanel.removeAll();
-        GridBagConstraints gbc = new GridBagConstraints();
-        for(ResourceAmount ra : Client.getInstance().getResourceAmounts()) {
-            gbc.gridx = 0;
-            gbc.anchor = GridBagConstraints.EAST;
-            objectsPanel.add(new JLabel(ra.getQuantity() + " x "), gbc);
-            gbc.gridx = 1;
-            gbc.anchor = GridBagConstraints.WEST;
-            objectsPanel.add(new JLabel(Ressource.RessourceToString(ra.getRessource())), gbc);
-        }
-        objectsPanel.revalidate();
+        GuiUtility.listInPanel(amountPanel, Client.getInstance().getResourceAmounts(), ra -> new JLabel(ra.getQuantity() + " x"),GridBagConstraints.NORTHEAST);
+        GuiUtility.listInPanel(namePanel, Client.getInstance().getResourceAmounts(), ra -> new JLabel(Ressource.RessourceToString(ra.getRessource())));
     }
 }
