@@ -132,8 +132,8 @@ public class CliGuiTrain {
     }
 
     public void updateWagonsPanel() {
-        GuiUtility.listInPanel(wagonsNamePanel, train.getWagons(), w -> WagonStats.getName(w.getType()) + " ");
-        GuiUtility.listInPanel(wagonsLevelPanel, train.getWagons(), w -> "" + w.getLevel());
+        GuiUtility.listInPanel(wagonsNamePanel, train.getWagons(), w -> new JLabel(WagonStats.getName(w.getType()) + " "));
+        GuiUtility.listInPanel(wagonsLevelPanel, train.getWagons(), w -> new JLabel("" + w.getLevel()));
     }
 
     public void updateWagonsList() {
@@ -145,7 +145,7 @@ public class CliGuiTrain {
     public void updateUpgradeCostPanel() {
         if(selectedWagon == null) return;
         ArrayList<ResourceAmount> costs = WagonStats.getUpgradeCost(selectedWagon);
-        GuiUtility.listInPanel(upgradeCostPanel, costs, ra -> ra.toString());
+        GuiUtility.listInPanel(upgradeCostPanel, costs, ra -> new JLabel(ra.toString()));
     }
 
     public void updateUpgradeQueuePanel() {
@@ -171,7 +171,7 @@ public class CliGuiTrain {
     public void updateCreateCostPanel() {
         if(selectedWagonRecipe == null) return;
         ArrayList<ResourceAmount> costs = selectedWagonRecipe.getCost();
-        GuiUtility.listInPanel(createCostPanel, costs, ra -> ra.toString());
+        GuiUtility.listInPanel(createCostPanel, costs, ra -> new JLabel(ra.toString()));
     }
 
     public void updateCreateQueuePanel() {

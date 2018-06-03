@@ -1,5 +1,7 @@
 package Utils;
 
+import javax.swing.*;
+
 public interface ListToPanel<T> {
-    String toDisplay(T t);
+    JComponent toAdd(T t);
 }

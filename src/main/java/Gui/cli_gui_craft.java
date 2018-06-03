@@ -97,7 +97,7 @@ public class cli_gui_craft {
             }
         }
 
-        GuiUtility.listInPanel(availableCrafts, availableRecipes, Recipe::toString);
+        GuiUtility.listInPanel(availableCrafts, availableRecipes, recipe -> new JLabel(recipe.toString()));
     }
 
     public boolean canCraft(Recipe recipe, ArrayList<ResourceAmount> resourceAmounts) {
