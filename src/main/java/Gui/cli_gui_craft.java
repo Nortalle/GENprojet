@@ -22,6 +22,8 @@ public class cli_gui_craft {
     private JPanel availableCrafts;
     private JButton placeOrderButton;
     private JPanel orderQueuePanel;
+    private JPanel orderQueueNamePanel;
+    private JPanel orderQueueBarPanel;
 
     private Recipe selectedRecipe;
 
@@ -68,16 +70,8 @@ public class cli_gui_craft {
 
     public void updateOrderQueue() {
         ArrayList<Craft> crafts = Client.getInstance().getCrafts();
-        orderQueuePanel.removeAll();
-        orderQueuePanel.setLayout(new GridLayout(0, 2));
-        for(Craft c : crafts) {
-            orderQueuePanel.add(new JLabel(c.toString()));
-            JProgressBar bar = new JProgressBar();
-            int max = Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime();
-            bar.setMaximum(max);
-            bar.setValue(max - c.getRemainingTime());
-            orderQueuePanel.add(bar);
-        }
+        GuiUtility.listInPanel(orderQueueNamePanel, crafts, craft -> new JLabel(craft.toString()));
+        GuiUtility.listInPanel(orderQueueBarPanel, crafts, craft -> GuiUtility.getProgressBar(craft, Craft::getRemainingTime, c -> Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime()));
     }
 
     public void updateAvailableCrafts(){

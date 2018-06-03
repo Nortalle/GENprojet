@@ -30,6 +30,10 @@ public class CliGuiTrain {
     private JPanel wagonsPanel;
     private JPanel wagonsNamePanel;
     private JPanel wagonsLevelPanel;
+    private JPanel createQueueNamePanel;
+    private JPanel createQueueBarPanel;
+    private JPanel upgradeQueueNamePanel;
+    private JPanel upgradeQueueBarPanel;
 
     private Train train;
     private Wagon selectedWagon;
@@ -150,16 +154,8 @@ public class CliGuiTrain {
 
     public void updateUpgradeQueuePanel() {
         ArrayList<UpgradeWagon> upgrades = Client.getInstance().getUpgradeWagons();
-        upgradeQueuePanel.removeAll();
-        upgradeQueuePanel.setLayout(new GridLayout(0, 2));
-        for(UpgradeWagon uw : upgrades) {
-            upgradeQueuePanel.add(new JLabel(uw.toString()));
-            JProgressBar bar = new JProgressBar();
-            int max = WagonStats.getUpgradeTime(uw.getWagon_to_upgrade().getLevel());
-            bar.setMaximum(max);
-            bar.setValue(max - uw.getRemainingTime());
-            upgradeQueuePanel.add(bar);
-        }
+        GuiUtility.listInPanel(upgradeQueueNamePanel, upgrades, uw -> new JLabel(uw.toString()));
+        GuiUtility.listInPanel(upgradeQueueBarPanel, upgrades, uw -> GuiUtility.getProgressBar(uw, UpgradeWagon::getRemainingTime, u -> WagonStats.getUpgradeTime(u.getWagon_to_upgrade().getLevel())));
     }
 
     public void updateCreateList() {
@@ -176,15 +172,7 @@ public class CliGuiTrain {
 
     public void updateCreateQueuePanel() {
         ArrayList<CreateWagon> upgrades = Client.getInstance().getCreateWagons();
-        createQueuePanel.removeAll();
-        createQueuePanel.setLayout(new GridLayout(0, 2));
-        for(CreateWagon cw : upgrades) {
-            createQueuePanel.add(new JLabel(cw.toString()));
-            JProgressBar bar = new JProgressBar();
-            int max = WagonRecipe.getAllRecipes().get(cw.getWagonRecipeIndex()).getProductionTime();
-            bar.setMaximum(max);
-            bar.setValue(max - cw.getRemainingTime());
-            createQueuePanel.add(bar);
-        }
+        GuiUtility.listInPanel(createQueueNamePanel, upgrades, cw -> new JLabel(cw.toString()));
+        GuiUtility.listInPanel(createQueueBarPanel, upgrades, cw -> GuiUtility.getProgressBar(cw, CreateWagon::getRemainingTime, c -> WagonRecipe.getAllRecipes().get(c.getWagonRecipeIndex()).getProductionTime()), GridBagConstraints.NORTHEAST);
     }
 }

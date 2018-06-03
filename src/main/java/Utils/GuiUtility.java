@@ -51,4 +51,13 @@ public class GuiUtility {
             return label;
         });
     }
+
+    public static <T> JProgressBar getProgressBar(T t, ToProgressBar<T> lambdaActual, ToProgressBar<T> lambdaMax) {
+        JProgressBar bar = new JProgressBar();
+        int actual = lambdaActual.getValue(t);
+        int max = lambdaMax.getValue(t);
+        bar.setMaximum(max);
+        bar.setValue(max - actual);
+        return bar;
+    }
 }
