@@ -63,15 +63,7 @@ public class cli_gui_craft {
 
     public void updateCraftCost(){
         if(selectedRecipe == null) return;
-        costPanel.removeAll();
-        costPanel.setLayout(new GridLayout(0, 1));
-        for(ResourceAmount cost : selectedRecipe.getCost()) {
-            int actualAmount = Client.getInstance().getSpesificResource(cost.getRessource());
-            JLabel label = new JLabel(actualAmount + "/" + cost.toString());
-            label.setForeground(actualAmount < cost.getQuantity() ? Color.RED : Color.GREEN);
-            costPanel.add(label);
-        }
-        costPanel.revalidate();
+        GuiUtility.displayCost(costPanel, selectedRecipe.getCost());
     }
 
     public void updateOrderQueue() {

@@ -145,7 +145,7 @@ public class CliGuiTrain {
     public void updateUpgradeCostPanel() {
         if(selectedWagon == null) return;
         ArrayList<ResourceAmount> costs = WagonStats.getUpgradeCost(selectedWagon);
-        GuiUtility.listInPanel(upgradeCostPanel, costs, ra -> new JLabel(ra.toString()));
+        GuiUtility.displayCost(upgradeCostPanel, costs);
     }
 
     public void updateUpgradeQueuePanel() {
@@ -171,7 +171,7 @@ public class CliGuiTrain {
     public void updateCreateCostPanel() {
         if(selectedWagonRecipe == null) return;
         ArrayList<ResourceAmount> costs = selectedWagonRecipe.getCost();
-        GuiUtility.listInPanel(createCostPanel, costs, ra -> new JLabel(ra.toString()));
+        GuiUtility.displayCost(createCostPanel, costs);
     }
 
     public void updateCreateQueuePanel() {

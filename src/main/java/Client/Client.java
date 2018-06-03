@@ -104,7 +104,7 @@ public class Client {
         frame.pack();
     }
 
-    public int getSpesificResource(Ressource.Type type) {
+    public int getSpecificResource(Ressource.Type type) {
         for(ResourceAmount ra : resourceAmounts) {
             if(ra.getRessource() == type) {
                 return ra.getQuantity();
