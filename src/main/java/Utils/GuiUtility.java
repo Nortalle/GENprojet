@@ -5,11 +5,11 @@ import java.awt.*;
 import java.util.ArrayList;
 
 import Client.Client;
-import Utils.ResourceAmount;
 
 public class GuiUtility {
 
     /**
+     *
      * @param panel panel where to add components
      * @param list list of object to place in panel
      * @param lambda function to apply to object to get the component to add
@@ -20,6 +20,7 @@ public class GuiUtility {
     }
 
     /**
+     *
      * @param panel panel where to add components
      * @param list list of object to place in panel
      * @param lambda function to apply to object to get the component to add
@@ -52,12 +53,20 @@ public class GuiUtility {
         });
     }
 
-    public static <T> JProgressBar getProgressBar(T t, ToProgressBar<T> lambdaActual, ToProgressBar<T> lambdaMax) {
+    /**
+     *
+     * @param t object to create the bar for
+     * @param lambdaCurrent how to calculate the current value
+     * @param lambdaMax how to calculate the max value
+     * @param <T> type of object
+     * @return
+     */
+    public static <T> JProgressBar getProgressBar(T t, ToProgressBar<T> lambdaCurrent, ToProgressBar<T> lambdaMax) {
         JProgressBar bar = new JProgressBar();
-        int actual = lambdaActual.getValue(t);
+        int current = lambdaCurrent.getValue(t);
         int max = lambdaMax.getValue(t);
         bar.setMaximum(max);
-        bar.setValue(max - actual);
+        bar.setValue(max - current);
         return bar;
     }
 }
