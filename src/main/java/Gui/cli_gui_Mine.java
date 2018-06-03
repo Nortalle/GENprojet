@@ -5,6 +5,7 @@ import Game.Mine;
 import Game.Train;
 import Game.Wagon;
 import Game.WagonMining;
+import Utils.GuiUtility;
 import Utils.OTrainProtocol;
 import Utils.WagonStats;
 
@@ -85,20 +86,11 @@ public class cli_gui_Mine {
     }
 
     public void updateMinesPanel() {
-        availableMinesPanel.setLayout(new GridLayout(0,1));
-        availableMinesPanel.removeAll();
-        for(Mine m : train.getTrainStation().getMines()) {
-            availableMinesPanel.add(new JLabel(m.toString()));
-        }
+        GuiUtility.listInPanel(availableMinesPanel, train.getTrainStation().getMines(), mine -> new JLabel(mine.toString()));
     }
 
     public void updateCurrentlyMiningWagons() {
-        currently_mining_panel.setLayout(new GridLayout(0,1));
-        currently_mining_panel.removeAll();
-        for( WagonMining wm : Client.getInstance().getWagonMining()) {
-            JLabel label = new JLabel(wm.getWagon() + " -> " + wm.getCurrentMine());
-            currently_mining_panel.add(label);
-        }
+        GuiUtility.listInPanel(currently_mining_panel, Client.getInstance().getWagonMining(), wm -> new JLabel(wm.getWagon() + " -> " + wm.getCurrentMine()));
     }
 
     public void updateMinesList() {

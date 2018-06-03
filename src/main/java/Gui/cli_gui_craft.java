@@ -81,10 +81,9 @@ public class cli_gui_craft {
     }
 
     public void updateAvailableCrafts(){
-        ArrayList<ResourceAmount> playerObjects = Client.getInstance().getResourceAmounts();
         ArrayList<Recipe> availableRecipes = new ArrayList<>();
         for(Recipe r : Recipe.getAllRecipes()) {
-            if(canCraft(r, playerObjects)) {
+            if(canCraft(r)) {
                 availableRecipes.add(r);
             }
         }
@@ -92,20 +91,11 @@ public class cli_gui_craft {
         GuiUtility.listInPanel(availableCrafts, availableRecipes, recipe -> new JLabel(recipe.toString()));
     }
 
-    public boolean canCraft(Recipe recipe, ArrayList<ResourceAmount> resourceAmounts) {
+    public boolean canCraft(Recipe recipe) {
         for(ResourceAmount cost : recipe.getCost()) {
-            if(!hasEnough(cost, resourceAmounts)) return false;
+            if(Client.getInstance().getSpecificResource(cost.getRessource()) < cost.getQuantity()) return false;
         }
         return true;
-    }
-
-    public boolean hasEnough(ResourceAmount cost, ArrayList<ResourceAmount> resourceAmounts) {
-        for(ResourceAmount ra : resourceAmounts) {
-            if(ra.getRessource() == cost.getRessource()) {
-                return ra.getQuantity() >= cost.getQuantity();
-            }
-        }
-        return false;
     }
 
     public void update() {

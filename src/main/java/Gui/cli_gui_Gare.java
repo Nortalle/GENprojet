@@ -4,6 +4,7 @@ import Client.Client;
 import Game.Mine;
 import Game.Train;
 import Game.TrainStation;
+import Utils.GuiUtility;
 import Utils.OTrainProtocol;
 
 import javax.swing.*;
@@ -99,19 +100,14 @@ public class cli_gui_Gare {
     }
 
     public void updateTrainsAtStation() {
-        if(viewingStation != null) {
-            panel_liste_joueurs.removeAll();
-            panel_liste_joueurs.setLayout(new GridLayout(0, 1));
-            for(Train t : Client.getInstance().getTrainsAtStation(viewingStation.getId())) panel_liste_joueurs.add(new JLabel(t.toString()));
-        }
+        if (viewingStation == null) return;
+        Client.getInstance().updateTrainsAtStation(viewingStation.getId());
+        GuiUtility.listInPanel(panel_liste_joueurs, Client.getInstance().getTrainsAtStation(viewingStation.getId()), train -> new JLabel(train.toString()));
     }
 
     public void updateMines() {
-        if(viewingStation != null) {
-            panel_liste_mines.removeAll();
-            panel_liste_mines.setLayout(new GridLayout(0, 1));
-            for(Mine m : viewingStation.getMines()) panel_liste_mines.add(new JLabel(m.toString()));
-        }
+        if (viewingStation == null) return;
+        GuiUtility.listInPanel(panel_liste_mines, viewingStation.getMines(), mine -> new JLabel(mine.toString()));
     }
 
     public void updateStationList() {
