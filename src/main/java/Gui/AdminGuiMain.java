@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 public class AdminGuiMain {
     private JPanel mainPanel;
     private JButton disconnectButton;
+    private JTabbedPane tabs;
 
     public AdminGuiMain() {
         disconnectButton.addActionListener(new ActionListener() {

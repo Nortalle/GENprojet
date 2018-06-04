@@ -5,7 +5,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Client.*;
-import Game.Resources;
 import Utils.Ressource;
 
 import java.awt.event.*;
