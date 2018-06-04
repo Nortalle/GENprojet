@@ -9,4 +9,11 @@ public class AdminGuiPlayer {
     private JTextField textField1;
     private JButton updateButton;
     private JButton deleteButton;
+
+    public AdminGuiPlayer() {
+        update();
+    }
+
+    public void update() {
+    }
 }

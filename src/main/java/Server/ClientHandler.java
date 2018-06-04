@@ -185,11 +185,11 @@ ClientHandler implements Runnable {
             while (running && line != null) {
                 //work...
 
-                if(line.equals(OTrainProtocol.SUCCESS)) {
-                    writer.println("if");
+                if(line.equals(OTrainProtocol.ADMIN)) {
+                    writer.println("yes you are admin");
                     writer.flush();
-                } else if(line.equals(OTrainProtocol.FAILURE)) {
-                    writer.println("else if");
+                } else if(line.equals(OTrainProtocol.GET_GARES)) {
+                    writer.println(JsonUtility.listToJson(db.getAllTrainStations(), TrainStation::toJson));
                     writer.flush();
                 }
 

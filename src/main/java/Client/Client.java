@@ -36,6 +36,25 @@ public class Client {
     private ArrayList<CreateWagon> createWagons = new ArrayList<>();
     private ArrayList<Train> trainsAtStation = new ArrayList<>();
     private ArrayList<TrainStation> trainStations = new ArrayList<>();
+    // start admin
+    private ArrayList<TrainStation> adminTrainStations = new ArrayList<>();
+
+
+    public void updateAdminTrainStations() {
+        writer.println(OTrainProtocol.GET_GARES);
+        writer.flush();
+        String answer = readLine();
+        adminTrainStations = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), TrainStation::new);
+    }
+
+    public ArrayList<TrainStation> getAdminTrainStations() {
+        return adminTrainStations;
+    }
+
+    public void updateAdminAll() {
+        updateAdminTrainStations();
+    }
+    // end admin
 
     public static Client getInstance() {
         if(instance == null) instance = new Client();
