@@ -2,15 +2,12 @@ package Gui;
 
 import Client.Client;
 import Game.Mine;
-import Game.Train;
 import Game.TrainStation;
-import Utils.ResourceAmount;
 import Utils.Ressource;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import java.util.ArrayList;
 
 public class AdminGuiMine {
     private JComboBox gare_select;
@@ -69,6 +66,7 @@ public class AdminGuiMine {
     public void updateStationList() {
         gare_select.removeAllItems();
         for(TrainStation station : Client.getInstance().getAdminTrainStations()) gare_select.addItem(station);
+        if(selectedStation == null) selectedStation = (TrainStation) gare_select.getSelectedItem();
     }
 
     public void updateMineList() {
