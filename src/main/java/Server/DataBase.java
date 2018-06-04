@@ -147,6 +147,25 @@ public class DataBase {
     }
 
     /**
+     * @return list of all players
+     */
+    public ArrayList<String> getAllPlayers() {
+        ArrayList<String> result = new ArrayList<>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT nomJoueur FROM Joueur;", Statement.RETURN_GENERATED_KEYS);
+            resultSet = ps.executeQuery();
+            while(resultSet.next()) {
+                result.add(resultSet.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(result);
+        return result;
+    }
+
+    /**
      * @param username player
      * @param password password
      * @return if login was successful

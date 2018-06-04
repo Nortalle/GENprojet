@@ -73,6 +73,12 @@ public class OTrainProtocol {
     public static final String SIGN_UP = "SIGN_UP";
 
 
+    /* ---------{ Admin commands }--------- */
+    // get list of all players
+    public static final String GET_ALL_PLAYER = "GET_ALL_PLAYER";
+    // get player cargo
+    public static final String GET_PLAYER_CARGO = "GET_PLAYER_CARGO";
+
     /* ---------{ Server side commands }--------- */
 
     /* General commands */

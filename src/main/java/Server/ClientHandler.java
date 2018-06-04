@@ -4,6 +4,9 @@ import Game.*;
 import Utils.JsonUtility;
 import Utils.OTrainProtocol;
 import Utils.ResourceAmount;
+import Utils.WagonStats;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.io.*;
 import java.net.Socket;
@@ -185,11 +188,24 @@ ClientHandler implements Runnable {
             while (running && line != null) {
                 //work...
 
-                if(line.equals(OTrainProtocol.ADMIN)) {
-                    writer.println("yes you are admin");
+                if(line.equals(OTrainProtocol.GET_ALL_PLAYER)) {
+                    writer.println(JsonUtility.listToJson(db.getAllPlayers(), string -> {
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.add("p", new JsonPrimitive(string));
+                        return jsonObject;
+                    }));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_GARES)) {
                     writer.println(JsonUtility.listToJson(db.getAllTrainStations(), TrainStation::toJson));
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_PLAYER_CARGO)) {
+                    String playerName = readLine();
+                    int currentCargo = 0;
+                    for(ResourceAmount ra : db.getPlayerObjects(playerName)) currentCargo += ra.getQuantity();
+                    int reservedCargo = Server.getInstance().getReserveCargoController().getReservedCargo(playerName);
+                    int maxCargo = WagonStats.getMaxCapacity(db.getTrain(playerName));
+
+                    writer.println(currentCargo + "(" + reservedCargo + ")/" + maxCargo);
                     writer.flush();
                 }
 

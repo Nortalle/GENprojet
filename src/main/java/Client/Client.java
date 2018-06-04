@@ -38,6 +38,8 @@ public class Client {
     private ArrayList<TrainStation> trainStations = new ArrayList<>();
     // start admin
     private ArrayList<TrainStation> adminTrainStations = new ArrayList<>();
+    private ArrayList<String> adminPlayers = new ArrayList<>();
+    private String adminCargo;
 
 
     public void updateAdminTrainStations() {
@@ -51,8 +53,33 @@ public class Client {
         return adminTrainStations;
     }
 
+    public void updateAdminPlayers() {
+        writer.println(OTrainProtocol.GET_ALL_PLAYER);
+        writer.flush();
+        String answer = readLine();
+        adminPlayers = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), p -> p.get("p").getAsString());
+    }
+
+    public ArrayList<String> getAdminPlayers() {
+        return adminPlayers;
+    }
+
+    public void updateAdminCargo(String playerName) {
+        writer.println(OTrainProtocol.GET_PLAYER_CARGO);
+        writer.println(playerName);
+        writer.flush();
+        String answer = readLine();
+        //adminCargo = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), ResourceAmount::new);
+        adminCargo = answer;
+    }
+
+    public String getAdminCargo() {
+        return adminCargo;
+    }
+
     public void updateAdminAll() {
         updateAdminTrainStations();
+        updateAdminPlayers();
     }
     // end admin
 
