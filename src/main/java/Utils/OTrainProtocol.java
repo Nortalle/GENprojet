@@ -81,6 +81,14 @@ public class OTrainProtocol {
     // get player object
     public static final String GET_PLAYER_OBJECT = "GET_PLAYER_OBJECT";
 
+    public static final String NEW_STATION = "NEW_STATION";
+    public static final String CHANGE_STATION = "CHANGE_STATION";
+    public static final String DELETE_STATION = "DELETE_STATION";
+    public static final String NEW_MINE = "NEW_MINE";
+    public static final String CHANGE_MINE = "CHANGE_MINE";
+    public static final String DELETE_MINE = "DELETE_MINE";
+    public static final String CHANGE_PLAYER_OBJECT = "CHANGE_PLAYER_OBJECT";
+
     /* ---------{ Server side commands }--------- */
 
     /* General commands */

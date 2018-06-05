@@ -213,6 +213,36 @@ ClientHandler implements Runnable {
 
                     writer.println(ra.toJson());
                     writer.flush();
+                } else if(line.equals(OTrainProtocol.NEW_STATION)) {
+                    readLine();
+                    writer.println("not ready");
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.CHANGE_STATION)) {
+                    readLine();
+                    writer.println("not ready");
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.DELETE_STATION)) {
+                    readLine();
+                    writer.println("not ready");
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.NEW_MINE)) {
+                    readLine();
+                    writer.println("not ready");
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.CHANGE_MINE)) {
+                    readLine();
+                    writer.println("not ready");
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.DELETE_MINE)) {
+                    readLine();
+                    writer.println("not ready");
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.CHANGE_PLAYER_OBJECT)) {
+                    readLine();
+                    readLine();
+                    readLine();
+                    writer.println("not ready");
+                    writer.flush();
                 }
 
                 line = readLine();

@@ -61,7 +61,7 @@ public class AdminGuiPlayer {
                     ex.printStackTrace();
                     return;
                 }
-                // send playerName, type, newAmount
+                Client.getInstance().sendChangePlayerObject(selectedPlayer, selectedType.ordinal(), newAmount);
             }
         });
     }

@@ -95,6 +95,58 @@ public class Client {
         updateAdminTrainStations();
         updateAdminPlayers();
     }
+
+    public String sendNewStation(TrainStation station) {
+        writer.println(OTrainProtocol.NEW_STATION);
+        writer.println(station.toJson());
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendChangeStation(TrainStation station) {
+        writer.println(OTrainProtocol.CHANGE_STATION);
+        writer.println(station.toJson());
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendDeleteStation(int id) {
+        writer.println(OTrainProtocol.DELETE_STATION);
+        writer.println(id);
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendNewMine(Mine mine) {
+        writer.println(OTrainProtocol.NEW_MINE);
+        writer.println(mine.toJson());
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendChangeMine(Mine mine) {
+        writer.println(OTrainProtocol.CHANGE_MINE);
+        writer.println(mine.toJson());
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendDeleteMine(int id) {
+        writer.println(OTrainProtocol.DELETE_MINE);
+        writer.println(id);
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendChangePlayerObject(String playerName, int type, int amount) {
+        writer.println(OTrainProtocol.CHANGE_PLAYER_OBJECT);
+        writer.println(playerName);
+        writer.println(type);
+        writer.println(amount);
+        writer.flush();
+        return readLine();
+    }
+
     // end admin
 
     public static Client getInstance() {

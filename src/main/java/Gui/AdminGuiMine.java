@@ -66,9 +66,19 @@ public class AdminGuiMine {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(selectedMine == null) {
-                    getMineFromInputs(-1);
+                    Client.getInstance().sendNewMine(getMineFromInputs(-1));
                 } else {
-                    getMineFromInputs(selectedMine.getId());
+                    Client.getInstance().sendChangeMine(getMineFromInputs(selectedMine.getId()));
+                }
+            }
+        });
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(selectedMine == null) {
+                    return;
+                } else {
+                    Client.getInstance().sendDeleteMine(selectedMine.getId());
                 }
             }
         });

@@ -50,11 +50,9 @@ public class AdminGuiGare {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(selectedStation == null) {
-                    TrainStation newStation = getStationFromInputs(-1);
-                    // if not null toJson and send
+                    Client.getInstance().sendNewStation(getStationFromInputs(-1));
                 } else {
-                    TrainStation updatedStation = getStationFromInputs(selectedStation.getId());
-                    // if not null toJson and send
+                    Client.getInstance().sendChangeStation(getStationFromInputs(selectedStation.getId()));
                 }
             }
         });
@@ -64,8 +62,7 @@ public class AdminGuiGare {
                 if(selectedStation == null) {
                     return;
                 } else {
-                    // send station id to delete
-                    selectedStation.getId();
+                    Client.getInstance().sendDeleteStation(selectedStation.getId());
                 }
             }
         });
