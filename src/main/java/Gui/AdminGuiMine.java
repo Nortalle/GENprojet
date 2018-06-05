@@ -3,11 +3,14 @@ package Gui;
 import Client.Client;
 import Game.Mine;
 import Game.TrainStation;
+import Utils.GuiUtility;
 import Utils.Ressource;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class AdminGuiMine {
     private JComboBox gare_select;
@@ -25,6 +28,10 @@ public class AdminGuiMine {
 
     public AdminGuiMine() {
         update();
+        GuiUtility.addChangeListener(max_ressource);
+        GuiUtility.addChangeListener(regen_rate);
+        GuiUtility.addChangeListener(current_amount);
+
         gare_select.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
@@ -55,6 +62,33 @@ public class AdminGuiMine {
             @Override
             public void popupMenuCanceled(PopupMenuEvent e) {}
         });
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(selectedMine == null) {
+                    getMineFromInputs(-1);
+                } else {
+                    getMineFromInputs(selectedMine.getId());
+                }
+            }
+        });
+    }
+
+    public Mine getMineFromInputs(int id) {
+        Mine mine = null;
+        Ressource.Type type = (Ressource.Type) resource_select.getSelectedItem();
+        int max;
+        int regen;
+        int current;
+        try {
+            max = GuiUtility.getValueFromTextField(max_ressource);
+            regen = GuiUtility.getValueFromTextField(regen_rate);
+            current = GuiUtility.getValueFromTextField(current_amount);
+            mine = new Mine(id, type.ordinal(), current, selectedStation.getId());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return mine;
     }
 
     public void update() {

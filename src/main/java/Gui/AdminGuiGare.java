@@ -2,10 +2,13 @@ package Gui;
 
 import Client.Client;
 import Game.TrainStation;
+import Utils.GuiUtility;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class AdminGuiGare {
     private JPanel panel_admin_gare;
@@ -22,6 +25,11 @@ public class AdminGuiGare {
 
     public AdminGuiGare() {
         update();
+        GuiUtility.addChangeListener(platformLengthTextField);
+        GuiUtility.addChangeListener(nbPlatformsTextField);
+        GuiUtility.addChangeListener(xTextField);
+        GuiUtility.addChangeListener(yTextField);
+
         dropdown_gare.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
@@ -38,6 +46,48 @@ public class AdminGuiGare {
             @Override
             public void popupMenuCanceled(PopupMenuEvent e) {}
         });
+        new_gare.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(selectedStation == null) {
+                    TrainStation newStation = getStationFromInputs(-1);
+                    // if not null toJson and send
+                } else {
+                    TrainStation updatedStation = getStationFromInputs(selectedStation.getId());
+                    // if not null toJson and send
+                }
+            }
+        });
+        delete_gare.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(selectedStation == null) {
+                    return;
+                } else {
+                    // send station id to delete
+                    selectedStation.getId();
+                }
+            }
+        });
+    }
+
+    public TrainStation getStationFromInputs(int id) {
+        TrainStation station = null;
+        String name = gare_name.getText();
+        int platformSize;
+        int nbPlatform;
+        int x;
+        int y;
+        try {
+            platformSize = GuiUtility.getValueFromTextField(platformLengthTextField);
+            nbPlatform = GuiUtility.getValueFromTextField(nbPlatformsTextField);
+            x = GuiUtility.getValueFromTextField(xTextField);
+            y = GuiUtility.getValueFromTextField(yTextField);
+            station = new TrainStation(id, x, y, nbPlatform, platformSize, null);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return station;
     }
 
     public void update() {

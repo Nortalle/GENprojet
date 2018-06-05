@@ -1,6 +1,8 @@
 package Utils;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -68,5 +70,37 @@ public class GuiUtility {
         bar.setMaximum(max);
         bar.setValue(max - current);
         return bar;
+    }
+
+    public static void addChangeListener(JTextField textField) {
+        textField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                textField.setBackground(Color.WHITE);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                textField.setBackground(Color.WHITE);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                textField.setBackground(Color.WHITE);
+            }
+        });
+    }
+
+    public static int getValueFromTextField(JTextField textField) {
+        int value;
+        String text = textField.getText();
+        try {
+            value = Integer.valueOf(text);
+        } catch (NumberFormatException e) {
+            textField.setBackground(Color.RED);
+            JOptionPane.showConfirmDialog(null, "\"" + text + "\"" + " is not a number", "WRONG NUMBER FORMAT", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null);
+            throw e;
+        }
+        return value;
     }
 }
