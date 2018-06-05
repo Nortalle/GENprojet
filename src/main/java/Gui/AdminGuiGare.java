@@ -96,6 +96,7 @@ public class AdminGuiGare {
         dropdown_gare.removeAllItems();
         dropdown_gare.addItem("NEW STATION");
         for(TrainStation station : Client.getInstance().getAdminTrainStations()) dropdown_gare.addItem(station);
+        if(selectedStation != null) dropdown_gare.setSelectedItem(selectedStation);
     }
 
     public void updateTextFields() {
