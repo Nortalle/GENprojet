@@ -119,8 +119,8 @@
               </grid>
             </constraints>
             <properties>
-              <lineWrap value="true"/>
-              <wrapStyleWord value="true"/>
+              <lineWrap value="false"/>
+              <wrapStyleWord value="false"/>
             </properties>
           </component>
         </children>
