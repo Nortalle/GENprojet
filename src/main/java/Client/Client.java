@@ -40,6 +40,7 @@ public class Client {
     private ArrayList<TrainStation> adminTrainStations = new ArrayList<>();
     private ArrayList<String> adminPlayers = new ArrayList<>();
     private String adminCargo;
+    private ResourceAmount adminResourceAmount;
 
 
     public void updateAdminTrainStations() {
@@ -75,6 +76,19 @@ public class Client {
 
     public String getAdminCargo() {
         return adminCargo;
+    }
+
+    public void updateAdminResourceAmount(String playerName, int type) {
+        writer.println(OTrainProtocol.GET_PLAYER_OBJECT);
+        writer.println(playerName);
+        writer.println(type);
+        writer.flush();
+        String answer = readLine();
+        adminResourceAmount = new ResourceAmount(answer);
+    }
+
+    public ResourceAmount getAdminResourceAmount() {
+        return adminResourceAmount;
     }
 
     public void updateAdminAll() {

@@ -78,6 +78,8 @@ public class OTrainProtocol {
     public static final String GET_ALL_PLAYER = "GET_ALL_PLAYER";
     // get player cargo
     public static final String GET_PLAYER_CARGO = "GET_PLAYER_CARGO";
+    // get player object
+    public static final String GET_PLAYER_OBJECT = "GET_PLAYER_OBJECT";
 
     /* ---------{ Server side commands }--------- */
 

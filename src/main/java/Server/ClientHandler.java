@@ -1,10 +1,7 @@
 package Server;
 
 import Game.*;
-import Utils.JsonUtility;
-import Utils.OTrainProtocol;
-import Utils.ResourceAmount;
-import Utils.WagonStats;
+import Utils.*;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -206,6 +203,15 @@ ClientHandler implements Runnable {
                     int maxCargo = WagonStats.getMaxCapacity(db.getTrain(playerName));
 
                     writer.println(currentCargo + "(" + reservedCargo + ")/" + maxCargo);
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_PLAYER_OBJECT)) {
+                    String playerName = readLine();
+                    String objectLine = readLine();
+                    int objectId = Integer.valueOf(objectLine);
+                    ResourceAmount ra = db.getPlayerObjectOfType(playerName, objectId);
+                    if(ra == null) ra = new ResourceAmount(Ressource.Type.values()[objectId], 0);
+
+                    writer.println(ra.toJson());
                     writer.flush();
                 }
 
