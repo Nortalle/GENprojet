@@ -15,8 +15,10 @@ public class AdminGuiMain {
     private AdminGuiGare gareForm;
     private AdminGuiMine mineForm;
     private AdminGuiPlayer playerForm;
+    private JTextArea logTextArea;
 
     public AdminGuiMain() {
+        Client.setClientLogComponent(logTextArea);
         Client.getInstance().updateAdminAll();
         update();
 
