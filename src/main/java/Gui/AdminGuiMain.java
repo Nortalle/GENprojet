@@ -26,6 +26,7 @@ public class AdminGuiMain {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Client.getInstance().disconnect();
+                Client.getInstance().setConnectionPanel();
             }
         });
         tabs.addChangeListener(new ChangeListener() {
