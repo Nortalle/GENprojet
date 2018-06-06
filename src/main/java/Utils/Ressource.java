@@ -138,5 +138,9 @@ public class Ressource {
         }
         return baseResources;
     }
+
+    public static void setPlayerBaseResources(ArrayList<ResourceAmount> playerResources, int[] newAmounts){
+
+    }
 }
 

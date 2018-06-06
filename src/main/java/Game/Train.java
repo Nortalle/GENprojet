@@ -53,6 +53,14 @@ public class Train {
         return trainStationTotalETA;
     }
 
+    public Train decreaseTrainStationETA(int i) {
+        trainStationETA -= i;
+        if(trainStationETA < 0){
+            trainStationETA = 0;
+        }
+        return this;
+    }
+
     public JsonObject toJson() {
         JsonObject train = new JsonObject();
         train.add("wagons", JsonUtility.listToJson(wagons, Wagon::toJson));

@@ -66,6 +66,11 @@ public class Mine {
         this.amount = new_amount;
     }
 
+    public Mine reduceAmount(int i) {
+        amount -= i;
+        return this;
+    }
+
     @Override
     public String toString() {
         return id + " " + Ressource.RessourceToString(Ressource.Type.values()[resource]) + " : " + amount;

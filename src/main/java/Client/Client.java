@@ -3,10 +3,7 @@ package Client;
 import Game.*;
 import Gui.LoginForm;
 import Server.ClientHandler;
-import Utils.JsonUtility;
-import Utils.OTrainProtocol;
-import Utils.ResourceAmount;
-import Utils.Ressource;
+import Utils.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -15,6 +12,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
@@ -32,20 +30,20 @@ public class Client {
     private String username;
     private Train train;
     private ArrayList<WagonMining> wagonMining = new ArrayList<>();
-    private ArrayList<ResourceAmount> resourceAmounts = new ArrayList<>();
+    private HashMap<Ressource.Type,ResourceAmount> resourceAmounts = new HashMap<>();
     private ArrayList<Craft> crafts = new ArrayList<>();
     private ArrayList<UpgradeWagon> upgradeWagons = new ArrayList<>();
     private ArrayList<CreateWagon> createWagons = new ArrayList<>();
     private ArrayList<Train> trainsAtStation = new ArrayList<>();
     private ArrayList<TrainStation> trainStations = new ArrayList<>();
+    private int baseResources[] = new int[8];
+
     // start admin
     private ArrayList<TrainStation> adminTrainStations = new ArrayList<>();
     private ArrayList<String> adminPlayers = new ArrayList<>();
     private String adminCargo;
     private ResourceAmount adminResourceAmount;
 
-    //pour la maj locale du model
-    private Timer timer;
 
     //TODO TEST DE MERDE
     public Client(){
@@ -58,18 +56,44 @@ public class Client {
 
             @Override
             public void localUpdate() {
-                ArrayList<Craft> toRemove = new ArrayList<>();
 
+                // 1) update des crafts en cours //
+                ArrayList<Craft> toRemove = new ArrayList<>();
                 for(Craft c : crafts){
                     c.decreaseRemainingTime();
                     if(c.getRemainingTime() <= 0){
                         toRemove.add(c);
+                        // update de la liste locale de l'inventaire
+                        ResourceAmount r = Recipe.getReciepAtIndex(c.getRecipeIndex()).getFinalProduct();
+                        resourceAmounts.put(r.getRessource(), resourceAmounts.getOrDefault(r.getRessource(), new ResourceAmount(r.getRessource(), 0)).addQuantity(r.getQuantity()));
                     }
                 }
-
                 for(Craft c : toRemove){
                     crafts.remove(c);
                 }
+
+                // 2) update des ressources en cours de minage //
+                for(WagonMining w : wagonMining){
+                    if(w.isMining()){
+                        // la quantité maximale que va miner le wagon
+                        int amount = WagonStats.getMiningAmount(w.getWagon());
+                        // on déduit de la mine
+                        w.getCurrentMine().reduceAmount(amount);
+
+                        // si la mine passe en négatif on corrige
+                        if(w.getCurrentMine().getAmount() < 0){
+                            amount += w.getCurrentMine().getAmount();
+                            w.getCurrentMine().setAmount(0);
+                        }
+
+                        // maj des ressources disponibles du joueur
+                        Ressource.Type type = Ressource.Type.values()[w.getCurrentMine().getResource()];
+                        resourceAmounts.put(type, resourceAmounts.getOrDefault(type, new ResourceAmount(type, 0)).addQuantity(amount));
+                    }
+                }
+
+                // 3) update des déplacements de train //
+                train.decreaseTrainStationETA(1);
             }
         });
     }
@@ -247,10 +271,8 @@ public class Client {
     }
 
     public int getSpecificResource(Ressource.Type type) {
-        for(ResourceAmount ra : resourceAmounts) {
-            if(ra.getRessource() == type) {
-                return ra.getQuantity();
-            }
+        if(resourceAmounts.containsKey(type)){
+            return resourceAmounts.get(type).getQuantity();
         }
         return 0;
     }
@@ -291,11 +313,18 @@ public class Client {
         writer.println(OTrainProtocol.GET_OBJECTS);
         writer.flush();
         String answer = readLine();
-        resourceAmounts = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), ResourceAmount::new);
+        ArrayList<ResourceAmount> list = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), ResourceAmount::new);
+        resourceAmounts.clear();
+
+        list.forEach(r -> resourceAmounts.put(r.getRessource(), r));
     }
 
     public ArrayList<ResourceAmount> getResourceAmounts() {
-        return resourceAmounts;
+        ArrayList<ResourceAmount> list = new ArrayList<>();
+
+        resourceAmounts.forEach((k,v) -> list.add(v));
+
+        return list;
     }
 
     public void updateCrafts() {
@@ -376,6 +405,7 @@ public class Client {
     public ArrayList<TrainStation> getTrainStations() {
         return trainStations;
     }
+
 
     public synchronized void updateAll() {
         updateTrain();
