@@ -53,6 +53,7 @@ public class cli_gui_craft {
                 if(selectedRecipe == null) return;
                 String line = Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
                 Client.getInstance().updateCrafts();// MANUAL UPDATE
+                Client.getInstance().updateResourceAmount();// MANUAL UPDATE
                 if(line.equals(OTrainProtocol.SUCCESS)) update();
             }
         });

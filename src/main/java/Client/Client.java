@@ -58,21 +58,21 @@ public class Client {
 
                 // 1) update des crafts en cours //
                 ArrayList<Craft> toRemove = new ArrayList<>();
-                for(Craft c : crafts){
-                    c.decreaseRemainingTime();
-                    if(c.getRemainingTime() <= 0){
-                        toRemove.add(c);
+                for(int i = 0; i < crafts.size() && i < WagonStats.getMaxParallelCraft(train); i++) {
+                    crafts.get(i).decreaseRemainingTime();
+                    if(crafts.get(i).getRemainingTime() <= 0){
+                        toRemove.add(crafts.get(i));
                         // update de la liste locale de l'inventaire
-                        ResourceAmount r = Recipe.getReciepAtIndex(c.getRecipeIndex()).getFinalProduct();
+                        ResourceAmount r = Recipe.getReciepAtIndex(crafts.get(i).getRecipeIndex()).getFinalProduct();
                         resourceAmounts.put(r.getRessource(), resourceAmounts.getOrDefault(r.getRessource(), new ResourceAmount(r.getRessource(), 0)).addQuantity(r.getQuantity()));
                     }
                 }
-                for(Craft c : toRemove){
+                for(Craft c : toRemove) {
                     crafts.remove(c);
                 }
 
                 // 2) update des ressources en cours de minage //
-                for(WagonMining w : wagonMining){
+                for(WagonMining w : wagonMining) {
                     if(w.isMining()){
                         // la quantité maximale que va miner le wagon
                         int amount = WagonStats.getMiningAmount(w.getWagon());
