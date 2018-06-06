@@ -36,6 +36,118 @@ public class Client {
     private ArrayList<CreateWagon> createWagons = new ArrayList<>();
     private ArrayList<Train> trainsAtStation = new ArrayList<>();
     private ArrayList<TrainStation> trainStations = new ArrayList<>();
+    // start admin
+    private ArrayList<TrainStation> adminTrainStations = new ArrayList<>();
+    private ArrayList<String> adminPlayers = new ArrayList<>();
+    private String adminCargo;
+    private ResourceAmount adminResourceAmount;
+
+
+    public void updateAdminTrainStations() {
+        writer.println(OTrainProtocol.GET_GARES);
+        writer.flush();
+        String answer = readLine();
+        adminTrainStations = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), TrainStation::new);
+    }
+
+    public ArrayList<TrainStation> getAdminTrainStations() {
+        return adminTrainStations;
+    }
+
+    public void updateAdminPlayers() {
+        writer.println(OTrainProtocol.GET_ALL_PLAYER);
+        writer.flush();
+        String answer = readLine();
+        adminPlayers = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), p -> p.get("p").getAsString());
+    }
+
+    public ArrayList<String> getAdminPlayers() {
+        return adminPlayers;
+    }
+
+    public void updateAdminCargo(String playerName) {
+        writer.println(OTrainProtocol.GET_PLAYER_CARGO);
+        writer.println(playerName);
+        writer.flush();
+        String answer = readLine();
+        //adminCargo = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), ResourceAmount::new);
+        adminCargo = answer;
+    }
+
+    public String getAdminCargo() {
+        return adminCargo;
+    }
+
+    public void updateAdminResourceAmount(String playerName, int type) {
+        writer.println(OTrainProtocol.GET_PLAYER_OBJECT);
+        writer.println(playerName);
+        writer.println(type);
+        writer.flush();
+        String answer = readLine();
+        adminResourceAmount = new ResourceAmount(answer);
+    }
+
+    public ResourceAmount getAdminResourceAmount() {
+        return adminResourceAmount;
+    }
+
+    public void updateAdminAll() {
+        updateAdminTrainStations();
+        updateAdminPlayers();
+    }
+
+    public String sendNewStation(TrainStation station) {
+        writer.println(OTrainProtocol.NEW_STATION);
+        writer.println(station.toJson());
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendChangeStation(TrainStation station) {
+        writer.println(OTrainProtocol.CHANGE_STATION);
+        writer.println(station.toJson());
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendDeleteStation(int id) {
+        writer.println(OTrainProtocol.DELETE_STATION);
+        writer.println(id);
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendNewMine(Mine mine) {
+        writer.println(OTrainProtocol.NEW_MINE);
+        writer.println(mine.toJson());
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendChangeMine(Mine mine) {
+        writer.println(OTrainProtocol.CHANGE_MINE);
+        writer.println(mine.toJson());
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendDeleteMine(int id) {
+        writer.println(OTrainProtocol.DELETE_MINE);
+        writer.println(id);
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendChangePlayerObject(String playerName, int type, int amount) {
+        writer.println(OTrainProtocol.CHANGE_PLAYER_OBJECT);
+        writer.println(playerName);
+        writer.println(type);
+        writer.println(amount);
+        writer.flush();
+        return readLine();
+    }
+
+    // end admin
 
     public static Client getInstance() {
         if(instance == null) instance = new Client();

@@ -1,9 +1,9 @@
 package Server;
 
 import Game.*;
-import Utils.JsonUtility;
-import Utils.OTrainProtocol;
-import Utils.ResourceAmount;
+import Utils.*;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.io.*;
 import java.net.Socket;
@@ -57,6 +57,11 @@ ClientHandler implements Runnable {
         return line;
     }
 
+    public void sendBooleanResult(boolean b) {
+        writer.println(b ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
+        writer.flush();
+    }
+
     private void waitForAuthentication() {
         try {
             boolean logged = false;
@@ -72,15 +77,13 @@ ClientHandler implements Runnable {
                 if(request.equals(OTrainProtocol.CONNECT)) {
                     // check if input are correct for login
                     logged = db.checkLogin(username, password);
-                    writer.println(logged ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
-                    writer.flush();
+                    sendBooleanResult(logged);
 
                 } else if(request.equals(OTrainProtocol.SIGN_UP)) {
                     // check if input are correct for sign up
                     if(username == null || password == null || username.equals("")) signedUp = false;
                     else signedUp = db.insertPlayer(username, password);
-                    writer.println(signedUp ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
-                    writer.flush();
+                    sendBooleanResult(signedUp);
                 }
             }
         } catch (IOException e) {
@@ -113,59 +116,29 @@ ClientHandler implements Runnable {
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
                     String newTsLine = readLine();
-                    if(Server.getInstance().getTravelController().ctrlChangeStation(username, newTsLine)) {
-                        writer.println(OTrainProtocol.SUCCESS);
-                    } else {
-                        writer.println(OTrainProtocol.FAILURE);
-                    }
-                    writer.flush();
+                    sendBooleanResult(Server.getInstance().getTravelController().ctrlChangeStation(username, newTsLine));
                 } else if(line.equals(OTrainProtocol.MINE)) {
                     String wagonLine = readLine();
                     String mineLine = readLine();
-                    if(Server.getInstance().getMineController().tryMine(username, wagonLine, mineLine)) {
-                        writer.println(OTrainProtocol.SUCCESS);
-                    } else {
-                        writer.println(OTrainProtocol.FAILURE);
-                    }
-                    writer.flush();
+                    sendBooleanResult(Server.getInstance().getMineController().tryMine(username, wagonLine, mineLine));
                 } else if(line.equals(OTrainProtocol.STOP_MINE)) {
                     String wagonLine = readLine();
-                    if(Server.getInstance().getMineController().removeWagon(wagonLine)) {
-                        writer.println(OTrainProtocol.SUCCESS);
-                    } else {
-                        writer.println(OTrainProtocol.FAILURE);
-                    }
-                    writer.flush();
+                    sendBooleanResult(Server.getInstance().getMineController().removeWagon(wagonLine));
                 } else if(line.equals(OTrainProtocol.CRAFT)) {
                     String recipeLine = readLine();
-                    if(Server.getInstance().getCraftController().tryCraft(username, recipeLine)) {
-                        writer.println(OTrainProtocol.SUCCESS);
-                    } else {
-                        writer.println(OTrainProtocol.FAILURE);
-                    }
-                    writer.flush();
+                    sendBooleanResult(Server.getInstance().getCraftController().tryCraft(username, recipeLine));
                 } else if(line.equals(OTrainProtocol.GET_PROD_QUEUE)) {
                     writer.println(JsonUtility.listToJson(Server.getInstance().getCraftController().getPlayerCrafts(username), Craft::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.UPGRADE)) {
                     String wagonLine = readLine();
-                    if(Server.getInstance().getUpgradeController().tryUpgrade(username, wagonLine)) {
-                        writer.println(OTrainProtocol.SUCCESS);
-                    } else {
-                        writer.println(OTrainProtocol.FAILURE);
-                    }
-                    writer.flush();
+                    sendBooleanResult(Server.getInstance().getUpgradeController().tryUpgrade(username, wagonLine));
                 } else if(line.equals(OTrainProtocol.GET_UPGRADE_QUEUE)) {
                     writer.println(JsonUtility.listToJson(Server.getInstance().getUpgradeController().getPlayerUpgrades(username), UpgradeWagon::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.CREATION)) {
                     String wagonRecipeLine = readLine();
-                    if(Server.getInstance().getCreateController().tryCreateWagon(username, wagonRecipeLine)) {
-                        writer.println(OTrainProtocol.SUCCESS);
-                    } else {
-                        writer.println(OTrainProtocol.FAILURE);
-                    }
-                    writer.flush();
+                    sendBooleanResult(Server.getInstance().getCreateController().tryCreateWagon(username, wagonRecipeLine));
                 } else if(line.equals(OTrainProtocol.GET_CREATION_QUEUE)) {
                     writer.println(JsonUtility.listToJson(Server.getInstance().getCreateController().getPlayerCreateWagons(username), CreateWagon::toJson));
                     writer.flush();
@@ -185,12 +158,59 @@ ClientHandler implements Runnable {
             while (running && line != null) {
                 //work...
 
-                if(line.equals(OTrainProtocol.SUCCESS)) {
-                    writer.println("if");
+                if(line.equals(OTrainProtocol.GET_ALL_PLAYER)) {
+                    writer.println(JsonUtility.listToJson(db.getAllPlayers(), string -> {
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.add("p", new JsonPrimitive(string));
+                        return jsonObject;
+                    }));
                     writer.flush();
-                } else if(line.equals(OTrainProtocol.FAILURE)) {
-                    writer.println("else if");
+                } else if(line.equals(OTrainProtocol.GET_GARES)) {
+                    writer.println(JsonUtility.listToJson(db.getAllTrainStations(), TrainStation::toJson));
                     writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_PLAYER_CARGO)) {
+                    String playerName = readLine();
+                    int currentCargo = 0;
+                    for(ResourceAmount ra : db.getPlayerObjects(playerName)) currentCargo += ra.getQuantity();
+                    int reservedCargo = Server.getInstance().getReserveCargoController().getReservedCargo(playerName);
+                    int maxCargo = WagonStats.getMaxCapacity(db.getTrain(playerName));
+
+                    writer.println(currentCargo + "(" + reservedCargo + ")/" + maxCargo);
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_PLAYER_OBJECT)) {
+                    String playerName = readLine();
+                    String objectLine = readLine();
+                    int objectId = Integer.valueOf(objectLine);
+                    ResourceAmount ra = db.getPlayerObjectOfType(playerName, objectId);
+                    if(ra == null) ra = new ResourceAmount(Ressource.Type.values()[objectId], 0);
+
+                    writer.println(ra.toJson());
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.NEW_STATION)) {
+                    TrainStation station = new TrainStation(readLine());
+                    sendBooleanResult(db.insertTrainStation(station.getPosX(), station.getPosY(), station.getNbOfPlatforms(), station.getSizeOfPlatforms()));
+                } else if(line.equals(OTrainProtocol.CHANGE_STATION)) {
+                    TrainStation station = new TrainStation(readLine());
+                    sendBooleanResult(db.updateTrainStation(station.getId(), station.getPosX(), station.getPosY(), station.getNbOfPlatforms(), station.getSizeOfPlatforms()));
+                } else if(line.equals(OTrainProtocol.DELETE_STATION)) {
+                    int id = Integer.valueOf(readLine());
+                    sendBooleanResult(db.deleteTrainStation(id));
+                } else if(line.equals(OTrainProtocol.NEW_MINE)) {
+                    Mine mine = new Mine(readLine());
+                    sendBooleanResult(db.addMine(mine.getPlace(), mine.getAmount(), mine.getResource()) != -1);
+                } else if(line.equals(OTrainProtocol.CHANGE_MINE)) {
+                    Mine mine = new Mine(readLine());
+                    sendBooleanResult(db.updateMine(mine.getId(), mine.getResource(), mine.getAmount(), mine.getPlace()));
+                } else if(line.equals(OTrainProtocol.DELETE_MINE)) {
+                    int id = Integer.valueOf(readLine());
+                    sendBooleanResult(db.deleteMine(id));
+                } else if(line.equals(OTrainProtocol.CHANGE_PLAYER_OBJECT)) {
+                    String playerName = readLine();
+                    int type = Integer.valueOf(readLine());
+                    int amount = Integer.valueOf(readLine());
+                    ResourceAmount ra = db.getPlayerObjectOfType(playerName, type);
+                    if(ra != null) amount -= ra.getQuantity();
+                    sendBooleanResult(db.updatePlayerObjects(playerName, type, amount));
                 }
 
                 line = readLine();

@@ -39,6 +39,7 @@ public class TrainStation {
         trainStation.add("posY", new JsonPrimitive(posY));
         trainStation.add("nbOfPlatforms", new JsonPrimitive(nbOfPlatforms));
         trainStation.add("sizeOfPlatforms", new JsonPrimitive(sizeOfPlatforms));
+        if(mines == null) mines = new ArrayList<>();
         trainStation.add("mines", JsonUtility.listToJson(mines, Mine::toJson));
 
         return trainStation;
