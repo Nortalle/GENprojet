@@ -49,6 +49,10 @@ public class SyncClock {
         updaters.remove(u);
     }
 
+    public synchronized void removeAllUpdaters() {
+        updaters.clear();
+    }
+
     private synchronized void localCycle(){
         for(Updater u : updaters){
             u.localUpdate();

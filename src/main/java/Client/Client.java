@@ -26,7 +26,8 @@ public class Client {
     private BufferedReader reader;
     private PrintWriter writer;
     private String username;
-    private boolean logged;
+    private boolean clientLogged;
+    private boolean adminLogged;
     private Train train;
     private ArrayList<WagonMining> wagonMining = new ArrayList<>();
     private HashMap<Ressource.Type,ResourceAmount> resourceAmounts = new HashMap<>();
@@ -150,12 +151,20 @@ public class Client {
         updateAdminPlayers();
     }
 
-    public boolean isLogged() {
-        return logged;
+    public boolean isClientLogged() {
+        return clientLogged;
     }
 
-    public void setLogged(boolean logged) {
-        this.logged = logged;
+    public void setClientLogged(boolean clientLogged) {
+        this.clientLogged = clientLogged;
+    }
+
+    public boolean isAdminLogged() {
+        return adminLogged;
+    }
+
+    public void setAdminLogged(boolean adminLogged) {
+        this.adminLogged = adminLogged;
     }
 
     public String sendNewStation(TrainStation station) {
@@ -247,7 +256,9 @@ public class Client {
 
     public void disconnect() {
         try {
-            logged = false;
+            clientLogged = false;
+            adminLogged = false;
+            SyncClock.getInstance().removeAllUpdaters();
             socket.close();
             reader.close();
             writer.close();
@@ -415,7 +426,7 @@ public class Client {
 
 
     public synchronized void updateAll() {
-        if(!logged) return;
+        if(!clientLogged) return;
         updateTrain();
         updateResourceAmount();
         updateCrafts();

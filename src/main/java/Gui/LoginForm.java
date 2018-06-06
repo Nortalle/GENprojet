@@ -55,11 +55,11 @@ public class LoginForm {
                     //
                     answer = client.readLine();
                     if(answer.equals(OTrainProtocol.PLAYER)) {
-                        client.setLogged(true);
+                        client.setClientLogged(true);
                         client.updateAll();// place somewhere else
                         client.setFrameContent(new ClientForm().getPanel_main(), new Dimension(900, 600));
                     } else if(answer.equals(OTrainProtocol.ADMIN)) {
-                        client.setLogged(true);
+                        client.setClientLogged(true);
                         client.setFrameContent(new AdminGuiMain().getMainPanel(), new Dimension(900, 600));
                     }
                 } else if(answer.equals(OTrainProtocol.FAILURE)) {
