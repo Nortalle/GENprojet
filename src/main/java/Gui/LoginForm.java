@@ -59,7 +59,7 @@ public class LoginForm {
                         client.updateAll();// place somewhere else
                         client.setFrameContent(new ClientForm().getPanel_main(), new Dimension(900, 600));
                     } else if(answer.equals(OTrainProtocol.ADMIN)) {
-                        client.setClientLogged(true);
+                        client.setAdminLogged(true);
                         client.setFrameContent(new AdminGuiMain().getMainPanel(), new Dimension(900, 600));
                     }
                 } else if(answer.equals(OTrainProtocol.FAILURE)) {
