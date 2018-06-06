@@ -13,8 +13,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Logger;
 
 public class Client {
@@ -28,6 +26,7 @@ public class Client {
     private BufferedReader reader;
     private PrintWriter writer;
     private String username;
+    private boolean logged;
     private Train train;
     private ArrayList<WagonMining> wagonMining = new ArrayList<>();
     private HashMap<Ressource.Type,ResourceAmount> resourceAmounts = new HashMap<>();
@@ -151,6 +150,14 @@ public class Client {
         updateAdminPlayers();
     }
 
+    public boolean isLogged() {
+        return logged;
+    }
+
+    public void setLogged(boolean logged) {
+        this.logged = logged;
+    }
+
     public String sendNewStation(TrainStation station) {
         writer.println(OTrainProtocol.NEW_STATION);
         writer.println(station.toJson());
@@ -240,6 +247,7 @@ public class Client {
 
     public void disconnect() {
         try {
+            logged = false;
             socket.close();
             reader.close();
             writer.close();
@@ -368,7 +376,6 @@ public class Client {
     }
 
     public Train getTrain() {
-        updateTrain();
         return train;
     }
 
@@ -408,6 +415,7 @@ public class Client {
 
 
     public synchronized void updateAll() {
+        if(!logged) return;
         updateTrain();
         updateResourceAmount();
         updateCrafts();
