@@ -64,6 +64,7 @@ public class ClientForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Client.getInstance().disconnect();
+                Client.getInstance().setConnectionPanel();
             }
         });
     }

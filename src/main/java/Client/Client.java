@@ -188,7 +188,6 @@ public class Client {
             socket.close();
             reader.close();
             writer.close();
-            setConnectionPanel();
         } catch (IOException e) {
             e.printStackTrace();
         }
