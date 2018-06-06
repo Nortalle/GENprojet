@@ -85,6 +85,11 @@ public class cli_gui_Mine {
         updateWagonsList();
     }
 
+    public void updateResources(){
+        updateMinesPanel();
+        updateCurrentlyMiningWagons();
+    }
+
     public void updateMinesPanel() {
         GuiUtility.listInPanel(availableMinesPanel, train.getTrainStation().getMines(), mine -> new JLabel(mine.toString()));
     }

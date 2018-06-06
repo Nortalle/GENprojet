@@ -116,6 +116,15 @@ public class CliGuiTrain {
         updateCreateList();
     }
 
+    public void updateResources() {
+        updateInfoPanel();
+        updateWagonsPanel();
+        updateUpgradeCostPanel();
+        updateUpgradeQueuePanel();
+        updateCreateCostPanel();
+        updateCreateQueuePanel();
+    }
+
     public void updateInfoPanel() {
         infoValuePanel.removeAll();
         infoValuePanel.add(new JLabel("" + train.getSize()));
@@ -154,8 +163,9 @@ public class CliGuiTrain {
 
     public void updateUpgradeQueuePanel() {
         ArrayList<UpgradeWagon> upgrades = Client.getInstance().getUpgradeWagons();
-        GuiUtility.listInPanel(upgradeQueueNamePanel, upgrades, uw -> new JLabel(uw.toString()));
-        GuiUtility.listInPanel(upgradeQueueBarPanel, upgrades, uw -> GuiUtility.getProgressBar(uw, UpgradeWagon::getRemainingTime, u -> WagonStats.getUpgradeTime(u.getWagon_to_upgrade().getLevel())));
+        //GuiUtility.listInPanel(upgradeQueueNamePanel, upgrades, uw -> new JLabel(uw.toString()));
+        //GuiUtility.listInPanel(upgradeQueueBarPanel, upgrades, uw -> GuiUtility.getProgressBar(uw, UpgradeWagon::getRemainingTime, u -> WagonStats.getUpgradeTime(u.getWagon_to_upgrade().getLevel())));
+        GuiUtility.listProgressBar(upgradeQueuePanel, upgrades, UpgradeWagon::getRemainingTime, u -> WagonStats.getUpgradeTime(u.getWagon_to_upgrade().getLevel()));
     }
 
     public void updateCreateList() {
@@ -172,7 +182,8 @@ public class CliGuiTrain {
 
     public void updateCreateQueuePanel() {
         ArrayList<CreateWagon> upgrades = Client.getInstance().getCreateWagons();
-        GuiUtility.listInPanel(createQueueNamePanel, upgrades, cw -> new JLabel(cw.toString()));
-        GuiUtility.listInPanel(createQueueBarPanel, upgrades, cw -> GuiUtility.getProgressBar(cw, CreateWagon::getRemainingTime, c -> WagonRecipe.getAllRecipes().get(c.getWagonRecipeIndex()).getProductionTime()), GridBagConstraints.NORTHEAST);
+        //GuiUtility.listInPanel(createQueueNamePanel, upgrades, cw -> new JLabel(cw.toString()));
+        //GuiUtility.listInPanel(createQueueBarPanel, upgrades, cw -> GuiUtility.getProgressBar(cw, CreateWagon::getRemainingTime, c -> WagonRecipe.getAllRecipes().get(c.getWagonRecipeIndex()).getProductionTime()), GridBagConstraints.NORTHEAST);
+        GuiUtility.listProgressBar(createQueuePanel, upgrades, CreateWagon::getRemainingTime, c -> WagonRecipe.getAllRecipes().get(c.getWagonRecipeIndex()).getProductionTime());
     }
 }

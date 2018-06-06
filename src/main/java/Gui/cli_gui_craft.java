@@ -71,8 +71,9 @@ public class cli_gui_craft {
 
     public void updateOrderQueue() {
         ArrayList<Craft> crafts = Client.getInstance().getCrafts();
-        GuiUtility.listInPanel(orderQueueNamePanel, crafts, craft -> new JLabel(craft.toString()));
-        GuiUtility.listInPanel(orderQueueBarPanel, crafts, craft -> GuiUtility.getProgressBar(craft, Craft::getRemainingTime, c -> Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime()));
+        //GuiUtility.listInPanel(orderQueueNamePanel, crafts, craft -> new JLabel(craft.toString()));
+        //GuiUtility.listInPanel(orderQueueBarPanel, crafts, craft -> GuiUtility.getProgressBar(craft, Craft::getRemainingTime, c -> Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime()));
+        GuiUtility.listProgressBar(orderQueueBarPanel, crafts, Craft::getRemainingTime, c -> Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime());
     }
 
     public void updateAvailableCrafts(){
@@ -96,6 +97,12 @@ public class cli_gui_craft {
     public void update() {
         updateAvailableCrafts();
         updateRecipeDropdown();
+        updateCraftCost();
+        updateOrderQueue();
+    }
+
+    public void updateResources() {
+        updateAvailableCrafts();
         updateCraftCost();
         updateOrderQueue();
     }

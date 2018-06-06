@@ -33,12 +33,31 @@ public class GuiUtility {
         panel.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = anchor;
         for(T item : list) panel.add(lambda.toAdd(item), gbc);
         gbc.weighty = 1.0;
         gbc.weightx = 1.0;
         panel.add(Box.createVerticalGlue(), gbc);
         panel.revalidate();
+    }
+
+    /**
+     *
+     * @param panel panel where to add components
+     * @param list list of object to place in panel
+     * @param lambdaCurrent how to calculate the current value
+     * @param lambdaMax how to calculate the max value
+     * @param <T> type of object
+     */
+    public static <T> void listProgressBar(JPanel panel, ArrayList<T> list, ToProgressBar<T> lambdaCurrent, ToProgressBar<T> lambdaMax) {
+        listInPanel(panel, list, t -> {
+            JPanel p = new JPanel();
+            p.setLayout(new BorderLayout());
+            p.add(new JLabel(t.toString() + " "), BorderLayout.WEST);
+            p.add(GuiUtility.getProgressBar(t, lambdaCurrent, lambdaMax), BorderLayout.EAST);
+            return p;
+        }, GridBagConstraints.NORTHEAST);
     }
 
     /**
@@ -61,7 +80,7 @@ public class GuiUtility {
      * @param lambdaCurrent how to calculate the current value
      * @param lambdaMax how to calculate the max value
      * @param <T> type of object
-     * @return
+     * @return the progress bar
      */
     public static <T> JProgressBar getProgressBar(T t, ToProgressBar<T> lambdaCurrent, ToProgressBar<T> lambdaMax) {
         JProgressBar bar = new JProgressBar();

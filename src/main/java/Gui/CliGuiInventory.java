@@ -22,6 +22,10 @@ public class CliGuiInventory {
         updateObjectsList();
     }
 
+    public void updateResources() {
+        updateObjectsList();
+    }
+
     public void updateObjectsList() {
         GuiUtility.listInPanel(amountPanel, Client.getInstance().getResourceAmounts(), ra -> new JLabel(ra.getQuantity() + " x"),GridBagConstraints.NORTHEAST);
         GuiUtility.listInPanel(namePanel, Client.getInstance().getResourceAmounts(), ra -> new JLabel(Ressource.RessourceToString(ra.getRessource())));

@@ -83,6 +83,13 @@ public class cli_gui_Gare {
         updateStationList();
     }
 
+    public void updateResources(){
+        updateStationInfo();
+        updateEtaBar();
+        updateTrainsAtStation();
+        updateMines();
+    }
+
     public void updateStationInfo() {
         if(viewingStation == null) viewingStation = Client.getInstance().getTrain().getTrainStation();
         label_stationName.setText(viewingStation.toString());

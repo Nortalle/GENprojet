@@ -75,17 +75,14 @@ public class ClientForm {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public synchronized void run() {
-                update();
+                freqentUpdate();
             }
-        }, 0, 100);
+        }, 0, 500);
 
 
     }
 
     private void updateResources(){
-        //String answer = Client.getInstance().getResources();
-        //Resources resources = new Resources(answer);
-        //Resources resources = Client.getInstance().getResources();
         int resources[] = Ressource.getPlayerBaseResources(Client.getInstance().getResourceAmounts());
         scrum_i.setText(Integer.toString(resources[0]));
         eau_i.setText(Integer.toString(resources[1]));
@@ -108,13 +105,21 @@ public class ClientForm {
     }
 
     public void update() {
-        //Client.getInstance().getTrain();
         updateResources();
         cli_gui_gare.update();
         cli_gui_mine.update();
         cli_gui_craft.update();
         cliGuiInventory.update();
         cliGuiTrain.update();
+    }
+
+    public void freqentUpdate() {
+        updateResources();
+        cli_gui_gare.updateResources();
+        cli_gui_mine.updateResources();
+        cli_gui_craft.updateResources();
+        cliGuiInventory.updateResources();
+        cliGuiTrain.updateResources();
     }
 
 }
