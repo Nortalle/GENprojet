@@ -24,8 +24,9 @@ public class cli_gui_craft {
     private JPanel orderQueuePanel;
     private JPanel orderQueueNamePanel;
     private JPanel orderQueueBarPanel;
-
     private Recipe selectedRecipe;
+
+
 
     public cli_gui_craft() {
         update();

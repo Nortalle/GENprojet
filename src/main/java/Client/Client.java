@@ -15,6 +15,8 @@ import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 public class Client {
@@ -42,6 +44,35 @@ public class Client {
     private String adminCargo;
     private ResourceAmount adminResourceAmount;
 
+    //pour la maj locale du model
+    private Timer timer;
+
+    //TODO TEST DE MERDE
+    public Client(){
+
+        SyncClock.getInstance().addUpdater(new Updater() {
+            @Override
+            public void sync() {
+                updateAll();
+            }
+
+            @Override
+            public void localUpdate() {
+                ArrayList<Craft> toRemove = new ArrayList<>();
+
+                for(Craft c : crafts){
+                    c.decreaseRemainingTime();
+                    if(c.getRemainingTime() <= 0){
+                        toRemove.add(c);
+                    }
+                }
+
+                for(Craft c : toRemove){
+                    crafts.remove(c);
+                }
+            }
+        });
+    }
 
     public void updateAdminTrainStations() {
         writer.println(OTrainProtocol.GET_GARES);
@@ -347,7 +378,7 @@ public class Client {
         return trainStations;
     }
 
-    public void updateAll() {
+    public synchronized void updateAll() {
         updateTrain();
         updateResourceAmount();
         updateCrafts();

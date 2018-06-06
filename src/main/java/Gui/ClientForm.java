@@ -5,9 +5,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Client.*;
+import Game.Craft;
 import Utils.Ressource;
 
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Timer;
 import java.util.TimerTask;
 
 public class ClientForm {
@@ -47,17 +50,17 @@ public class ClientForm {
 
     public ClientForm() {
         Client.setClientLogComponent(logTextArea);
-        update();
+        sync();
 
         updateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                update();
+                sync();
             }
         });
         tabs.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                update();
+                sync();
             }
         });
         disconnectButton.addActionListener(new ActionListener() {
@@ -66,6 +69,16 @@ public class ClientForm {
                 Client.getInstance().disconnect();
             }
         });
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public synchronized void run() {
+                update();
+            }
+        }, 0, 100);
+
+
     }
 
     private void updateResources(){
@@ -88,9 +101,13 @@ public class ClientForm {
         return panel_main;
     }
 
+    public void sync(){
+        Client.getInstance().updateAll();
+        update();
+    }
+
     public void update() {
         //Client.getInstance().getTrain();
-        Client.getInstance().updateAll();
         updateResources();
         cli_gui_gare.update();
         cli_gui_mine.update();
@@ -98,4 +115,5 @@ public class ClientForm {
         cliGuiInventory.update();
         cliGuiTrain.update();
     }
+
 }
