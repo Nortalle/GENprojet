@@ -91,6 +91,10 @@ public class GuiUtility {
         return bar;
     }
 
+    /**
+     *
+     * @param textField field to reset background
+     */
     public static void addChangeListener(JTextField textField) {
         textField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -110,6 +114,11 @@ public class GuiUtility {
         });
     }
 
+    /**
+     *
+     * @param textField field to get input from
+     * @return the int value of the field
+     */
     public static int getValueFromTextField(JTextField textField) {
         int value;
         String text = textField.getText();
