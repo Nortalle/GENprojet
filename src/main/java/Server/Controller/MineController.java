@@ -25,22 +25,17 @@ public class MineController {
                 for(int i = 0; i < wagonMining.size(); ++i) {
                     WagonMining wm = wagonMining.get(i);
                     String username = db.getUsernameByWagonId(wm.getWagon().getId());
-                    //int ETM = ETMs.get(i);
-                    //ETMs.set(i, --ETM);
-                    //if(ETM == 0) {
-                        // TODO TEST IF TRAIN IS STILL AT STATION WHERE MINE IS
-                        //ETMs.set(i, WagonStats.getMiningTime(wm.getWagon()));
-                        int miningAmount = WagonStats.getMiningAmount(wm.getWagon());
-                        miningAmount = -db.canChangeMineAmount(wm.getCurrentMine().getId(), -miningAmount);
-                        miningAmount = db.canUpdatePlayerObjects(username, miningAmount);
-                        if(miningAmount != 0) {
-                            if(db.changeMineAmount(wm.getCurrentMine().getId(), -miningAmount)) {
-                                if(db.updatePlayerObjects(username, wm.getCurrentMine().getResource(), miningAmount)) {
-                                    // SUCCESS
-                                }
+                    // TODO TEST IF TRAIN IS STILL AT STATION WHERE MINE IS
+                    int miningAmount = WagonStats.getMiningAmount(wm.getWagon());
+                    miningAmount = -db.canChangeMineAmount(wm.getCurrentMine().getId(), -miningAmount);
+                    miningAmount = db.canUpdatePlayerObjects(username, miningAmount);
+                    if (miningAmount != 0) {
+                        if (db.changeMineAmount(wm.getCurrentMine().getId(), -miningAmount)) {
+                            if (db.updatePlayerObjects(username, wm.getCurrentMine().getResource(), miningAmount)) {
+                                // SUCCESS
                             }
                         }
-                    //}
+                    }
                 }
             }
         }, INTERVAL_MS, INTERVAL_MS);

@@ -1,5 +1,7 @@
 package Utils;
 
+import java.util.ArrayList;
+
 public class Ressource {
     /**
      * Enum qui représente les types des ressources du jeu. c'est l'ID unique qui représente une ressource dans la BDD
@@ -113,11 +115,27 @@ public class Ressource {
 
     /**
      *
-     * @return the basic resources of the game
+     * @return the basic resources id of the game
      */
-    public static int[] getBaseResources() {
+    public static int[] getBaseResourcesId() {
         int baseResources[] = {Type.SCRUM.ordinal(), Type.WATER.ordinal(), Type.WOOD_LOG.ordinal(), Type.CHARCOAL.ordinal(),
                                 Type.OIL.ordinal(), Type.IRON_ORE.ordinal(), Type.COPPER_ORE.ordinal(), Type.GOLD_ORE.ordinal()};
+        return baseResources;
+    }
+
+    public static int[] getPlayerBaseResources(ArrayList<ResourceAmount> playerResources) {
+        int baseResources[] = {0, 0, 0, 0, 0, 0, 0, 0};
+        int resourcesFound = 0;
+        for(ResourceAmount ra : playerResources) {
+            if(resourcesFound >= getBaseResourcesId().length) break;// for optimisation
+            for(int id : getBaseResourcesId()) {
+                if(id == ra.getRessource().ordinal()) {
+                    resourcesFound++;
+                    baseResources[id] = ra.getQuantity();
+                    break;
+                }
+            }
+        }
         return baseResources;
     }
 }

@@ -2,12 +2,8 @@ package Game;
 
 import Utils.JsonUtility;
 import Utils.Recipe;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
-import java.util.ArrayList;
 
 public class Craft {
     private String username;

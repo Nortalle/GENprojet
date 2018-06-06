@@ -3,9 +3,7 @@ package Gui;
 import javax.swing.*;
 
 import Client.*;
-import Game.Resources;
-import Game.WagonMining;
-import Utils.WagonStats;
+import Utils.Ressource;
 
 public class ClientForm {
     private JPanel panel_main;
@@ -40,9 +38,11 @@ public class ClientForm {
     private JTextArea logTextArea;
     private CliGuiInventory cliGuiInventory;
     private CliGuiTrain cliGuiTrain;
+    private JButton disconnectButton;
 
     public ClientForm() {
         Client.setClientLogComponent(logTextArea);
+        update();
 
         SyncClock.getInstance().addUpdater(new Updater() {
             @Override
@@ -55,53 +55,27 @@ public class ClientForm {
                 localUpdateRessources();
             }
         });
-
-        updateButton.addActionListener(e -> update());
-        tabs.addChangeListener(e -> {
-            update();
+        disconnectButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Client.getInstance().disconnect();
+            }
         });
     }
 
-    /**
-     * Calcule l'augmentetion en une seconde a partir du dernier taux d'incrémentation connu ne pas appeler plus d'une fois par seconde
-     */
-    private void localUpdateRessources(){
-
-
-        localRessources[0] += ressourceGainRate[0];
-        localRessources[1] += ressourceGainRate[1];
-        localRessources[2] += ressourceGainRate[2];
-        localRessources[3] += ressourceGainRate[3];
-        localRessources[4] += ressourceGainRate[4];
-        localRessources[5] += ressourceGainRate[5];
-        localRessources[6] += ressourceGainRate[6];
-        localRessources[7] += ressourceGainRate[7];
-
-        scrum_i.setText(Integer.toString(localRessources[0]));
-        eau_i.setText(Integer.toString(localRessources[1]));
-        bois_i.setText(Integer.toString(localRessources[2]));
-        coal_i.setText(Integer.toString(localRessources[3]));
-        oil_i.setText(Integer.toString(localRessources[4]));
-        iron_ore_i.setText(Integer.toString(localRessources[5]));
-        copper_ore_i.setText(Integer.toString(localRessources[6]));
-        gold_ore_i.setText(Integer.toString(localRessources[7]));
-    }
-
-    private void syncResources(){
-
-        // Ajouté pour updater les gain_rate
-        int j = 0;
-        for(int i : ressourceGainRate ){
-            ressourceGainRate[j++] = 0;
-        }
-        for( WagonMining wm : Client.getInstance().getWagonMining()) {
-            ressourceGainRate[wm.getCurrentMine().getResource()] += WagonStats.getMiningAmount(wm.getWagon());
-        }
-
-        // END Ajouté pour updater les gain_rate
-
-        String answer = Client.getInstance().getResources();
-        Resources resources = new Resources(answer);
+    private void updateResources(){
+        //String answer = Client.getInstance().getResources();
+        //Resources resources = new Resources(answer);
+        //Resources resources = Client.getInstance().getResources();
+        int resources[] = Ressource.getPlayerBaseResources(Client.getInstance().getResourceAmounts());
+        scrum_i.setText(Integer.toString(resources[0]));
+        eau_i.setText(Integer.toString(resources[1]));
+        bois_i.setText(Integer.toString(resources[2]));
+        coal_i.setText(Integer.toString(resources[3]));
+        oil_i.setText(Integer.toString(resources[4]));
+        iron_ore_i.setText(Integer.toString(resources[5]));
+        copper_ore_i.setText(Integer.toString(resources[6]));
+        gold_ore_i.setText(Integer.toString(resources[7]));
 
         localRessources[0] = resources.getScrum();
         localRessources[1] = resources.getEau();
@@ -127,8 +101,9 @@ public class ClientForm {
     }
 
     public void update() {
-        Client.getInstance().getTrainSync();
-        syncResources();
+        //Client.getInstance().getTrain();
+        Client.getInstance().updateAll();
+        updateResources();
         cli_gui_gare.update();
         cli_gui_mine.update();
         cli_gui_craft.update();

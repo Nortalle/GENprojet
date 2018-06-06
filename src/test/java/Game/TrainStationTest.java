@@ -44,8 +44,8 @@ public class TrainStationTest {
         stations.add(new TrainStation());
         stations.add(new TrainStation());
         stations.add(new TrainStation());
-        String json = JsonUtility.toJson(JsonUtility.listToJson(stations, station -> station.toJson()));
+        String json = JsonUtility.toJson(JsonUtility.listToJson(stations, TrainStation::toJson));
         System.out.println(stations.size());
-        assertEquals(stations.size(), JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(json), station -> new TrainStation(station)).size());
+        assertEquals(stations.size(), JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(json), TrainStation::new).size());
     }
 }

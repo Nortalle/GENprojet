@@ -32,6 +32,7 @@ public class TestConnection {
         String line = client.sendLogin(username, username);
         System.out.println("Server : " + line);
         assertEquals(OTrainProtocol.SUCCESS, line);
+        client.readLine();
     }
 
     @Test
@@ -42,6 +43,7 @@ public class TestConnection {
         assertEquals(OTrainProtocol.FAILURE, line);
         line = client.sendLogin(username, username);
         System.out.println("Server : " + line);
+        client.readLine();
     }
 
     @Test

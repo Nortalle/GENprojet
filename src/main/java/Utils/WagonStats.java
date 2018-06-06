@@ -2,6 +2,7 @@ package Utils;
 
 import Game.Mine;
 import Game.Train;
+import Game.TrainStation;
 import Game.Wagon;
 
 import java.util.ArrayList;
@@ -22,46 +23,37 @@ public class WagonStats {
     public static final int LEVEL_MAX = 20;// min is 1
 
     // --- LOCO --- //
-    //public static final int LOCO_ID = 1;
     public static final String LOCO_NAME = "Loco";
     public static final int LOCO_BASE_SPEED = 2;// units of distance / seconds
-    public static final int LOCO_SPEED[] = {4, 5, 7, 10, 15};// units of distance / seconds
 
     // --- DRILL WAGON --- //
-    //public static final int DRILL_ID = 2;
     public static final String DRILL_NAME = "Drill wagon";
+    public static final int DRILL_BASE_MINING_AMOUNT = 2;
+    public static final int DRILL_CAN_MINE[] = {CHARCOAL.ordinal(), IRON_ORE.ordinal(), COPPER_ORE.ordinal(), GOLD_ORE.ordinal()};
+
     // --- SAW WAGON --- //
-    //public static final int SAW_ID = 3;
     public static final String SAW_NAME = "Saw wagon";
+    public static final int SAW_BASE_MINING_AMOUNT = 4;
+    public static final int SAW_CAN_MINE[] = {WOOD_LOG.ordinal()};
+
     // --- PUMP WAGON --- //
-    //public static final int PUMP_ID = 4;
     public static final String PUMP_NAME = "Pump wagon";
-    // -- mining levels -- //
-    // resources per seconds // TODO
-    public static final int DRILL_BASE_MINING_TIME = 2;// DRILL
-    public static final int SAW_BASE_MINING_TIME = 4;// SAW
-    public static final int PUMP_BASE_MINING_TIME = 1;// PUMP
-    public static final int MINING_TIME[][] = {{10,9,8,7,6}, {5,4,3,2,1}, {20,19,18,17,16}};// DRILL; SAW; PUMP
-    // -- what can mine what -- //
-    public static final int CAN_MINE[][] = {{CHARCOAL.ordinal(), IRON_ORE.ordinal(), COPPER_ORE.ordinal(), STEEL_INGOT.ordinal(), GOLD_ORE.ordinal()},
-            {WOOD_LOG.ordinal()},
-            {WATER.ordinal(), OIL.ordinal()}};
+    public static final int PUMP_CAN_MINE[] = {WATER.ordinal(), OIL.ordinal()};
+    public static final int PUMP_BASE_MINING_AMOUNT = 1;
 
     // --- CARGO WAGON --- //
-    //public static final int CARGO_ID = 5;
     public static final String CARGO_NAME = "Cargo wagon";
     public static final int BASE_CARGO_CAPACITY = 500;
-    public static final int CARGO_CAPACITY[] = {100, 200, 400, 600, 1000};
 
     // --- CRAFT WAGON --- //
-    //public static final int CRAFT_ID = 6;
     public static final String CRAFT_NAME = "Craft wagon";
     public static final int BASE_CRAFT_PARALLEL = 1;
-    public static final int CRAFT_PARALLEL[] = {1, 2, 3, 4, 5};
 
 
-
-
+    /**
+     * @param t type of wagon
+     * @return name of wagon
+     */
     public static String getName(WagonType t) {
         switch (t) {
             case LOCO: return LOCO_NAME;
@@ -70,10 +62,14 @@ public class WagonStats {
             case PUMP: return PUMP_NAME;
             case CARGO: return CARGO_NAME;
             case CRAFT: return CRAFT_NAME;
+            default: return "unknown";
         }
-        return "unknown";
     }
 
+    /**
+     * @param train train
+     * @return the train speed (min 1)
+     */
     public static int getLocoSpeed(Train train) {
         Wagon loco = null;
         for(Wagon w : train.getWagons()) {
@@ -84,55 +80,97 @@ public class WagonStats {
         }
         if(loco == null) return 1;// if no loco, not zero because distance/speed
 
-        return linearValuePerLevel(loco.getLevel(), LOCO_BASE_SPEED);
+        return getLocoSpeed(loco);
     }
 
+    /**
+     * @param loco loco
+     * @return the speed of the loco (min 1)
+     */
     public static int getLocoSpeed(Wagon loco) {
         if(loco.getType() != WagonType.LOCO) return 1;// if not a loco, not zero because distance/speed
         return linearValuePerLevel(loco.getLevel(), LOCO_BASE_SPEED);
     }
 
+    /**
+     * @param ts1 station 1
+     * @param ts2 station 2
+     * @return the distance between the two station
+     */
+    public static int calculateTravelDistance(TrainStation ts1, TrainStation ts2) {
+        return Math.abs(ts2.getPosX() - ts1.getPosX()) + Math.abs(ts2.getPosY() - ts1.getPosY());
+    }
+
+    /**
+     * @param loco the loco
+     * @param ts1 station 1
+     * @param ts2 station 2
+     * @return the ETA to get to station 2 from station 1
+     */
+    public static int calculateTravelETA(Wagon loco, TrainStation ts1, TrainStation ts2) {
+        if(loco.getType() != WagonType.LOCO) return 1;// error
+        return Math.max(1, calculateTravelDistance(ts1, ts2) / WagonStats.getLocoSpeed(loco));
+    }
+
+    /**
+     * @param wagon mining wagon
+     * @return how much the wagon mine every seconds
+     */
     public static int getMiningAmount(Wagon wagon) {
         switch(wagon.getType()) {
             case DRILL:
-                return linearValuePerLevel(wagon.getLevel(), DRILL_BASE_MINING_TIME);
+                return linearValuePerLevel(wagon.getLevel(), DRILL_BASE_MINING_AMOUNT);
             case SAW:
-                return linearValuePerLevel(wagon.getLevel(), SAW_BASE_MINING_TIME);
+                return linearValuePerLevel(wagon.getLevel(), SAW_BASE_MINING_AMOUNT);
             case PUMP:
-                return linearValuePerLevel(wagon.getLevel(), PUMP_BASE_MINING_TIME);
+                return linearValuePerLevel(wagon.getLevel(), PUMP_BASE_MINING_AMOUNT);
             default:
                 return 0;// ERROR
         }
     }
 
-    public static int getMiningTime(Wagon wagon) {
+    /**
+     * @param wagon mining wagon
+     * @return what can be mine by the wagon
+     */
+    public static int[] getWhatCanBeMine(Wagon wagon) {
         switch(wagon.getType()) {
             case DRILL:
-                return linearReductionValuePerLevel(wagon.getLevel() / 2, DRILL_BASE_MINING_TIME);
+                return DRILL_CAN_MINE;
             case SAW:
-                return linearReductionValuePerLevel(wagon.getLevel() / 4, SAW_BASE_MINING_TIME);
+                return SAW_CAN_MINE;
             case PUMP:
-                return linearReductionValuePerLevel(wagon.getLevel(), PUMP_BASE_MINING_TIME);
+                return PUMP_CAN_MINE;
             default:
-                return 1;// ERROR
+                int[] empty = {};
+                return empty;// ERROR
         }
-
-        //return MINING_TIME[wagon.getType().ordinal() - 1][wagon.getLevel() - 1];
     }
 
+    /**
+     * @param wagon mining wagon
+     * @param mine mine
+     * @return if the wagon can mine the mine
+     */
     public static boolean canMine(Wagon wagon, Mine mine) {// need tests
-        for(int i : CAN_MINE[wagon.getType().ordinal() - 1]) {
-            if(i == mine.getResource()) return true;
-        }
+        for(int i : getWhatCanBeMine(wagon)) if(i == mine.getResource()) return true;
         return false;
     }
 
+    /**
+     * @param train train
+     * @return max cargo capacity of the train
+     */
     public static int getMaxCapacity(Train train) {
         int capacity = 0;
         for(Wagon w : train.getWagons()) if(w.getType() == WagonType.CARGO) capacity += linearValuePerLevel(w.getLevel(), BASE_CARGO_CAPACITY);//CARGO_CAPACITY[w.getLevel() - 1];
         return capacity;
     }
 
+    /**
+     * @param train train
+     * @return max crafts the train can do at the same time
+     */
     public static int getMaxParallelCraft(Train train) {
         int parallelCraft = 0;
         for(Wagon w : train.getWagons()) if(w.getType() == WagonType.CRAFT) parallelCraft += linearValuePerLevel(w.getLevel(), BASE_CRAFT_PARALLEL);//CRAFT_PARALLEL[w.getLevel() - 1];
@@ -173,43 +211,53 @@ public class WagonStats {
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 8)));
                 ra.add(new ResourceAmount(Ressource.Type.WOOD_LOG, costPerLevel(w.getLevel(), 3)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_GEAR, costPerLevel(w.getLevel(), 15)));
-                //ra.add(new ResourceAmount(Ressource.Type.SAW_T1_RCPT, costPerLevel(w.getLevel(), 4)));
+                ra.add(new ResourceAmount(Ressource.Type.SAW_T1, costPerLevel(w.getLevel(), 4)));
                 break;
             case PUMP:
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 9)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_TUBE, costPerLevel(w.getLevel(), 16)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_GEAR, costPerLevel(w.getLevel(), 4)));
-                //ra.add(new ResourceAmount(Ressource.Type.PUMP_T1_RCPT, costPerLevel(w.getLevel(), 4)));
+                ra.add(new ResourceAmount(Ressource.Type.PUMP_T1, costPerLevel(w.getLevel(), 4)));
                 break;
             case CARGO:
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 20)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_TUBE, costPerLevel(w.getLevel(), 2)));
-                //ra.add(new ResourceAmount(Ressource.Type.CRATE, costPerLevel(w.getLevel(), 4)));
+                ra.add(new ResourceAmount(Ressource.Type.WOODEN_CRATE, costPerLevel(w.getLevel(), 4)));
                 break;
             case CRAFT:
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 18)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_TUBE, costPerLevel(w.getLevel(), 10)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_GEAR, costPerLevel(w.getLevel(), 24)));
-                //ra.add(new ResourceAmount(Ressource.Type.ROBOTIC_ARM, costPerLevel(w.getLevel(), 2)));
-                //ra.add(new ResourceAmount(Ressource.Type.PROCESSOR, costPerLevel(w.getLevel(), 1)));
+                ra.add(new ResourceAmount(Ressource.Type.ROBOTIC_ARM_T1, costPerLevel(w.getLevel(), 2)));
+                ra.add(new ResourceAmount(Ressource.Type.PROCESSOR_T1, costPerLevel(w.getLevel(), 1)));
                 break;
         }
 
         return ra;
     }
 
+    /**
+     * @param level level of wagon
+     * @param baseCost initial cost
+     * @return actual cost
+     */
     private static int costPerLevel(int level, int baseCost){
         return (int)(Math.pow(2, level-1) * baseCost);
     }
 
+    /**
+     * @param level level of wagon
+     * @param baseValue initial value
+     * @return actual value
+     */
     private static int linearValuePerLevel(int level, int baseValue) {
         return level * baseValue;
     }
 
-    private static int linearReductionValuePerLevel(int level, int baseValue) {
-        return Math.max(baseValue - level, 1);
-    }
-
+    /**
+     * @param level level of wagon
+     * @return time it takes to upgrade
+     */
     public static int getUpgradeTime(int level) {
         return costPerLevel(level, 5);// TODO
     }

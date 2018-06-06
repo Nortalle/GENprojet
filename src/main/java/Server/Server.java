@@ -14,12 +14,16 @@ public class Server {
     private LinkedList<ClientHandler> clientHandlers;
     private boolean running;
     private DataBase dataBase;
+    private static String dataBaseUrl;
     private Travel travelController;
     private MineRegeneration regenerationController;
     private MineController mineController;
     private CraftController craftController;
     private UpgradeController upgradeController;
     private CreateController createController;
+    private ReserveCargoController reserveCargoController;
+    public static final String ADMINS_USERNAME[] = {"admin"};
+    public static final String ADMINS_PASSWORD[] = {"admin"};
 
     private Server(){}
 
@@ -29,7 +33,9 @@ public class Server {
     }
 
     public void init() {
-        dataBase = new DataBase();
+        if(dataBaseUrl == null) dataBase = new DataBase();
+        else dataBase = new DataBase(dataBaseUrl);
+        for(int i = 0; i < ADMINS_USERNAME.length; i++) dataBase.insertAdmin(ADMINS_USERNAME[i], ADMINS_PASSWORD[i]);
         dataBase.insertTrainStation(0, 0, 100, 100);// make sure the starting station exist
         travelController = new Travel();
         regenerationController = new MineRegeneration();
@@ -37,6 +43,7 @@ public class Server {
         craftController = new CraftController();
         upgradeController = new UpgradeController();
         createController = new CreateController();
+        reserveCargoController = new ReserveCargoController();
     }
 
     public void startServer() {
@@ -93,6 +100,10 @@ public class Server {
         return createController;
     }
 
+    public ReserveCargoController getReserveCargoController() {
+        return reserveCargoController;
+    }
+
     public DataBase getDataBase() {
         return dataBase;
     }
@@ -102,6 +113,7 @@ public class Server {
     }
 
     public static void main(String ... args) {
+        if(args.length > 0) dataBaseUrl = args[0];
         Server.getInstance().startServer();
     }
 }

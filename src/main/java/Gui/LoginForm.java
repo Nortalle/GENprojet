@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 public class LoginForm {
     private JPasswordField input_password;
@@ -16,11 +18,13 @@ public class LoginForm {
     private JPanel panel_main;
     private JPanel panel_buttons;
     private JLabel label_info;
+    private JTextField ipTextField;
 
     private Client client;
 
     public LoginForm() {
         client = Client.getInstance();
+        ipTextField.setText(client.getIpAddress());
         //client.connectServer();
 
         button_sign_up.addActionListener(new ActionListener() {
@@ -49,15 +53,32 @@ public class LoginForm {
                     label_info.setForeground(Color.GREEN);
                     label_info.setText("You are logged");
                     //
-                    client.setFrameContent(new ClientForm().getPanel_main(), new Dimension(900, 600));
-                }
-                else if(answer.equals(OTrainProtocol.FAILURE)) {
+                    answer = client.readLine();
+                    if(answer.equals(OTrainProtocol.PLAYER)) {
+                        client.setFrameContent(new ClientForm().getPanel_main(), new Dimension(900, 600));
+                    } else if(answer.equals(OTrainProtocol.ADMIN)) {
+                        // TODO
+                        client.setFrameContent(new AdminGuiMain().getMainPanel(), new Dimension(900, 600));
+                    }
+                } else if(answer.equals(OTrainProtocol.FAILURE)) {
                     label_info.setForeground(Color.RED);
                     label_info.setText("Wrong username/password");
-                }
-                else {
+                } else {
                     label_info.setForeground(Color.RED);
                     label_info.setText("ERROR");
+                }
+            }
+        });
+
+        ipTextField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {}
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if(!client.setIpAddress(ipTextField.getText())) {
+                    label_info.setForeground(Color.RED);
+                    label_info.setText("CANNOT CONNECT TO SERVER");
                 }
             }
         });

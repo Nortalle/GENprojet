@@ -31,35 +31,85 @@ ClientHandler implements Runnable {
     }
 
     public void run() {
-        try {
-            waitForAuthentication();
+        waitForAuthentication();
+        boolean isAdmin = false;
+        for(String adminName : Server.ADMINS_USERNAME) {
+            if(username.equals(adminName)) {
+                isAdmin = true;
+                break;
+            }
+        }
 
+        if(isAdmin) {
+            writer.println(OTrainProtocol.ADMIN);
+            writer.flush();
+            handleAdmin();
+        } else {
+            writer.println(OTrainProtocol.PLAYER);
+            writer.flush();
+            handleClient();
+        }
+    }
+
+    private String readLine() throws IOException {
+        String line = reader.readLine();
+        LOG.info("Client (" + username + ") : " + line);
+        return line;
+    }
+
+    private void waitForAuthentication() {
+        try {
+            boolean logged = false;
+            boolean signedUp;
+            while(!logged) {
+                String request = readLine();
+                // wait to get connection or sign up request
+                while(!request.equals(OTrainProtocol.CONNECT) && !request.equals(OTrainProtocol.SIGN_UP)) request = readLine();
+                // get username and password
+                username = readLine();
+                String password = readLine();
+
+                if(request.equals(OTrainProtocol.CONNECT)) {
+                    // check if input are correct for login
+                    logged = db.checkLogin(username, password);
+                    writer.println(logged ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
+                    writer.flush();
+
+                } else if(request.equals(OTrainProtocol.SIGN_UP)) {
+                    // check if input are correct for sign up
+                    if(username == null || password == null || username.equals("")) signedUp = false;
+                    else signedUp = db.insertPlayer(username, password);
+                    writer.println(signedUp ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
+                    writer.flush();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Server.getInstance().removeHandler(this);
+        }
+    }
+
+    private void handleClient() {
+        try {
             String line = readLine();
             while (running && line != null) {
                 //work...
 
-                if(line.equals(OTrainProtocol.GET_RESSOURCES)) {
-                    //int r[] = db.getPlayerResources(username);
-                    int r[] = db.getPlayerResourcesViaObjects(username);// temp solution
-                    Resources resources = new Resources(r);
-                    writer.println(resources.toJson());
-                    writer.flush();
-                } else if(line.equals(OTrainProtocol.GET_TRAIN_STATUS)) {
+                if(line.equals(OTrainProtocol.GET_TRAIN_STATUS)) {
                     writer.println(db.getTrain(username).toJson());
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_OBJECTS)) {
-                    writer.println(JsonUtility.listToJson(db.getPlayerObjects(username), ra -> ra.toJson()));
+                    writer.println(JsonUtility.listToJson(db.getPlayerObjects(username), ResourceAmount::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_TRAINS_AT)) {
                     int stationId = Integer.valueOf(readLine());
-                    writer.println(JsonUtility.listToJson(db.getAllTrainsAtStation(stationId), train -> train.toJson()));
+                    writer.println(JsonUtility.listToJson(db.getAllTrainsAtStation(stationId), Train::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.MINE_INFO)) {
-                    writer.println(JsonUtility.listToJson(Server.getInstance().getMineController().getPlayerWagonMining(username), wm -> wm.toJson()));
+                    writer.println(JsonUtility.listToJson(Server.getInstance().getMineController().getPlayerWagonMining(username), WagonMining::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_GARES)) {
-                    ArrayList<TrainStation> trainStations = db.getAllTrainStations();
-                    writer.println(JsonUtility.listToJson(trainStations, station -> station.toJson()));
+                    writer.println(JsonUtility.listToJson(db.getAllTrainStations(), TrainStation::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
                     String newTsLine = readLine();
@@ -95,7 +145,7 @@ ClientHandler implements Runnable {
                     }
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_PROD_QUEUE)) {
-                    writer.println(JsonUtility.listToJson(Server.getInstance().getCraftController().getPlayerCrafts(username), craft -> craft.toJson()));
+                    writer.println(JsonUtility.listToJson(Server.getInstance().getCraftController().getPlayerCrafts(username), Craft::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.UPGRADE)) {
                     String wagonLine = readLine();
@@ -106,7 +156,7 @@ ClientHandler implements Runnable {
                     }
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_UPGRADE_QUEUE)) {
-                    writer.println(JsonUtility.listToJson(Server.getInstance().getUpgradeController().getPlayerUpgrades(username), uw -> uw.toJson()));
+                    writer.println(JsonUtility.listToJson(Server.getInstance().getUpgradeController().getPlayerUpgrades(username), UpgradeWagon::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.CREATION)) {
                     String wagonRecipeLine = readLine();
@@ -117,7 +167,7 @@ ClientHandler implements Runnable {
                     }
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_CREATION_QUEUE)) {
-                    writer.println(JsonUtility.listToJson(Server.getInstance().getCreateController().getPlayerCreateWagons(username), cw -> cw.toJson()));
+                    writer.println(JsonUtility.listToJson(Server.getInstance().getCreateController().getPlayerCreateWagons(username), CreateWagon::toJson));
                     writer.flush();
                 }
 
@@ -125,43 +175,29 @@ ClientHandler implements Runnable {
             }
         } catch (IOException e) {
             e.printStackTrace();
-
             Server.getInstance().removeHandler(this);
         }
     }
 
-    private String readLine() throws IOException {
-        String line = reader.readLine();
-        LOG.info("Client (" + username + ") : " + line);
-        return line;
-    }
-
-    private void waitForAuthentication() {
+    private void handleAdmin() {
         try {
-            boolean logged = false;
-            boolean signedUp;
-            while(!logged) {
-                String request = readLine();
-                while(!request.equals(OTrainProtocol.CONNECT) && !request.equals(OTrainProtocol.SIGN_UP)) request = readLine();
-                username = readLine();
-                String password = readLine();
-                if(request.equals(OTrainProtocol.CONNECT)) {
-                    logged = db.checkLogin(username, password);
-                    writer.println(logged ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
+            String line = readLine();
+            while (running && line != null) {
+                //work...
+
+                if(line.equals(OTrainProtocol.SUCCESS)) {
+                    writer.println("if");
                     writer.flush();
-                } else if(request.equals(OTrainProtocol.SIGN_UP)) {
-                    if(username == null || password == null || username.equals("")) {
-                        signedUp = false;
-                    } else {
-                        signedUp = db.insertPlayer(username, password);
-                    }
-                    writer.println(signedUp ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
+                } else if(line.equals(OTrainProtocol.FAILURE)) {
+                    writer.println("else if");
                     writer.flush();
                 }
+
+                line = readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
+            Server.getInstance().removeHandler(this);
         }
-
     }
 }

@@ -55,7 +55,7 @@ public class Train {
 
     public JsonObject toJson() {
         JsonObject train = new JsonObject();
-        train.add("wagons", JsonUtility.listToJson(wagons, wagon -> wagon.toJson()));
+        train.add("wagons", JsonUtility.listToJson(wagons, Wagon::toJson));
         train.add("trainStation", trainStation.toJson());
         train.add("trainStationETA", new JsonPrimitive(trainStationETA));
         train.add("trainStationTotalETA", new JsonPrimitive(trainStationTotalETA));
@@ -64,7 +64,7 @@ public class Train {
     }
 
     public void fromJson(JsonObject from) {
-        wagons = JsonUtility.listFromJson((JsonArray) from.get("wagons"), wagon -> new Wagon(wagon));
+        wagons = JsonUtility.listFromJson((JsonArray) from.get("wagons"), Wagon::new);
         if(trainStation == null) trainStation = new TrainStation();// to change
         trainStation.fromJson((JsonObject) from.get("trainStation"));
         trainStationETA = from.get("trainStationETA").getAsInt();

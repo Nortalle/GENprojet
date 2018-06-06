@@ -32,8 +32,9 @@ public class CraftController {
                             // insert in DB
                             ResourceAmount finalProduct = Recipe.getAllRecipes().get(c.getRecipeIndex()).getFinalProduct();
                             int finalAmount = finalProduct.getQuantity();
-                            finalAmount = db.canUpdatePlayerObjects(c.getUsername(), finalAmount);
+                            finalAmount = db.canUpdatePlayerObjectsOnReservedCargo(c.getUsername(), finalAmount, finalAmount);
                             db.updatePlayerObjects(c.getUsername(), finalProduct.getRessource().ordinal(), finalAmount);
+                            Server.getInstance().getReserveCargoController().removeReservedCargo(c.getUsername(), finalProduct.getQuantity());
                             toRemove.add(c);
                         }
                     }
@@ -59,8 +60,9 @@ public class CraftController {
             if(playerObject == null) return false;
             if(playerObject.getQuantity() < ra.getQuantity()) return false;
         }
-
+        Server.getInstance().getReserveCargoController().addReservedCargo(username, recipe.getFinalProduct().getQuantity());
         for(ResourceAmount ra : recipe.getCost()) Server.getInstance().getDataBase().updatePlayerObjects(username, ra.getRessource().ordinal(), -ra.getQuantity());
+
         addCraft(new Craft(username, recipeIndex, Recipe.getAllRecipes().get(recipeIndex).getProductionTime()));
         return true;
     }

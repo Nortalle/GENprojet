@@ -4,6 +4,7 @@ import Client.Client;
 import Game.Mine;
 import Game.Train;
 import Game.TrainStation;
+import Utils.GuiUtility;
 import Utils.OTrainProtocol;
 
 import javax.swing.*;
@@ -43,6 +44,7 @@ public class cli_gui_Gare {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
                 String line = Client.getInstance().changeStation(viewingStation.getId());
+                Client.getInstance().updateAll();// MANUAL UPDATE
                 if(line.equals(OTrainProtocol.SUCCESS)) update();
 
             }
@@ -51,22 +53,23 @@ public class cli_gui_Gare {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
                 viewingStationIndex = select_station.getSelectedIndex();
+                Client.getInstance().updateAll();// MANUAL UPDATE
                 update();
             }
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                viewingStation = Client.getInstance().getTrainSync().getTrainStation();
+                viewingStation = Client.getInstance().getTrain().getTrainStation();
+                Client.getInstance().updateAll();// MANUAL UPDATE
                 update();
             }
         });
         select_station.addPopupMenuListener(new PopupMenuListener() {
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                //select_station.removeAllItems();
-                //for(TrainStation ts : Client.getInstance().getStations()) select_station.addItem(ts);
-            }
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
 
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                // maybe update so we can remove view button
+            }
 
             public void popupMenuCanceled(PopupMenuEvent e) {}
         });
@@ -97,24 +100,19 @@ public class cli_gui_Gare {
     }
 
     public void updateTrainsAtStation() {
-        if(viewingStation != null) {
-            panel_liste_joueurs.removeAll();
-            panel_liste_joueurs.setLayout(new GridLayout(0, 1));
-            for(Train t : Client.getInstance().getTrainsAtStation(viewingStation.getId())) panel_liste_joueurs.add(new JLabel(t.toString()));
-        }
+        if (viewingStation == null) return;
+        Client.getInstance().updateTrainsAtStation(viewingStation.getId());
+        GuiUtility.listInPanel(panel_liste_joueurs, Client.getInstance().getTrainsAtStation(viewingStation.getId()), train -> new JLabel(train.toString()));
     }
 
     public void updateMines() {
-        if(viewingStation != null) {
-            panel_liste_mines.removeAll();
-            panel_liste_mines.setLayout(new GridLayout(0, 1));
-            for(Mine m : viewingStation.getMines()) panel_liste_mines.add(new JLabel(m.toString()));
-        }
+        if (viewingStation == null) return;
+        GuiUtility.listInPanel(panel_liste_mines, viewingStation.getMines(), mine -> new JLabel(mine.toString()));
     }
 
     public void updateStationList() {
         select_station.removeAllItems();
-        for(TrainStation ts : Client.getInstance().getStations()) select_station.addItem(ts);
-        if(select_station != null) select_station.setSelectedIndex(viewingStationIndex);
+        for(TrainStation ts : Client.getInstance().getTrainStations()) select_station.addItem(ts);
+        if(select_station != null && select_station.getItemCount() > 0) select_station.setSelectedIndex(viewingStationIndex);
     }
 }

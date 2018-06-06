@@ -5,6 +5,7 @@ import Game.Mine;
 import Game.Train;
 import Game.Wagon;
 import Game.WagonMining;
+import Utils.GuiUtility;
 import Utils.OTrainProtocol;
 import Utils.WagonStats;
 
@@ -39,18 +40,16 @@ public class cli_gui_Mine {
                 Wagon wagon = (Wagon) select_wagon.getSelectedItem();
 
                 String line = Client.getInstance().startMining(wagon.getId(), mine.getId());
-                if(line.equals(OTrainProtocol.SUCCESS)) {
-                    update();
-                }
+                Client.getInstance().updateWagonMining();// MANUAL UPDATE
+                if(line.equals(OTrainProtocol.SUCCESS)) update();
             }
         });
         stopMiningButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String line = Client.getInstance().stopMining(((Wagon) select_wagon.getSelectedItem()).getId());
-                if(line.equals(OTrainProtocol.SUCCESS)) {
-                    update();
-                }
+                Client.getInstance().updateWagonMining();// MANUAL UPDATE
+                if(line.equals(OTrainProtocol.SUCCESS)) update();
             }
         });
         select_mine.addPopupMenuListener(new PopupMenuListener() {
@@ -87,20 +86,11 @@ public class cli_gui_Mine {
     }
 
     public void updateMinesPanel() {
-        availableMinesPanel.setLayout(new GridLayout(0,1));
-        availableMinesPanel.removeAll();
-        for(Mine m : train.getTrainStation().getMines()) {
-            availableMinesPanel.add(new JLabel(m.toString()));
-        }
+        GuiUtility.listInPanel(availableMinesPanel, train.getTrainStation().getMines(), mine -> new JLabel(mine.toString()));
     }
 
     public void updateCurrentlyMiningWagons() {
-        currently_mining_panel.setLayout(new GridLayout(0,1));
-        currently_mining_panel.removeAll();
-        for( WagonMining wm : Client.getInstance().getWagonMining()) {
-            JLabel label = new JLabel(wm.getWagon() + " -> " + wm.getCurrentMine());
-            currently_mining_panel.add(label);
-        }
+        GuiUtility.listInPanel(currently_mining_panel, Client.getInstance().getWagonMining(), wm -> new JLabel(wm.getWagon() + " -> " + wm.getCurrentMine()));
     }
 
     public void updateMinesList() {
@@ -108,13 +98,13 @@ public class cli_gui_Mine {
         for(Mine m : train.getTrainStation().getMines()) {
             select_mine.addItem(m);
         }
-        select_mine.setSelectedIndex(mineIndex);
+        if(select_mine.getItemCount() > 0) select_mine.setSelectedIndex(mineIndex);
     }
 
     public void updateWagonsList() {
         ArrayList<Wagon> canMineWagons = new ArrayList<>();
         for(Wagon w : train.getWagons()){
-            if(w.getType() == WagonStats.WagonType.DRILL || w.getType() == WagonStats.WagonType.SAW || w.getType() == WagonStats.WagonType.PUMP){
+            if(WagonStats.getWhatCanBeMine(w).length > 0){
                 canMineWagons.add(w);
             }
         }
@@ -122,6 +112,6 @@ public class cli_gui_Mine {
         for(Wagon w : canMineWagons){
             select_wagon.addItem(w);
         }
-        select_wagon.setSelectedIndex(wagonIndex);
+        if(select_wagon.getItemCount() > 0) select_wagon.setSelectedIndex(wagonIndex);
     }
 }
