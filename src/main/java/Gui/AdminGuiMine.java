@@ -111,6 +111,7 @@ public class AdminGuiMine {
         gare_select.removeAllItems();
         for(TrainStation station : Client.getInstance().getAdminTrainStations()) gare_select.addItem(station);
         if(selectedStation == null) selectedStation = (TrainStation) gare_select.getSelectedItem();
+        if(selectedStation != null) gare_select.setSelectedItem(selectedStation);
     }
 
     public void updateMineList() {
@@ -118,11 +119,16 @@ public class AdminGuiMine {
         if(selectedStation == null) return;
         mine_select.addItem("NEW MINE");
         for(Mine mine : selectedStation.getMines()) mine_select.addItem(mine);
+        if(selectedMine != null) mine_select.setSelectedItem(selectedMine);
     }
 
     public void updateTextFields() {
         resource_select.removeAllItems();
-        for(int id : Ressource.getBaseResourcesId()) resource_select.addItem(Ressource.Type.values()[id]);
+        for(int id : Ressource.getBaseResourcesId()) {
+            if(id != Ressource.Type.SCRUM.ordinal()) {
+                resource_select.addItem(Ressource.Type.values()[id]);
+            }
+        }
         if(selectedMine == null) {
             max_ressource.setText("");
             regen_rate.setText("");
