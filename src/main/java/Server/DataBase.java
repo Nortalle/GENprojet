@@ -925,24 +925,26 @@ public class DataBase {
 
     /**
      * @param emplacement station where the mine will be added
-     * @param qteResources quantity of ressources of the mine
+     * @param qteResources quantity of resources of the mine
      * @param type type of the mine
      * @return true if the mine has been added, else false
      */
-    public int addMine(int emplacement, int qteResources, int type){
+    public int addMine(int emplacement, int qteResources, int max, int regen, int type){
         int result = -1;
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Mine VALUES(default,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Mine VALUES(default,?,?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, type);
             ps.setObject(2, qteResources);
-            ps.setObject(3, emplacement);
+            ps.setObject(3, max);
+            ps.setObject(4, regen);
+            ps.setObject(5, emplacement);
             int status = ps.executeUpdate();
             if(status != 0){
                 ResultSet resultSet = ps.getGeneratedKeys();
                 resultSet.next();
                 result = resultSet.getInt(1);
                 // need tests
-                Server.getInstance().getRegenerationController().addMine(new Mine(resultSet.getInt(1), type, qteResources, emplacement));
+                Server.getInstance().getRegenerationController().addMine(new Mine(resultSet.getInt(1), type, qteResources, max, regen, emplacement));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -958,16 +960,18 @@ public class DataBase {
     public ArrayList<Mine> getAllMinesOfStation(int trainStation){
         ArrayList<Mine> result = new ArrayList<>();
         try {
-            ResultSet resultSet;
+            ResultSet resultSet;// TODO
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Mine WHERE `emplacement` = " + trainStation + ";", Statement.RETURN_GENERATED_KEYS);
             resultSet = ps.executeQuery();
             while(resultSet.next()) {
                 int id = resultSet.getInt("id");
                 int type = resultSet.getInt("type");
                 int qteRessources = resultSet.getInt("qteRessources");
+                int max = resultSet.getInt("max");
+                int regen = resultSet.getInt("regen");
                 int emplacement = resultSet.getInt("emplacement");
 
-                Mine mine = new Mine(id, type, qteRessources, emplacement);
+                Mine mine = new Mine(id, type, qteRessources, max, regen, emplacement);
                 result.add(mine);
 
             }
@@ -991,9 +995,11 @@ public class DataBase {
                 int id = resultSet.getInt("id");
                 int type = resultSet.getInt("type");
                 int qteRessources = resultSet.getInt("qteRessources");
+                int max = resultSet.getInt("max");
+                int regen = resultSet.getInt("regen");
                 int emplacement = resultSet.getInt("emplacement");
 
-                Mine mine = new Mine(id, type, qteRessources, emplacement);
+                Mine mine = new Mine(id, type, qteRessources, max, regen, emplacement);
                 result.add(mine);
 
             }
@@ -1018,9 +1024,11 @@ public class DataBase {
                 int idMine = resultSet.getInt("id");
                 int type = resultSet.getInt("type");
                 int qteRessources = resultSet.getInt("qteRessources");
+                int max = resultSet.getInt("max");
+                int regen = resultSet.getInt("regen");
                 int emplacement = resultSet.getInt("emplacement");
 
-                mine = new Mine(idMine, type, qteRessources, emplacement);
+                mine = new Mine(idMine, type, qteRessources, max, regen, emplacement);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1034,14 +1042,16 @@ public class DataBase {
      * @param amount new amount
      * @param place new station DataBase id
      */
-    public boolean updateMine(int id, int resource, int amount, int place){
+    public boolean updateMine(int id, int resource, int amount, int max, int regen, int place){
 
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET type=?, qteRessources=?, emplacement=? WHERE id=?", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET type=?, qteRessources=?, max=?, regen=?, emplacement=? WHERE id=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, resource);
             ps.setObject(2, amount);
-            ps.setObject(3, place);
-            ps.setObject(4, id);
+            ps.setObject(3, max);
+            ps.setObject(4, regen);
+            ps.setObject(5, place);
+            ps.setObject(6, id);
             int status = ps.executeUpdate();
             if(status != 0){
                 return true;
@@ -1079,10 +1089,10 @@ public class DataBase {
     public int canChangeMineAmount(int id, int changeAmount) {
         int maxChange = changeAmount;
 
-        int MAX = 1000;// int MAX = getMine(id).getMax(); lorsqu'il y aura le MAX dans la database
-        int MIN = 0;
         Mine mine = getMine(id);
         if(mine == null) return 0;
+        int MAX = mine.getMax();
+        int MIN = 0;
         int currentAmount = mine.getAmount();
         if(currentAmount > MAX || currentAmount < MIN) return 0;
         int newAmount =  currentAmount + changeAmount;
