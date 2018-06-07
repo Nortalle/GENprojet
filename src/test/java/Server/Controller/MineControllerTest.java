@@ -37,11 +37,11 @@ class MineControllerTest {
         server.getDataBase().insertTrainStation(x, y, 10, 10);
         stationId = server.getDataBase().getTrainStationIdByPos(x, y);
         server.getDataBase().changeStationOfTrain(user, stationId);
-        mineId = server.getDataBase().addMine(stationId, 500, Ressource.Type.IRON_ORE.ordinal());
-        server.getDataBase().addMine(stationId, 500, Ressource.Type.WOOD_LOG.ordinal());
-        server.getDataBase().addMine(stationId, 0, Ressource.Type.WATER.ordinal());
-        server.getDataBase().addMine(stationId, 500, Ressource.Type.OIL.ordinal());
-        server.getDataBase().addMine(stationId, 500, Ressource.Type.GOLD_ORE.ordinal());
+        mineId = server.getDataBase().addMine(stationId, 500, 1000, 10, Ressource.Type.IRON_ORE.ordinal());
+        server.getDataBase().addMine(stationId, 500, 1000, 10, Ressource.Type.WOOD_LOG.ordinal());
+        server.getDataBase().addMine(stationId, 0, 1000, 10, Ressource.Type.WATER.ordinal());
+        server.getDataBase().addMine(stationId, 500, 1000, 10, Ressource.Type.OIL.ordinal());
+        server.getDataBase().addMine(stationId, 500, 1000, 10, Ressource.Type.GOLD_ORE.ordinal());
         wagonId = server.getDataBase().addWagon(user, 2000, 1, WagonStats.WagonType.DRILL.ordinal());
         server.getDataBase().addWagon(user, 2000, 1, WagonStats.WagonType.SAW.ordinal());
         server.getDataBase().addWagon(user, 2000, 1, WagonStats.WagonType.PUMP.ordinal());

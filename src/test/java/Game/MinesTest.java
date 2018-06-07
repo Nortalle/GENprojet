@@ -30,9 +30,9 @@ public class MinesTest {
         int s2 = 2;
         int s3 = 3;
         ArrayList<Mine> mines = new ArrayList<>();
-        mines.add(new Mine(id, s1, amount, placeId));
-        mines.add(new Mine(id, s2, amount, placeId));
-        mines.add(new Mine(id, s3, amount, placeId));
+        mines.add(new Mine(id, s1, amount, 1000, 10, placeId));
+        mines.add(new Mine(id, s2, amount, 1000, 10, placeId));
+        mines.add(new Mine(id, s3, amount, 1000, 10, placeId));
         String json = JsonUtility.toJson(JsonUtility.listToJson(mines, Mine::toJson));
         ArrayList<Mine> newMines = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(json), Mine::new);
         for(Mine m : newMines) System.out.println("- " + m.getResource());

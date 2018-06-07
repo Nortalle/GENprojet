@@ -54,6 +54,7 @@ public class ChangeStationTest {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         String line = client.changeStation(stationId);
         System.out.println(line);
+        client.updateTrain();
         assertEquals(dataBase.getTrainStation(stationId).toString(), client.getTrain().getTrainStation().toString());
     }
 
@@ -87,6 +88,7 @@ public class ChangeStationTest {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         String line = client.changeStation(stationId);
         System.out.println(line);
+        client.updateTrain();
         assertTrue(client.getTrain().getTrainStationETA() > 0);
     }
 }

@@ -18,10 +18,10 @@ class MineRegenerationTest {
     @BeforeAll
     public static void setUpBeforeAll() {
 
-        Mine mine1 = new Mine(1, 1, 30, 1);
-        Mine mine2 = new Mine(2, 2, 1000, 1);
-        Mine mine3 = new Mine(3, 3, 900, 1);
-        Mine mine4 = new Mine(4, 4, 0, 1);
+        Mine mine1 = new Mine(1, 1, 30, 1000, 10, 1);
+        Mine mine2 = new Mine(2, 2, 1000, 1000, 10, 1);
+        Mine mine3 = new Mine(3, 3, 900, 1000, 10, 1);
+        Mine mine4 = new Mine(4, 4, 0, 1000, 10, 1);
 
         mines.add(mine1);
         mines.add(mine2);
@@ -38,7 +38,7 @@ class MineRegenerationTest {
     void addMines() {
         Server.getInstance().init();
         int nbrMines = Server.getInstance().getRegenerationController().getMines().size();
-        Server.getInstance().getRegenerationController().addMine(new Mine(-1, Ressource.Type.WOOD_LOG.ordinal(), 500, 1));
+        Server.getInstance().getRegenerationController().addMine(new Mine(-1, Ressource.Type.WOOD_LOG.ordinal(), 500, 1000, 10, 1));
         ArrayList<Mine> updatedMines = Server.getInstance().getRegenerationController().getMines();
         assertEquals(nbrMines + 1, updatedMines.size());
     }

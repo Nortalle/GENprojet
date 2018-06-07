@@ -89,12 +89,12 @@ public class AdminGuiMine {
         Ressource.Type type = (Ressource.Type) resource_select.getSelectedItem();
         int max;
         int regen;
-        int current;
+        int amount;
         try {
             max = GuiUtility.getValueFromTextField(max_ressource);
             regen = GuiUtility.getValueFromTextField(regen_rate);
-            current = GuiUtility.getValueFromTextField(current_amount);
-            mine = new Mine(id, type.ordinal(), current, selectedStation.getId());
+            amount = GuiUtility.getValueFromTextField(current_amount);
+            mine = new Mine(id, type.ordinal(), amount, max, regen, selectedStation.getId());
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
