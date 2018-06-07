@@ -23,6 +23,7 @@ public class cli_gui_craft {
     private JPanel orderQueuePanel;
     private JPanel orderQueueNamePanel;
     private JPanel orderQueueBarPanel;
+    private JTextField orderAmountTextField;
     private Recipe selectedRecipe;
 
 
@@ -31,6 +32,7 @@ public class cli_gui_craft {
         localUpdate();
         selectedRecipe = (Recipe) recipeDropdown.getSelectedItem();
         updateCraftCost();
+        GuiUtility.addChangeListener(orderAmountTextField);
 
         recipeDropdown.addPopupMenuListener(new PopupMenuListener() {
             @Override
@@ -50,9 +52,17 @@ public class cli_gui_craft {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(selectedRecipe == null) return;
-                String line = Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
+                String line = "";
+                try {
+                    int amount = GuiUtility.getValueFromTextField(orderAmountTextField);
+                    for(int i = 0; i < amount; i++) {
+                        line = Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
+                    }
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                }
                 Client.getInstance().updateAll();
-                if(line.equals(OTrainProtocol.SUCCESS)) localUpdate();
+                if(line.equals(OTrainProtocol.SUCCESS)) update();
             }
         });
     }

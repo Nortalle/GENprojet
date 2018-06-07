@@ -11,8 +11,6 @@ public class MineRegeneration {
     //Contient toutes les mines du jeux
     private ArrayList<Mine> mines;
 
-    private int MAX_AMOUNT = 1000;
-    private int AMOUNT_TO_ADD = 10;
     private int INTERVAL_MS = 1000 * 60;
 
 
@@ -35,7 +33,7 @@ public class MineRegeneration {
             public void run() {
                 DataBase db = Server.getInstance().getDataBase();
                 for (Mine mine : mines) {
-                    int miningAmount = AMOUNT_TO_ADD;
+                    int miningAmount = mine.getRegen();
                     miningAmount = db.canChangeMineAmount(mine.getId(), miningAmount);
                     if(db.changeMineAmount(mine.getId(), miningAmount)) {
                         // all good

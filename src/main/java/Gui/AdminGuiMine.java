@@ -89,12 +89,12 @@ public class AdminGuiMine {
         Ressource.Type type = (Ressource.Type) resource_select.getSelectedItem();
         int max;
         int regen;
-        int current;
+        int amount;
         try {
             max = GuiUtility.getValueFromTextField(max_ressource);
             regen = GuiUtility.getValueFromTextField(regen_rate);
-            current = GuiUtility.getValueFromTextField(current_amount);
-            mine = new Mine(id, type.ordinal(), current, selectedStation.getId());
+            amount = GuiUtility.getValueFromTextField(current_amount);
+            mine = new Mine(id, type.ordinal(), amount, max, regen, selectedStation.getId());
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -135,8 +135,8 @@ public class AdminGuiMine {
             current_amount.setText("");
         } else {
             resource_select.setSelectedItem(Ressource.Type.values()[selectedMine.getResource()]);
-            max_ressource.setText("1000"/* + selectedMine.getMax()*/);
-            regen_rate.setText("10"/* + selectedMine.getRegen()*/);
+            max_ressource.setText("" + selectedMine.getMax());
+            regen_rate.setText("" + selectedMine.getRegen());
             current_amount.setText("" + selectedMine.getAmount());
         }
     }

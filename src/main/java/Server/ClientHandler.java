@@ -197,10 +197,10 @@ ClientHandler implements Runnable {
                     sendBooleanResult(db.deleteTrainStation(id));
                 } else if(line.equals(OTrainProtocol.NEW_MINE)) {
                     Mine mine = new Mine(readLine());
-                    sendBooleanResult(db.addMine(mine.getPlace(), mine.getAmount(), mine.getResource()) != -1);
+                    sendBooleanResult(db.addMine(mine.getPlace(), mine.getAmount(), mine.getMax(), mine.getRegen(), mine.getResource()) != -1);
                 } else if(line.equals(OTrainProtocol.CHANGE_MINE)) {
                     Mine mine = new Mine(readLine());
-                    sendBooleanResult(db.updateMine(mine.getId(), mine.getResource(), mine.getAmount(), mine.getPlace()));
+                    sendBooleanResult(db.updateMine(mine.getId(), mine.getResource(), mine.getAmount(), mine.getMax(), mine.getRegen(), mine.getPlace()));
                 } else if(line.equals(OTrainProtocol.DELETE_MINE)) {
                     int id = Integer.valueOf(readLine());
                     sendBooleanResult(db.deleteMine(id));
