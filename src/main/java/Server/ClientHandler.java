@@ -126,7 +126,8 @@ ClientHandler implements Runnable {
                     sendBooleanResult(Server.getInstance().getMineController().removeWagon(wagonLine));
                 } else if(line.equals(OTrainProtocol.CRAFT)) {
                     String recipeLine = readLine();
-                    sendBooleanResult(Server.getInstance().getCraftController().tryCraft(username, recipeLine));
+                    String amountLine = readLine();
+                    sendBooleanResult(Server.getInstance().getCraftController().tryCraft(username, recipeLine, amountLine));
                 } else if(line.equals(OTrainProtocol.GET_PROD_QUEUE)) {
                     writer.println(JsonUtility.listToJson(Server.getInstance().getCraftController().getPlayerCrafts(username), Craft::toJson));
                     writer.flush();

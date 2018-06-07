@@ -33,6 +33,7 @@ public class cli_gui_craft {
         selectedRecipe = (Recipe) recipeDropdown.getSelectedItem();
         updateCraftCost();
         GuiUtility.addChangeListener(orderAmountTextField);
+        orderAmountTextField.setText("1");
 
         recipeDropdown.addPopupMenuListener(new PopupMenuListener() {
             @Override
@@ -55,9 +56,7 @@ public class cli_gui_craft {
                 String line = "";
                 try {
                     int amount = GuiUtility.getValueFromTextField(orderAmountTextField);
-                    for(int i = 0; i < amount; i++) {
-                        line = Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
-                    }
+                    line = Client.getInstance().startCraft(selectedRecipe.getRecipeIndex(), amount);
                 } catch (NumberFormatException ex) {
                     ex.printStackTrace();
                 }
