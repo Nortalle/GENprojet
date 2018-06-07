@@ -52,14 +52,16 @@ public class cli_gui_craft {
         placeOrderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(selectedRecipe == null) return;
+                String line = "";
                 try {
                     int amount = GuiUtility.getValueFromTextField(orderAmountTextField);
-                    System.out.println(amount);
+                    for(int i = 0; i < amount; i++) {
+                        line = Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
+                    }
                 } catch (NumberFormatException ex) {
                     ex.printStackTrace();
                 }
-                if(selectedRecipe == null) return;
-                String line = Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
                 Client.getInstance().updateCrafts();// MANUAL UPDATE
                 Client.getInstance().updateResourceAmount();// MANUAL UPDATE
                 if(line.equals(OTrainProtocol.SUCCESS)) update();
