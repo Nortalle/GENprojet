@@ -2,7 +2,6 @@ package Gui;
 
 import Client.Client;
 import Utils.GuiUtility;
-import Utils.ResourceAmount;
 import Utils.Ressource;
 
 import javax.swing.*;
@@ -15,14 +14,14 @@ public class CliGuiInventory {
     private JPanel namePanel;
 
     public CliGuiInventory() {
-        update();
+        localUpdate();
     }
 
-    public void update() {
+    public void localUpdate() {
         updateObjectsList();
     }
 
-    public void updateResources() {
+    public void frequentLocalUpdate() {
         updateObjectsList();
     }
 

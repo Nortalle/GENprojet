@@ -5,11 +5,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import Client.*;
-import Game.Craft;
 import Utils.Ressource;
 
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,7 +22,6 @@ public class ClientForm {
     private JTabbedPane tabs;
     private JPanel TabGare;
     private JPanel Hangar;
-    private JPanel Inventaire;
     private JPanel Mine;
     private JPanel Factory;
 
@@ -47,6 +44,7 @@ public class ClientForm {
     private CliGuiInventory cliGuiInventory;
     private CliGuiTrain cliGuiTrain;
     private JButton disconnectButton;
+    private JPanel Inventory;
 
     public ClientForm() {
         Client.setClientLogComponent(logTextArea);
@@ -75,7 +73,7 @@ public class ClientForm {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public synchronized void run() {
-                freqentUpdate();
+                frequentLocalUpdate();
             }
         }, 0, 500);
 
@@ -101,25 +99,31 @@ public class ClientForm {
 
     public void sync(){
         Client.getInstance().updateAll();
-        update();
+        localUpdate();
     }
 
-    public void update() {
+    /**
+     * Maj de la GUI complête, appelée après un sync
+     */
+    public void localUpdate() {
         updateResources();
-        cli_gui_gare.update();
-        cli_gui_mine.update();
-        cli_gui_craft.update();
-        cliGuiInventory.update();
-        cliGuiTrain.update();
+        cli_gui_gare.localUpdate();
+        cli_gui_mine.localUpdate();
+        cli_gui_craft.localUpdate();
+        cliGuiInventory.localUpdate();
+        cliGuiTrain.localUpdate();
     }
 
-    public void freqentUpdate() {
+    /**
+     * Met a jour les parties de la GUI qui nécessitent une maj continue
+     */
+    public void frequentLocalUpdate() {
         updateResources();
-        cli_gui_gare.updateResources();
-        cli_gui_mine.updateResources();
-        cli_gui_craft.updateResources();
-        cliGuiInventory.updateResources();
-        cliGuiTrain.updateResources();
+        cli_gui_gare.frequentLocalUpdate();
+        cli_gui_mine.frequentLocalUpdate();
+        cli_gui_craft.frequentLocalUpdate();
+        cliGuiInventory.frequentLocalUpdate();
+        cliGuiTrain.frequentLocalUpdate();
     }
 
 }

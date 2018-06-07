@@ -44,7 +44,7 @@ public class CliGuiTrain {
     public CliGuiTrain() {
         train = Client.getInstance().getTrain();
         init();
-        update();
+        localUpdate();
         //selectedWagon = (Wagon) upgradeList.getSelectedItem();
         //updateUpgradeCostPanel();
 
@@ -56,7 +56,7 @@ public class CliGuiTrain {
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 selectedWagon = (Wagon) upgradeList.getSelectedItem();
                 selectedWagonIndex = upgradeList.getSelectedIndex();
-                update();
+                localUpdate();
             }
 
             @Override
@@ -69,7 +69,7 @@ public class CliGuiTrain {
             @Override
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 selectedWagonRecipe = (WagonRecipe) createList.getSelectedItem();
-                update();
+                localUpdate();
             }
 
             @Override
@@ -81,7 +81,7 @@ public class CliGuiTrain {
                 if(selectedWagon == null) return;
                 String line = Client.getInstance().startUpgrade(selectedWagon.getId());
                 Client.getInstance().updateUpgradeWagons();// MANUAL UPDATE
-                if(line.equals(OTrainProtocol.SUCCESS)) update();
+                if(line.equals(OTrainProtocol.SUCCESS)) localUpdate();
             }
         });
         createButton.addActionListener(new ActionListener() {
@@ -90,7 +90,7 @@ public class CliGuiTrain {
                 if(selectedWagonRecipe == null) return;
                 String line = Client.getInstance().startCreation(selectedWagonRecipe.getRecipeIndex());
                 Client.getInstance().updateCreateWagons();// MANUAL UPDATE
-                if(line.equals(OTrainProtocol.SUCCESS)) update();
+                if(line.equals(OTrainProtocol.SUCCESS)) localUpdate();
             }
         });
     }
@@ -105,7 +105,7 @@ public class CliGuiTrain {
         infoNamePanel.add(new JLabel("crafts : "));
     }
 
-    public void update() {
+    public void localUpdate() {
         updateInfoPanel();
         updateWagonsPanel();
         updateUpgradeCostPanel();
@@ -116,7 +116,7 @@ public class CliGuiTrain {
         updateCreateList();
     }
 
-    public void updateResources() {
+    public void frequentLocalUpdate() {
         updateInfoPanel();
         updateWagonsPanel();
         updateUpgradeCostPanel();

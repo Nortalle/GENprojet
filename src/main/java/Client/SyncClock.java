@@ -1,5 +1,7 @@
 package Client;
 
+import com.sun.corba.se.impl.orbutil.concurrent.Sync;
+
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,15 +22,16 @@ public class SyncClock {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public synchronized void run() {
+
+                ++cyclesSinceLastSync;
                 if(cyclesSinceLastSync % nbCyclesBetweenSync == 0){
                     syncCycle();
-                    cyclesSinceLastSync = 0;
                 } else {
                     localCycle();
                 }
-                ++cyclesSinceLastSync;
             }
         }, cycleTime, cycleTime);
+        syncCycle();
     }
 
     public static SyncClock getInstance() {
@@ -60,6 +63,8 @@ public class SyncClock {
     }
 
     public synchronized void syncCycle(){
+
+        cyclesSinceLastSync = 0;
         for(Updater u : updaters){
             u.sync();
         }

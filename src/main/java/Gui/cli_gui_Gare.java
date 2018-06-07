@@ -37,7 +37,7 @@ public class cli_gui_Gare {
 
     public cli_gui_Gare() {
 
-        update();
+        localUpdate();
         viewingStation = Client.getInstance().getTrain().getTrainStation();// maybe useless
 
         button_travel.addActionListener(new ActionListener() {
@@ -45,7 +45,7 @@ public class cli_gui_Gare {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
                 String line = Client.getInstance().changeStation(viewingStation.getId());
                 Client.getInstance().updateAll();// MANUAL UPDATE
-                if(line.equals(OTrainProtocol.SUCCESS)) update();
+                if(line.equals(OTrainProtocol.SUCCESS)) localUpdate();
 
             }
         });
@@ -54,36 +54,33 @@ public class cli_gui_Gare {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
                 viewingStationIndex = select_station.getSelectedIndex();
                 Client.getInstance().updateAll();// MANUAL UPDATE
-                update();
+                localUpdate();
             }
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = Client.getInstance().getTrain().getTrainStation();
                 Client.getInstance().updateAll();// MANUAL UPDATE
-                update();
+                localUpdate();
             }
         });
         select_station.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) {}
 
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                // maybe update so we can remove view button
+                // maybe localUpdate so we can remove view button
             }
 
             public void popupMenuCanceled(PopupMenuEvent e) {}
         });
     }
 
-    public void update(){
-        updateStationInfo();
-        updateEtaBar();
-        updateTrainsAtStation();
-        updateMines();
+    public void localUpdate(){
+        frequentLocalUpdate();
         updateStationList();
     }
 
-    public void updateResources(){
+    public void frequentLocalUpdate(){
         updateStationInfo();
         updateEtaBar();
         updateTrainsAtStation();

@@ -57,10 +57,33 @@ public class WagonMining  {
         return wagon;
     }
 
+    /**
+     * remplaces les référence courante du wagon par celle du train passé en paramètre
+     * @param train
+     * @return
+     */
     public boolean linkWagonToTrain(Train train) {
+        boolean hasBeenUpdate = false;
+        // maj des références sur les wagons
         for(Wagon w : train.getWagons()) {
             if(wagon.getId() == w.getId()) {
                 wagon = w;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * remplace la référence courante sur la mine par celles du train passé en paramètre
+     * @param train
+     * @return
+     */
+    public boolean linkMineToTrain(Train train){
+
+        for(Mine m : train.getTrainStation().getMines()){
+            if(currentMine.getId() == m.getId()){
+                currentMine = m;
                 return true;
             }
         }

@@ -509,7 +509,7 @@ public class DataBase {
      * @param level new level
      * @param type new type
      * @param id DataBase id of the wagon
-     * @return if update has been applied
+     * @return if localUpdate has been applied
      */
     public boolean updateWagon(String username, int weight, int level, int type, int id){
         try {
@@ -532,7 +532,7 @@ public class DataBase {
     /**
      * @param id wagon DataBase id
      * @param level new level
-     * @return if update has been applied
+     * @return if localUpdate has been applied
      */
     public boolean updateWagonLevel(int id, int level){
         try {

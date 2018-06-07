@@ -57,13 +57,13 @@ public class Client {
             @Override
             public void localUpdate() {
 
-                // 1) update des crafts en cours //
+                // 1) localUpdate des crafts en cours //
                 ArrayList<Craft> toRemove = new ArrayList<>();
                 for(int i = 0; i < crafts.size() && i < WagonStats.getMaxParallelCraft(train); i++) {
                     crafts.get(i).decreaseRemainingTime();
                     if(crafts.get(i).getRemainingTime() <= 0){
                         toRemove.add(crafts.get(i));
-                        // update de la liste locale de l'inventaire
+                        // localUpdate de la liste locale de l'inventaire
                         ResourceAmount r = Recipe.getReciepAtIndex(crafts.get(i).getRecipeIndex()).getFinalProduct();
                         resourceAmounts.put(r.getRessource(), resourceAmounts.getOrDefault(r.getRessource(), new ResourceAmount(r.getRessource(), 0)).addQuantity(r.getQuantity()));
                     }
@@ -72,7 +72,7 @@ public class Client {
                     crafts.remove(c);
                 }
 
-                // 2) update des ressources en cours de minage //
+                // 2) localUpdate des ressources en cours de minage //
                 for(WagonMining w : wagonMining) {
                     if(w.isMining()){
                         // la quantité maximale que va miner le wagon
@@ -92,7 +92,7 @@ public class Client {
                     }
                 }
 
-                // 3) update des déplacements de train //
+                // 3) localUpdate des déplacements de train //
                 train.decreaseTrainStationETA(1);
             }
         });
@@ -384,6 +384,11 @@ public class Client {
         writer.flush();
         String answer = readLine();
         train.fromJson((JsonObject) JsonUtility.fromJson(answer));
+
+        for(WagonMining w : wagonMining){
+            w.linkWagonToTrain(train);
+            w.linkMineToTrain(train);
+        }
     }
 
     public Train getTrain() {
@@ -427,12 +432,12 @@ public class Client {
 
     public synchronized void updateAll() {
         if(!clientLogged) return;
-        updateTrain();
+        updateWagonMining();
+        updateTrain();          // doit se faire après updateWagonMining;
         updateResourceAmount();
         updateCrafts();
         updateUpgradeWagons();
         updateCreateWagons();
-        updateWagonMining();
         updateTrainStations();
         updateTrainsAtStation(train.getTrainStation().getId());
     }

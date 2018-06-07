@@ -73,6 +73,10 @@ public class Mine {
 
     @Override
     public String toString() {
-        return id + " " + Ressource.RessourceToString(Ressource.Type.values()[resource]) + " : " + amount;
+        return Ressource.RessourceToString(Ressource.Type.values()[resource]) + " Mine " + id;
+    }
+
+    public String printInfo() {
+        return toString() + " [" + amount + "] left";
     }
 }
