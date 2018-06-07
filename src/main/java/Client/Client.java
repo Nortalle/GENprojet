@@ -459,9 +459,10 @@ public class Client {
         return readLine();
     }
 
-    public String startCraft(int recipeIndex) {
+    public String startCraft(int recipeIndex, int amount) {
         writer.println(OTrainProtocol.CRAFT);
         writer.println(recipeIndex);
+        writer.println(amount);
         writer.flush();
         return readLine();
     }

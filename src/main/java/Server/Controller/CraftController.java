@@ -51,19 +51,20 @@ public class CraftController {
         }
     }
 
-    public boolean tryCraft(String username, String recipeLine) {
+    public boolean tryCraft(String username, String recipeLine, String amountLine) {
         int recipeIndex = Integer.valueOf(recipeLine);
+        int amount = Integer.valueOf(amountLine);
         // need more tests
         Recipe recipe = Recipe.getAllRecipes().get(recipeIndex);
         for(ResourceAmount ra : recipe.getCost()) {
             ResourceAmount playerObject = Server.getInstance().getDataBase().getPlayerObjectOfType(username, ra.getRessource().ordinal());
             if(playerObject == null) return false;
-            if(playerObject.getQuantity() < ra.getQuantity()) return false;
+            if(playerObject.getQuantity() < ra.getQuantity() * amount) return false;
         }
-        Server.getInstance().getReserveCargoController().addReservedCargo(username, recipe.getFinalProduct().getQuantity());
-        for(ResourceAmount ra : recipe.getCost()) Server.getInstance().getDataBase().updatePlayerObjects(username, ra.getRessource().ordinal(), -ra.getQuantity());
+        Server.getInstance().getReserveCargoController().addReservedCargo(username, recipe.getFinalProduct().getQuantity() * amount);
+        for(ResourceAmount ra : recipe.getCost()) Server.getInstance().getDataBase().updatePlayerObjects(username, ra.getRessource().ordinal(), -(ra.getQuantity() * amount));
 
-        addCraft(new Craft(username, recipeIndex, Recipe.getAllRecipes().get(recipeIndex).getProductionTime()));
+        for(int i = 0; i < amount; i++) addCraft(new Craft(username, recipeIndex, Recipe.getAllRecipes().get(recipeIndex).getProductionTime()));
         return true;
     }
 
