@@ -24,6 +24,7 @@ public class cli_gui_craft {
     private JPanel orderQueuePanel;
     private JPanel orderQueueNamePanel;
     private JPanel orderQueueBarPanel;
+    private JTextField orderAmountTextField;
     private Recipe selectedRecipe;
 
 
@@ -32,6 +33,7 @@ public class cli_gui_craft {
         update();
         selectedRecipe = (Recipe) recipeDropdown.getSelectedItem();
         updateCraftCost();
+        GuiUtility.addChangeListener(orderAmountTextField);
 
         recipeDropdown.addPopupMenuListener(new PopupMenuListener() {
             @Override
@@ -50,6 +52,12 @@ public class cli_gui_craft {
         placeOrderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    int amount = GuiUtility.getValueFromTextField(orderAmountTextField);
+                    System.out.println(amount);
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                }
                 if(selectedRecipe == null) return;
                 String line = Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
                 Client.getInstance().updateCrafts();// MANUAL UPDATE
