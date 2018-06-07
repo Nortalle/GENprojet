@@ -135,8 +135,8 @@ public class AdminGuiMine {
             current_amount.setText("");
         } else {
             resource_select.setSelectedItem(Ressource.Type.values()[selectedMine.getResource()]);
-            max_ressource.setText("1000"/* + selectedMine.getMax()*/);
-            regen_rate.setText("10"/* + selectedMine.getRegen()*/);
+            max_ressource.setText("" + selectedMine.getMax());
+            regen_rate.setText("" + selectedMine.getRegen());
             current_amount.setText("" + selectedMine.getAmount());
         }
     }
