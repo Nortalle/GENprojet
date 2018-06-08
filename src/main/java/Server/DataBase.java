@@ -752,7 +752,7 @@ public class DataBase {
         ArrayList<TrainStation> result = new ArrayList<>();
         try {
             ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE posX BETWEEN ? AND ? AND poxY BETWEEN ? AND ?;", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE posX BETWEEN ? AND ? AND posY BETWEEN ? AND ?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, x - range);
             ps.setObject(2, x + range);
             ps.setObject(3, y - range);
@@ -775,12 +775,14 @@ public class DataBase {
 
         Random r = new Random();
         // parcours de toutes les gares qui devraient s'y trouver et check si elles existent déjà
-        for(int xi = x - range; xi < x + range; x++ ){
+        for(int xi = x - range; xi < x + range; xi++ ){
             r.setSeed(xi);
-            for(int yi = y -range; yi < y + range; y++){
+            for(int yi = y -range; yi < y + range; yi++){
                 r.setSeed(r.nextInt() + yi);
-                boolean isStation = r.nextInt(1000) < 30;   // séquence déterministe pour savoir si il y a une gare a cet emplacement
+                boolean isStation = r.nextInt(1000) < 5;   // séquence déterministe pour savoir si il y a une gare a cet emplacement
                 if(isStation){
+                    //TODO remove le debug
+                    System.out.println("New Station at (" + xi + ":" + yi + ")");
                     boolean found = false;
                     for(TrainStation ts : result){
                         if(ts.getPosX() == xi && ts.getPosY() == yi){
@@ -790,18 +792,21 @@ public class DataBase {
                     }
                     // si elle y est pas on doit la rajouter
                     if(!found){
+
+                        int xiabs = Math.abs(xi);
+                        int yiabs = Math.abs(yi);
                         // ajout de la gare
                         insertTrainStation(xi,
                                 yi,
-                                1 + r.nextInt(5 + 10 - Math.min(((xi + yi) / 30), 10)) ,
-                                4 + r.nextInt(6 + Math.min(((xi + yi) / 30), 14))
+                                1 + r.nextInt(5 + 10 - Math.min(((xiabs + yiabs) / 30), 10)) ,
+                                4 + r.nextInt(6 + Math.min(((xiabs + yiabs) / 30), 14))
                                 );
                         TrainStation station = getTrainStationByPos(xi, yi);
                         // ajout des mines
-                        int nbMines = r.nextInt(3 + 7 - Math.min(((xi + yi) / 30), 5));
+                        int nbMines = r.nextInt(1 + 5 - Math.min(((xiabs + yiabs) / 30), 5));
                         for(int i = 0 ; i < nbMines; i ++){
                             Ressource.Type t = yi < 0 ? Ressource.southOccurence() : Ressource.northOccurence();
-                            int max = (int)(40 + r.nextInt(40 + xi + yi) * Ressource.amountMofifier(t));
+                            int max = (int)(40 + r.nextInt(40 + xiabs + yiabs) * Ressource.amountMofifier(t));
                             addMine(station.getId(),
                                     max,
                                     max,
@@ -826,7 +831,7 @@ public class DataBase {
         ArrayList<TrainStation> result = new ArrayList<>();
         try {
             ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM  WHERE;", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare;", Statement.RETURN_GENERATED_KEYS);
             resultSet = ps.executeQuery();
             while(resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -853,7 +858,7 @@ public class DataBase {
         int result = -1;
         try {
             ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT id FROM Gare WHERE posX = ? AND posY = ?;", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("SELECT id FROM Gare WHERE posX=? AND posY=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, x);
             ps.setObject(2, y);
             resultSet = ps.executeQuery();
