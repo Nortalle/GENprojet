@@ -750,7 +750,6 @@ public class DataBase {
      * @return
      */
     public ArrayList<TrainStation> getAllTrainStationsWithinRange(int range, int x, int y){
-        range = 100;// TEMP
         ArrayList<TrainStation> result = new ArrayList<>();
         try {
             ResultSet resultSet;
@@ -775,14 +774,14 @@ public class DataBase {
             e.printStackTrace();
         }
 
-        /*
+
         Random r = new Random();
         // parcours de toutes les gares qui devraient s'y trouver et check si elles existent déjà
         for(int xi = x - range; xi < x + range; xi++ ){
             r.setSeed(xi);
             for(int yi = y -range; yi < y + range; yi++){
                 r.setSeed(r.nextInt() + yi);
-                boolean isStation = r.nextInt(1000) < 5;   // séquence déterministe pour savoir si il y a une gare a cet emplacement
+                boolean isStation = r.nextInt(1000) < 8;   // séquence déterministe pour savoir si il y a une gare a cet emplacement
                 if(isStation){
                     //TODO remove le debug
                     System.out.println("New Station at (" + xi + ":" + yi + ")");
@@ -823,7 +822,7 @@ public class DataBase {
                 }
             }
         }
-        */
+
         return result;
     }
 
