@@ -10,4 +10,12 @@ public class cli_gui_trade {
     private JButton searchButton;
     private JButton placeButton;
     private JPanel trading_panel;
+
+    public cli_gui_trade() {
+
+    }
+
+    public void localUpdate() {
+
+    }
 }

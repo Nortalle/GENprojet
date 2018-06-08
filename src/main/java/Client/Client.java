@@ -449,6 +449,45 @@ public class Client {
         updateTrainsAtStation(train.getTrainStation().getId());
     }
 
+    // TODO
+    public void updateOffers(int offerType, int priceType) {
+        writer.println(OTrainProtocol.SUCCESS);
+        writer.println(offerType);
+        writer.println(priceType);
+        writer.flush();
+        String answer = readLine();
+        //offers = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), Offer::new);
+    }
+
+    // TODO
+    public ArrayList<Object> getOffers() {
+        return null;
+    }
+
+    public String placeOffer(int offerType, int offerAmount, int priceType, int priceAmount) {
+        writer.println(OTrainProtocol.SUCCESS);
+        writer.println(offerType);
+        writer.println(offerAmount);
+        writer.println(priceType);
+        writer.println(priceAmount);
+        writer.flush();
+        return readLine();
+    }
+
+    public String buyOffer(int id) {
+        writer.println(OTrainProtocol.SUCCESS);
+        writer.println(id);
+        writer.flush();
+        return readLine();
+    }
+
+    public String cancelOffer(int id) {
+        writer.println(OTrainProtocol.SUCCESS);
+        writer.println(id);
+        writer.flush();
+        return readLine();
+    }
+
     public String changeStation(int stationId) {
         writer.println(OTrainProtocol.GO_TO);
         writer.println(stationId);
