@@ -212,6 +212,9 @@ ClientHandler implements Runnable {
                     ResourceAmount ra = db.getPlayerObjectOfType(playerName, type);
                     if(ra != null) amount -= ra.getQuantity();
                     sendBooleanResult(db.updatePlayerObjects(playerName, type, amount));
+                } else if(line.equals(OTrainProtocol.DELETE_PLAYER)) {
+                    String playerName = readLine();
+                    sendBooleanResult(db.deleteUser(playerName));
                 }
 
                 line = readLine();
