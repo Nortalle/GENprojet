@@ -18,6 +18,7 @@ public class cli_gui_trade {
     private JButton searchButton;
     private JButton placeButton;
     private JPanel trading_panel;
+    private JPanel offersPanel;
 
     public cli_gui_trade() {
         localUpdate();
@@ -28,6 +29,7 @@ public class cli_gui_trade {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Client.getInstance().updateOffers(getType(dropdown_ressource_offer).orElse(-1), getType(dropdown_ressource_price).orElse(-1));
+                localUpdate();
             }
         });
         placeButton.addActionListener(new ActionListener() {
@@ -83,7 +85,7 @@ public class cli_gui_trade {
     }
 
     public void updateOffers() {
-        GuiUtility.listInPanel(trading_panel, Client.getInstance().getOffers(), offer -> {
+        GuiUtility.listInPanel(offersPanel, Client.getInstance().getOffers(), offer -> {
             JPanel panel = new JPanel();
             JLabel label = new JLabel(offer.toString());
             JButton button = new JButton();
