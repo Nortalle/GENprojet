@@ -149,12 +149,11 @@ ClientHandler implements Runnable {
                     writer.println(JsonUtility.listToJson(db.getOffers(offerTypeLine, priceTypeLine), Offer::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.SET_OFFER)) {
-                    String offerTypeLine = readLine();
-                    String offerAmountLine = readLine();
-                    String priceTypeLine = readLine();
-                    String priceAmountLine = readLine();
-                    writer.println("CMD NOT READY");
-                    writer.flush();
+                    int offerTypeLine = Integer.valueOf(readLine());
+                    int offerAmountLine = Integer.valueOf(readLine());
+                    int priceTypeLine = Integer.valueOf(readLine());
+                    int priceAmountLine = Integer.valueOf(readLine());
+                    sendBooleanResult(db.addOffer(username, offerTypeLine, offerAmountLine, priceTypeLine, priceAmountLine));
                 } else if(line.equals(OTrainProtocol.BUY_OFFER)) {
                     String idLine = readLine();
                     writer.println("CMD NOT READY");

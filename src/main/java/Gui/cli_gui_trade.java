@@ -47,6 +47,7 @@ public class cli_gui_trade {
                     String line = Client.getInstance().placeOffer(offerType.get(), GuiUtility.getValueFromTextField(quantity_offer), priceType.get(), GuiUtility.getValueFromTextField(quantity_price));
 
                     Client.getInstance().updateAll();
+                    Client.getInstance().updateOffers(getType(dropdown_ressource_offer).orElse(-1), getType(dropdown_ressource_price).orElse(-1));
                     if(line.equals(OTrainProtocol.SUCCESS)) localUpdate();
 
                 } catch (NumberFormatException | NoResourceTypeError ex) {

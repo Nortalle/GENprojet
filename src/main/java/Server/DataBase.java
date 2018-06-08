@@ -1128,24 +1128,22 @@ public class DataBase {
 
     public ArrayList<Offer> getOffers(int offer, int price) {
         ArrayList<Offer> offers = new ArrayList<>();
-
         PreparedStatement ps;
-
         try {
             ResultSet resultSet;
             if(offer == -1 && price == -1) {
-                ps = connection.prepareStatement("SELECT * FROM Offers");
+                ps = connection.prepareStatement("SELECT * FROM Offres");
             }
             else if(offer != -1 && price == -1) {
-                ps = connection.prepareStatement("SELECT * FROM Offers WHERE offerType=?");
+                ps = connection.prepareStatement("SELECT * FROM Offres WHERE offerType=?");
                 ps.setObject(1, offer);
             }
             else if(offer == -1 && price != -1) {
-                ps = connection.prepareStatement("SELECT * FROM Offers WHERE priceType=?");
+                ps = connection.prepareStatement("SELECT * FROM Offres WHERE priceType=?");
                 ps.setObject(1, price);
             }
             else {
-                ps = connection.prepareStatement("SELECT * FROM Offers WHERE offerType=? AND priceType=?");
+                ps = connection.prepareStatement("SELECT * FROM Offres WHERE offerType=? AND priceType=?");
                 ps.setObject(1, offer);
                 ps.setObject(2, price);
             }
@@ -1163,9 +1161,25 @@ public class DataBase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
         return offers;
     }
 
+    public boolean addOffer(String playerName, int offerType, int offerAmount, int priceType, int priceAmount) {
+        // TODO TESTS AND REMOVE RESOURCES FORM PLAYER
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Offres VALUES(default,?,?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, playerName);
+            ps.setObject(2, offerType);
+            ps.setObject(3, offerAmount);
+            ps.setObject(4, priceType);
+            ps.setObject(5, priceAmount);
+            int status = ps.executeUpdate();
+            if(status != 0){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
