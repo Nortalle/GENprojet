@@ -8,6 +8,7 @@ import Utils.ResourceAmount;
 import Utils.WagonRecipe;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.TimerTask;
 
 public class CreateController {
@@ -48,9 +49,10 @@ public class CreateController {
         // need more tests
         WagonRecipe wagonRecipe = WagonRecipe.getAllRecipes().get(wagonRecipeIndex);
         for(ResourceAmount ra : wagonRecipe.getCost()) {
-            ResourceAmount playerObject = Server.getInstance().getDataBase().getPlayerObjectOfType(username, ra.getRessource().ordinal());
-            if(playerObject == null) return false;
-            if(playerObject.getQuantity() < ra.getQuantity()) return false;
+            Optional<ResourceAmount> playerObject = Server.getInstance().getDataBase().getPlayerObjectOfType(username, ra.getRessource().ordinal());
+            if(playerObject.filter( po -> po.getQuantity() < ra.getQuantity()).isPresent()) return false;
+            //if(playerObject == null) return false;
+            //if(playerObject.getQuantity() < ra.getQuantity()) return false;
         }
 
         for(ResourceAmount ra : wagonRecipe.getCost()) Server.getInstance().getDataBase().updatePlayerObjects(username, ra.getRessource().ordinal(), -ra.getQuantity());
