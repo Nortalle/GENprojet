@@ -50,7 +50,7 @@ public class CreateController {
         WagonRecipe wagonRecipe = WagonRecipe.getAllRecipes().get(wagonRecipeIndex);
         for(ResourceAmount ra : wagonRecipe.getCost()) {
             Optional<ResourceAmount> playerObject = Server.getInstance().getDataBase().getPlayerObjectOfType(username, ra.getRessource().ordinal());
-            if(playerObject.filter( po -> po.getQuantity() < ra.getQuantity()).isPresent()) return false;
+            if(!playerObject.filter(po -> po.getQuantity() >= ra.getQuantity()).isPresent()) return false;
             //if(playerObject == null) return false;
             //if(playerObject.getQuantity() < ra.getQuantity()) return false;
         }

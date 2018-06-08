@@ -1284,7 +1284,7 @@ public class DataBase {
 
     public boolean addOffer(String playerName, int offerType, int offerAmount, int priceType, int priceAmount) {
         Optional<ResourceAmount> playerObject = getPlayerObjectOfType(playerName, offerType);
-        if(playerObject.filter(ra -> ra.getQuantity() < offerAmount).isPresent()) return false;
+        if(!playerObject.filter(ra -> ra.getQuantity() >= offerAmount).isPresent()) return false;
         //if(ra == null) return false;
         //if(ra.getQuantity() < offerAmount) return false;
         updatePlayerObjects(playerName, offerType, -offerAmount);
@@ -1316,7 +1316,7 @@ public class DataBase {
 
     public boolean buyOffer(String buyer, Offer offer) {
         Optional<ResourceAmount> buyerObject = getPlayerObjectOfType(buyer, offer.getPrice().getRessource().ordinal());
-        if(buyerObject.filter(ra -> ra.getQuantity() < offer.getPrice().getQuantity()).isPresent()) return false;
+        if(!buyerObject.filter(ra -> ra.getQuantity() >= offer.getPrice().getQuantity()).isPresent()) return false;
         updatePlayerObjects(buyer, offer.getPrice().getRessource().ordinal(), -offer.getPrice().getQuantity());
 
         try {

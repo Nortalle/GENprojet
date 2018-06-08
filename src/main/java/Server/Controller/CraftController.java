@@ -59,7 +59,7 @@ public class CraftController {
         Recipe recipe = Recipe.getAllRecipes().get(recipeIndex);
         for(ResourceAmount ra : recipe.getCost()) {
             Optional<ResourceAmount> playerObject = Server.getInstance().getDataBase().getPlayerObjectOfType(username, ra.getRessource().ordinal());
-            if(playerObject.filter( po -> po.getQuantity() < ra.getQuantity() * amount).isPresent()) return false;
+            if(!playerObject.filter(po -> po.getQuantity() >= ra.getQuantity() * amount).isPresent()) return false;
             //if(playerObject == null) return false;
             //if(playerObject.getQuantity() < ra.getQuantity() * amount) return false;
         }
