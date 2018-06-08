@@ -52,9 +52,8 @@ public class cli_gui_trade {
     }
 
     private Optional<Integer> getType(JComboBox list) {
-        Object selectedOfferType = list.getSelectedItem();
-        if(selectedOfferType instanceof Ressource.Type) return Optional.of(((Ressource.Type) selectedOfferType).ordinal());
-        else return Optional.empty();
+        if(!(list.getSelectedItem() instanceof Ressource.Type)) return Optional.empty();
+        return Optional.of(((Ressource.Type) list.getSelectedItem()).ordinal());
     }
 
     private void noResourceTypeError() throws NoResourceTypeError {
