@@ -387,7 +387,9 @@ public class DataBase {
 
             // clean
             System.out.println("cleaning");
-            PreparedStatement deletePs = connection.prepareStatement("DELETE FROM ObjetsParJoueur WHERE objetAmount=0;", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement deletePs = connection.prepareStatement("DELETE FROM ObjetsParJoueur WHERE nomJoueur=? AND objetId=? AND objetAmount=0;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, typeId);
             deletePs.executeUpdate();
 
             int status = ps.executeUpdate();
