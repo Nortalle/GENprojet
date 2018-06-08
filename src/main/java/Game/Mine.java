@@ -89,7 +89,7 @@ public class Mine {
 
     @Override
     public String toString() {
-        return Ressource.RessourceToString(Ressource.Type.values()[resource]) + " Mine " + id;
+        return Ressource.RessourceToString(resource) + " Mine " + id;
     }
 
     public String printInfo() {
