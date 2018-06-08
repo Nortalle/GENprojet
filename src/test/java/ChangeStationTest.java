@@ -40,7 +40,8 @@ public class ChangeStationTest {
         System.out.println(line);
         client.readLine();
     }
-
+    //TODO REFAIRE CE TEST AVANT QUE ON PEUPLE LA BDD AVEC DES GARES GENEREES ALEATOIREMENT
+/*
     @Test
     public void getNumberOfAllTrainStations(){
         int nbStation = dataBase.getAllTrainStations().size();
@@ -48,7 +49,7 @@ public class ChangeStationTest {
         client.updateTrainStations();
         assertEquals(nbStation, client.getTrainStations().size());
     }
-
+*/
     @Test
     public void changeStation() {
         int stationId = dataBase.getTrainStationIdByPos(x, y);

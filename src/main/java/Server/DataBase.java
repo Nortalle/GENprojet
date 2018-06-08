@@ -7,6 +7,7 @@ import Utils.WagonStats;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Optional;
 
 public class DataBase {
@@ -712,6 +713,119 @@ public class DataBase {
     }
 
     /**
+     * gets station from pos
+     * @param x
+     * @param y
+     * @return
+     */
+    public TrainStation getTrainStationByPos(int x, int y){
+        TrainStation trainStation = null;
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE `posX`=? AND `posY`=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, x);
+            ps.setObject(2, y);
+            resultSet = ps.executeQuery();
+            if(!resultSet.next()){return null;}
+            int id = resultSet.getInt("id");
+            int posX = resultSet.getInt("posX");
+            int posY = resultSet.getInt("posY");
+            int nbOfPlatforms = resultSet.getInt("nbrQuai");
+            int sizeOfPlatforms = resultSet.getInt("tailleQuai");
+            ArrayList<Mine> mines = getAllMinesOfStation(id);
+
+            trainStation = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return trainStation;
+    }
+
+    /**
+     * all station at range of range from pos x,y
+     * Creates them if they don't exist in database
+     * @param range
+     * @param x
+     * @param y
+     * @return
+     */
+    public ArrayList<TrainStation> getAllTrainStationsWithinRange(int range, int x, int y){
+        ArrayList<TrainStation> result = new ArrayList<>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE posX BETWEEN ? AND ? AND posY BETWEEN ? AND ?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, x - range);
+            ps.setObject(2, x + range);
+            ps.setObject(3, y - range);
+            ps.setObject(4, y + range);
+
+            resultSet = ps.executeQuery();
+            while(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int posX = resultSet.getInt("posX");
+                int posY = resultSet.getInt("posY");
+                int nbOfPlatforms = resultSet.getInt("nbrQuai");
+                int sizeOfPlatforms = resultSet.getInt("tailleQuai");
+                ArrayList<Mine> mines = getAllMinesOfStation(id);
+
+                result.add(new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Random r = new Random();
+        // parcours de toutes les gares qui devraient s'y trouver et check si elles existent déjà
+        for(int xi = x - range; xi < x + range; xi++ ){
+            r.setSeed(xi);
+            for(int yi = y -range; yi < y + range; yi++){
+                r.setSeed(r.nextInt() + yi);
+                boolean isStation = r.nextInt(1000) < 5;   // séquence déterministe pour savoir si il y a une gare a cet emplacement
+                if(isStation){
+                    //TODO remove le debug
+                    System.out.println("New Station at (" + xi + ":" + yi + ")");
+                    boolean found = false;
+                    for(TrainStation ts : result){
+                        if(ts.getPosX() == xi && ts.getPosY() == yi){
+                            found = true;
+                            break;
+                        }
+                    }
+                    // si elle y est pas on doit la rajouter
+                    if(!found){
+
+                        int xiabs = Math.abs(xi);
+                        int yiabs = Math.abs(yi);
+                        // ajout de la gare
+                        insertTrainStation(xi,
+                                yi,
+                                1 + r.nextInt(5 + 10 - Math.min(((xiabs + yiabs) / 30), 10)) ,
+                                4 + r.nextInt(6 + Math.min(((xiabs + yiabs) / 30), 14))
+                                );
+                        TrainStation station = getTrainStationByPos(xi, yi);
+                        // ajout des mines
+                        int nbMines = r.nextInt(1 + 5 - Math.min(((xiabs + yiabs) / 30), 5));
+                        for(int i = 0 ; i < nbMines; i ++){
+                            Ressource.Type t = yi < 0 ? Ressource.southOccurence() : Ressource.northOccurence();
+                            int max = (int)(40 + r.nextInt(40 + xiabs + yiabs) * Ressource.amountMofifier(t));
+                            addMine(station.getId(),
+                                    max,
+                                    max,
+                                    1 + (int)((max / 120.0) * (1 + r.nextInt(20) / 5.0)),
+                                    t.ordinal()
+                                    );
+                        }
+                        station = getTrainStationByPos(xi, yi);
+                        result.add(station);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * @return a list containing all the stations of the database
      */
     public ArrayList<TrainStation> getAllTrainStations(){
@@ -745,7 +859,7 @@ public class DataBase {
         int result = -1;
         try {
             ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT id FROM Gare WHERE posX = ? AND posY = ?;", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("SELECT id FROM Gare WHERE posX=? AND posY=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, x);
             ps.setObject(2, y);
             resultSet = ps.executeQuery();
