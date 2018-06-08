@@ -8,6 +8,7 @@ import Utils.ResourceAmount;
 import Utils.WagonStats;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.TimerTask;
 
 public class UpgradeController {
@@ -57,9 +58,10 @@ public class UpgradeController {
             return false;
         }
         for (ResourceAmount ra : resourceAmounts) {
-            ResourceAmount playerObject = dataBase.getPlayerObjectOfType(username, ra.getRessource().ordinal());
-            if (playerObject == null) return false;
-            if (playerObject.getQuantity() < ra.getQuantity()) return false;
+            Optional<ResourceAmount> playerObject = dataBase.getPlayerObjectOfType(username, ra.getRessource().ordinal());
+            if(playerObject.filter(po -> po.getQuantity() < ra.getQuantity()).isPresent()) return false;
+            //if(playerObject == null) return false;
+            //if(playerObject.getQuantity() < ra.getQuantity()) return false;
         }
 
         for (ResourceAmount ra : resourceAmounts) dataBase.updatePlayerObjects(username, ra.getRessource().ordinal(), -ra.getQuantity());

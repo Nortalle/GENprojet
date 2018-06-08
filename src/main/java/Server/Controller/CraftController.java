@@ -9,6 +9,7 @@ import Utils.WagonStats;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.TimerTask;
 
 public class CraftController {
@@ -57,9 +58,10 @@ public class CraftController {
         // need more tests
         Recipe recipe = Recipe.getAllRecipes().get(recipeIndex);
         for(ResourceAmount ra : recipe.getCost()) {
-            ResourceAmount playerObject = Server.getInstance().getDataBase().getPlayerObjectOfType(username, ra.getRessource().ordinal());
-            if(playerObject == null) return false;
-            if(playerObject.getQuantity() < ra.getQuantity() * amount) return false;
+            Optional<ResourceAmount> playerObject = Server.getInstance().getDataBase().getPlayerObjectOfType(username, ra.getRessource().ordinal());
+            if(playerObject.filter( po -> po.getQuantity() < ra.getQuantity() * amount).isPresent()) return false;
+            //if(playerObject == null) return false;
+            //if(playerObject.getQuantity() < ra.getQuantity() * amount) return false;
         }
         Server.getInstance().getReserveCargoController().addReservedCargo(username, recipe.getFinalProduct().getQuantity() * amount);
         for(ResourceAmount ra : recipe.getCost()) Server.getInstance().getDataBase().updatePlayerObjects(username, ra.getRessource().ordinal(), -(ra.getQuantity() * amount));

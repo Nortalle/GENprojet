@@ -8,6 +8,7 @@ import com.google.gson.JsonPrimitive;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 public class
@@ -201,8 +202,7 @@ ClientHandler implements Runnable {
                     String playerName = readLine();
                     String objectLine = readLine();
                     int objectId = Integer.valueOf(objectLine);
-                    ResourceAmount ra = db.getPlayerObjectOfType(playerName, objectId);
-                    if(ra == null) ra = new ResourceAmount(Ressource.Type.values()[objectId], 0);
+                    ResourceAmount ra = db.getPlayerObjectOfType(playerName, objectId).orElse(new ResourceAmount(Ressource.Type.values()[objectId], 0));
 
                     writer.println(ra.toJson());
                     writer.flush();
@@ -227,10 +227,9 @@ ClientHandler implements Runnable {
                 } else if(line.equals(OTrainProtocol.CHANGE_PLAYER_OBJECT)) {
                     String playerName = readLine();
                     int type = Integer.valueOf(readLine());
-                    int amount = Integer.valueOf(readLine());
-                    ResourceAmount ra = db.getPlayerObjectOfType(playerName, type);
-                    if(ra != null) amount -= ra.getQuantity();
-                    sendBooleanResult(db.updatePlayerObjects(playerName, type, amount));
+                    AtomicInteger amount = new AtomicInteger(Integer.valueOf(readLine()));//AtomicInteger as a wrapper for modification in lambda
+                    db.getPlayerObjectOfType(playerName, type).ifPresent(ra -> amount.set(amount.intValue() - ra.getQuantity()));
+                    sendBooleanResult(db.updatePlayerObjects(playerName, type, amount.intValue()));
                 } else if(line.equals(OTrainProtocol.DELETE_PLAYER)) {
                     String playerName = readLine();
                     sendBooleanResult(db.deleteUser(playerName));

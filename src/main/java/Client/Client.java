@@ -49,10 +49,7 @@ public class Client {
     private ResourceAmount adminResourceAmount;
 
 
-    //TODO TEST DE MERDE
-    private Client(){
-
-    }
+    private Client(){}
 
     private void addLocalUpdater() {
         SyncClock.getInstance().addUpdater(new Updater() {
