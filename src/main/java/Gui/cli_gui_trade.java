@@ -2,6 +2,7 @@ package Gui;
 
 import Client.Client;
 import Utils.GuiUtility;
+import Utils.ListToPanel;
 import Utils.OTrainProtocol;
 import Utils.Ressource;
 
@@ -9,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class cli_gui_trade {
@@ -86,25 +88,34 @@ public class cli_gui_trade {
     }
 
     public void updateOffers() {
-        GuiUtility.listInPanel(offersPanel, Client.getInstance().getOffers(), offer -> {
-            JPanel panel = new JPanel();
-            JLabel label = new JLabel(offer.toString());
-            JButton button = new JButton();
+        offersPanel.removeAll();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.ipadx = 10;
+        Client.getInstance().getOffers().forEach(offer -> {
+            gbc.gridx = 1;
+            offersPanel.add(new JLabel(offer.getPlayerName()), gbc);
+            gbc.gridx = 2;
+            offersPanel.add(new JLabel("offers : " + offer.getOffer().toString()), gbc);
+            gbc.gridx = 3;
+            offersPanel.add(new JLabel("for : " + offer.getPrice().toString()), gbc);
 
+            JButton button = new JButton();
             // own offer -> cancel
             if(Client.getInstance().getUsername().equals(offer.getPlayerName())) {
                 button.setText("CANCEL");
                 button.addActionListener(e -> Client.getInstance().cancelOffer(offer.getId()));
-            // someone else offer -> by
+                // someone else offer -> by
             } else {
                 button.setText("BUY");
                 button.addActionListener(e -> Client.getInstance().buyOffer(offer.getId()));
             }
             button.setPreferredSize(new Dimension(button.getPreferredSize().width, 20));
 
-            panel.add(label);
-            panel.add(button);
-            return panel;
+            gbc.gridx = 4;
+            offersPanel.add(button, gbc);
         });
+        offersPanel.revalidate();
     }
 }
