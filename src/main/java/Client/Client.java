@@ -52,6 +52,9 @@ public class Client {
     //TODO TEST DE MERDE
     public Client(){
 
+    }
+
+    private void addLocalUpdater() {
         SyncClock.getInstance().addUpdater(new Updater() {
             @Override
             public void sync() {
@@ -181,6 +184,7 @@ public class Client {
     }
 
     public void setClientLogged(boolean clientLogged) {
+        if(clientLogged) addLocalUpdater();
         this.clientLogged = clientLogged;
     }
 
