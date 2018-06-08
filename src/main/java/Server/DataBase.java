@@ -7,6 +7,7 @@ import Utils.WagonStats;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class DataBase {
     private Connection connection;
@@ -1165,7 +1166,11 @@ public class DataBase {
     }
 
     public boolean addOffer(String playerName, int offerType, int offerAmount, int priceType, int priceAmount) {
-        // TODO TESTS AND REMOVE RESOURCES FORM PLAYER
+        ResourceAmount ra = getPlayerObjectOfType(playerName, offerType);
+        if(ra == null) return false;
+        if(ra.getQuantity() < offerAmount) return false;
+        updatePlayerObjects(playerName, offerType, -offerAmount);
+
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Offres VALUES(default,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, playerName);
@@ -1183,31 +1188,64 @@ public class DataBase {
         return false;
     }
 
-    public boolean buyOffer(int id) {
-        // TODO ALL
+    public boolean optionalBuyOffer(String buyer, int id) {
+        return getOfferById(id).filter(offer -> buyOffer(buyer, offer)).isPresent();
+    }
+
+    public boolean optionalCancelOffer(int id) {
+        return getOfferById(id).filter(this::cancelOffer).isPresent();
+    }
+
+    public boolean buyOffer(String buyer, Offer offer) {
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Offres WHERE id=?", Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, id);
+            ps.setObject(1, offer.getId());
             int status = ps.executeUpdate();
-            if(status == 1) return true;
-            else return false;
+            if(status == 1) {
+                updatePlayerObjects(buyer, offer.getOffer().getRessource().ordinal(), offer.getOffer().getQuantity());
+                updatePlayerObjects(offer.getPlayerName(), offer.getPrice().getRessource().ordinal(), offer.getPrice().getQuantity());
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    public boolean cancelOffer(int id) {
-        // TODO ALL
+    public boolean cancelOffer(Offer offer) {
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Offres WHERE id=?", Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, id);
+            ps.setObject(1, offer.getId());
             int status = ps.executeUpdate();
-            if(status == 1) return true;
-            else return false;
+            if(status == 1) {
+                updatePlayerObjects(offer.getPlayerName(), offer.getOffer().getRessource().ordinal(), offer.getOffer().getQuantity());
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public Optional<Offer> getOfferById(int id) {
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Offres WHERE id=?");
+            ps.setObject(1, id);
+            resultSet = ps.executeQuery();
+            if(resultSet.next()) {
+                String trader = resultSet.getString("trader");
+                int offerType = resultSet.getInt("offerType");
+                int offerAmount = resultSet.getInt("offerAmount");
+                int priceType = resultSet.getInt("priceType");
+                int priceAmount = resultSet.getInt("priceAmount");
+
+                return Optional.of(new Offer(id, trader, offerType, offerAmount, priceType, priceAmount));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
 }

@@ -156,10 +156,10 @@ ClientHandler implements Runnable {
                     sendBooleanResult(db.addOffer(username, offerTypeLine, offerAmountLine, priceTypeLine, priceAmountLine));
                 } else if(line.equals(OTrainProtocol.BUY_OFFER)) {
                     int idLine = Integer.valueOf(readLine());
-                    sendBooleanResult(db.buyOffer(idLine));
+                    sendBooleanResult(db.optionalBuyOffer(username, idLine));
                 } else if(line.equals(OTrainProtocol.CANCEL_OFFER)) {
                     int idLine = Integer.valueOf(readLine());
-                    sendBooleanResult(db.cancelOffer(idLine));
+                    sendBooleanResult(db.optionalCancelOffer(idLine));
                 }
 
                 line = readLine();
