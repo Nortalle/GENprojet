@@ -119,7 +119,7 @@ public class GuiUtility {
      * @param textField field to get input from
      * @return the int value of the field
      */
-    public static int getValueFromTextField(JTextField textField) {
+    public static int getValueFromTextField(JTextField textField) throws NumberFormatException {
         int value;
         String text = textField.getText();
         try {
