@@ -37,7 +37,8 @@ public class Client {
     private ArrayList<Craft> crafts = new ArrayList<>();
     private ArrayList<UpgradeWagon> upgradeWagons = new ArrayList<>();
     private ArrayList<CreateWagon> createWagons = new ArrayList<>();
-    private ArrayList<Train> trainsAtStation = new ArrayList<>();
+    //private ArrayList<Train> trainsAtStation = new ArrayList<>();
+    private ArrayList<String> trainsAtStation = new ArrayList<>();
     private ArrayList<TrainStation> trainStations = new ArrayList<>();
     private ArrayList<Offer> offers = new ArrayList<>();
     private int baseResources[] = new int[8];
@@ -456,10 +457,10 @@ public class Client {
         writer.println(stationId);
         writer.flush();
         String answer = readLine();
-        trainsAtStation = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), Train::new);
+        trainsAtStation = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), p -> p.get("p").getAsString());
     }
 
-    public ArrayList<Train> getTrainsAtStation(int stationId) {
+    public ArrayList<String> getTrainsAtStation(int stationId) {
         return trainsAtStation;
     }
 

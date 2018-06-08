@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class
 ClientHandler implements Runnable {
@@ -107,7 +108,20 @@ ClientHandler implements Runnable {
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_TRAINS_AT)) {
                     int stationId = Integer.valueOf(readLine());
-                    writer.println(JsonUtility.listToJson(db.getAllTrainsAtStation(stationId), Train::toJson));
+
+                    // TODO NOTHING ...
+                    ArrayList<String> players = db.getAllTrainsAtStation(stationId).stream()
+                            .map(train -> db.getUsernameByWagonId(train.getWagons().get(0).getId()))
+                            .collect(Collectors.toCollection(ArrayList::new));
+
+                    writer.println(JsonUtility.listToJson(players, string -> {
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.add("p", new JsonPrimitive(string));
+                        return jsonObject;
+                    }));
+
+
+                    //writer.println(JsonUtility.listToJson(db.getAllTrainsAtStation(stationId), Train::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.MINE_INFO)) {
                     writer.println(JsonUtility.listToJson(Server.getInstance().getMineController().getPlayerWagonMining(username), WagonMining::toJson));
