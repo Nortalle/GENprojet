@@ -1313,6 +1313,10 @@ public class DataBase {
     }
 
     public boolean buyOffer(String buyer, Offer offer) {
+        Optional<ResourceAmount> buyerObject = getPlayerObjectOfType(buyer, offer.getPrice().getRessource().ordinal());
+        if(buyerObject.filter(ra -> ra.getQuantity() < offer.getPrice().getQuantity()).isPresent()) return false;
+        updatePlayerObjects(buyer, offer.getPrice().getRessource().ordinal(), -offer.getPrice().getQuantity());
+
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Offres WHERE id=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, offer.getId());
