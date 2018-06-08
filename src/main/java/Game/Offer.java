@@ -1,6 +1,7 @@
 package Game;
 
 import Utils.JsonUtility;
+import Utils.ResourceAmount;
 import Utils.Ressource;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -8,20 +9,23 @@ import com.google.gson.JsonPrimitive;
 public class Offer {
     private int id;
     private String playerName;
-    private int offerType;
-    private int offerAmount;
-    private int priceType;
-    private int priceAmount;
+    private ResourceAmount offer;
+    private ResourceAmount price;
 
     public Offer() {}
+
+    public Offer(int id, String playerName, ResourceAmount offer, ResourceAmount price) {
+        this.id = id;
+        this.playerName = playerName;
+        this.offer = offer;
+        this.price = price;
+    }
 
     public Offer(int id, String playerName, int offerType, int offerAmount, int priceType, int priceAmount) {
         this.id = id;
         this.playerName = playerName;
-        this.offerType = offerType;
-        this.offerAmount = offerAmount;
-        this.priceType = priceType;
-        this.priceAmount = priceAmount;
+        this.offer = new ResourceAmount(Ressource.Type.values()[offerType], offerAmount);
+        this.price = new ResourceAmount(Ressource.Type.values()[priceType], priceAmount);
     }
 
     public Offer(JsonObject json) {
@@ -40,30 +44,20 @@ public class Offer {
         return playerName;
     }
 
-    public int getOfferType() {
-        return offerType;
+    public ResourceAmount getOffer() {
+        return offer;
     }
 
-    public int getOfferAmount() {
-        return offerAmount;
-    }
-
-    public int getPriceType() {
-        return priceType;
-    }
-
-    public int getPriceAmount() {
-        return priceAmount;
+    public ResourceAmount getPrice() {
+        return price;
     }
 
     public JsonObject toJson() {
         JsonObject train = new JsonObject();
         train.add("id", new JsonPrimitive(id));
         train.add("playerName", new JsonPrimitive(playerName));
-        train.add("offerType", new JsonPrimitive(offerType));
-        train.add("offerAmount", new JsonPrimitive(offerAmount));
-        train.add("priceType", new JsonPrimitive(priceType));
-        train.add("priceAmount", new JsonPrimitive(priceAmount));
+        train.add("offer", offer.toJson());
+        train.add("price", price.toJson());
 
         return train;
     }
@@ -71,14 +65,22 @@ public class Offer {
     public void fromJson(JsonObject from) {
         id = from.get("id").getAsInt();
         playerName = from.get("playerName").getAsString();
-        offerType = from.get("offerType").getAsInt();
-        offerAmount = from.get("offerAmount").getAsInt();
-        priceType = from.get("priceType").getAsInt();
-        priceAmount = from.get("priceAmount").getAsInt();
+        if(offer == null) offer = new ResourceAmount((JsonObject) from.get("offer"));
+        else offer.fromJson((JsonObject) from.get("offer"));
+        if(price == null) price = new ResourceAmount((JsonObject) from.get("price"));
+        else price.fromJson((JsonObject) from.get("price"));
     }
 
     @Override
     public String toString() {
-        return playerName + " offers : " + offerAmount + Ressource.RessourceToString(offerType) + " for : " + priceAmount + Ressource.RessourceToString(priceType);
+        return playerName
+                + " offers : "
+                + offer.getQuantity()
+                + "x"
+                + Ressource.RessourceToString(offer.getRessource().ordinal())
+                + " for : "
+                + price.getQuantity()
+                + "x"
+                + Ressource.RessourceToString(price.getRessource().ordinal());
     }
 }

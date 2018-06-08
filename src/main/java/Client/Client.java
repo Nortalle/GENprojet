@@ -257,6 +257,14 @@ public class Client {
         return instance;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public static void setClientLogComponent(JTextArea component) {
         CLIENT_LOG.setComponent(component);
     }

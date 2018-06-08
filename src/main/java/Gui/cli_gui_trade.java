@@ -52,9 +52,8 @@ public class cli_gui_trade {
     }
 
     private Optional<Integer> getType(JComboBox list) {
-        Object selectedOfferType = list.getSelectedItem();
-        if(selectedOfferType instanceof Ressource.Type) return Optional.of(((Ressource.Type) selectedOfferType).ordinal());
-        else return Optional.empty();
+        if(!(list.getSelectedItem() instanceof Ressource.Type)) return Optional.empty();
+        else return Optional.of(((Ressource.Type) list.getSelectedItem()).ordinal());
     }
 
     private void noResourceTypeError() throws NoResourceTypeError {
@@ -67,6 +66,7 @@ public class cli_gui_trade {
     public void localUpdate() {
         frequentLocalUpdate();
         updateTypeLists();
+        updateOffers();
     }
 
     public void frequentLocalUpdate() {
@@ -80,5 +80,27 @@ public class cli_gui_trade {
             dropdown_ressource_offer.addItem(t);
             dropdown_ressource_price.addItem(t);
         }
+    }
+
+    public void updateOffers() {
+        GuiUtility.listInPanel(trading_panel, Client.getInstance().getOffers(), offer -> {
+            JPanel panel = new JPanel();
+            JLabel label = new JLabel(offer.toString());
+            JButton button = new JButton();
+
+            // own offer -> cancel
+            if(Client.getInstance().getUsername().equals(offer.getPlayerName())) {
+                button.setText("CANCEL");
+                button.addActionListener(e -> Client.getInstance().cancelOffer(offer.getId()));
+            // someone else offer -> by
+            } else {
+                button.setText("BUY");
+                button.addActionListener(e -> Client.getInstance().buyOffer(offer.getId()));
+            }
+
+            panel.add(label);
+            panel.add(button);
+            return panel;
+        });
     }
 }
