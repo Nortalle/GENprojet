@@ -88,6 +88,7 @@ public class OTrainProtocol {
     public static final String CHANGE_MINE = "CHANGE_MINE";
     public static final String DELETE_MINE = "DELETE_MINE";
     public static final String CHANGE_PLAYER_OBJECT = "CHANGE_PLAYER_OBJECT";
+    public static final String DELETE_PLAYER = "DELETE_PLAYER";
 
     /* ---------{ Server side commands }--------- */
 

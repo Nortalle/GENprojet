@@ -218,6 +218,13 @@ public class Client {
         return readLine();
     }
 
+    public String sendDeletePlayer(String playerName) {
+        writer.println(OTrainProtocol.DELETE_PLAYER);
+        writer.println(playerName);
+        writer.flush();
+        return readLine();
+    }
+
     // end admin
 
     public static Client getInstance() {

@@ -18,6 +18,7 @@ public class AdminGuiPlayer {
     private JTextField amountTextField;
     private JButton updateButton;
     private JLabel inventoryLabel;
+    private JButton deleteButton;
 
     private String selectedPlayer;
     private Ressource.Type selectedType;
@@ -64,6 +65,16 @@ public class AdminGuiPlayer {
                     return;
                 }
                 line = Client.getInstance().sendChangePlayerObject(selectedPlayer, selectedType.ordinal(), newAmount);
+                if(line.equals(OTrainProtocol.SUCCESS)) {
+                    Client.getInstance().updateAdminAll();
+                    update();
+                }
+            }
+        });
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String line = Client.getInstance().sendDeletePlayer(selectedPlayer);
                 if(line.equals(OTrainProtocol.SUCCESS)) {
                     Client.getInstance().updateAdminAll();
                     update();
