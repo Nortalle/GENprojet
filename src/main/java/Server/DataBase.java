@@ -750,6 +750,7 @@ public class DataBase {
      * @return
      */
     public ArrayList<TrainStation> getAllTrainStationsWithinRange(int range, int x, int y){
+        range = 100;// TEMP
         ArrayList<TrainStation> result = new ArrayList<>();
         try {
             ResultSet resultSet;
@@ -774,6 +775,7 @@ public class DataBase {
             e.printStackTrace();
         }
 
+        /*
         Random r = new Random();
         // parcours de toutes les gares qui devraient s'y trouver et check si elles existent déjà
         for(int xi = x - range; xi < x + range; xi++ ){
@@ -821,7 +823,7 @@ public class DataBase {
                 }
             }
         }
-
+        */
         return result;
     }
 
