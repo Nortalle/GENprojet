@@ -61,7 +61,7 @@ public class cli_gui_craft {
                     ex.printStackTrace();
                 }
                 Client.getInstance().updateAll();
-                if(line.equals(OTrainProtocol.SUCCESS)) update();
+                if(line.equals(OTrainProtocol.SUCCESS)) localUpdate();
             }
         });
     }
