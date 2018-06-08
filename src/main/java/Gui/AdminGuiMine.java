@@ -4,6 +4,7 @@ import Client.Client;
 import Game.Mine;
 import Game.TrainStation;
 import Utils.GuiUtility;
+import Utils.OTrainProtocol;
 import Utils.Ressource;
 
 import javax.swing.*;
@@ -65,20 +66,30 @@ public class AdminGuiMine {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String line;
                 if(selectedMine == null) {
-                    Client.getInstance().sendNewMine(getMineFromInputs(-1));
+                    line = Client.getInstance().sendNewMine(getMineFromInputs(-1));
                 } else {
-                    Client.getInstance().sendChangeMine(getMineFromInputs(selectedMine.getId()));
+                    line = Client.getInstance().sendChangeMine(getMineFromInputs(selectedMine.getId()));
+                }
+                if(line.equals(OTrainProtocol.SUCCESS)) {
+                    Client.getInstance().updateAdminAll();
+                    update();
                 }
             }
         });
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String line;
                 if(selectedMine == null) {
                     return;
                 } else {
-                    Client.getInstance().sendDeleteMine(selectedMine.getId());
+                    line = Client.getInstance().sendDeleteMine(selectedMine.getId());
+                }
+                if(line.equals(OTrainProtocol.SUCCESS)) {
+                    Client.getInstance().updateAdminAll();
+                    update();
                 }
             }
         });

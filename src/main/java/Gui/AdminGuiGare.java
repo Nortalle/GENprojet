@@ -3,6 +3,7 @@ package Gui;
 import Client.Client;
 import Game.TrainStation;
 import Utils.GuiUtility;
+import Utils.OTrainProtocol;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -49,20 +50,30 @@ public class AdminGuiGare {
         new_gare.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String line;
                 if(selectedStation == null) {
-                    Client.getInstance().sendNewStation(getStationFromInputs(-1));
+                    line = Client.getInstance().sendNewStation(getStationFromInputs(-1));
                 } else {
-                    Client.getInstance().sendChangeStation(getStationFromInputs(selectedStation.getId()));
+                    line = Client.getInstance().sendChangeStation(getStationFromInputs(selectedStation.getId()));
+                }
+                if(line.equals(OTrainProtocol.SUCCESS)) {
+                    Client.getInstance().updateAdminAll();
+                    update();
                 }
             }
         });
         delete_gare.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String line;
                 if(selectedStation == null) {
                     return;
                 } else {
-                    Client.getInstance().sendDeleteStation(selectedStation.getId());
+                    line = Client.getInstance().sendDeleteStation(selectedStation.getId());
+                }
+                if(line.equals(OTrainProtocol.SUCCESS)) {
+                    Client.getInstance().updateAdminAll();
+                    update();
                 }
             }
         });

@@ -2,6 +2,7 @@ package Gui;
 
 import Client.Client;
 import Utils.GuiUtility;
+import Utils.OTrainProtocol;
 import Utils.Ressource;
 
 import javax.swing.*;
@@ -55,13 +56,18 @@ public class AdminGuiPlayer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int newAmount;
+                String line = "";
                 try {
                     newAmount = GuiUtility.getValueFromTextField(amountTextField);
                 } catch (NumberFormatException ex) {
                     ex.printStackTrace();
                     return;
                 }
-                Client.getInstance().sendChangePlayerObject(selectedPlayer, selectedType.ordinal(), newAmount);
+                line = Client.getInstance().sendChangePlayerObject(selectedPlayer, selectedType.ordinal(), newAmount);
+                if(line.equals(OTrainProtocol.SUCCESS)) {
+                    Client.getInstance().updateAdminAll();
+                    update();
+                }
             }
         });
     }
