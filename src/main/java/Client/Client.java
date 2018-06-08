@@ -59,19 +59,17 @@ public class Client {
             public void localUpdate() {
 
                 // 1) localUpdate des crafts en cours //
-                ArrayList<Craft> toRemove = new ArrayList<>();
+                ArrayList<Craft> craftToRemove = new ArrayList<>();
                 for(int i = 0; i < crafts.size() && i < WagonStats.getMaxParallelCraft(train); i++) {
                     crafts.get(i).decreaseRemainingTime();
                     if(crafts.get(i).getRemainingTime() <= 0){
-                        toRemove.add(crafts.get(i));
+                        craftToRemove.add(crafts.get(i));
                         // localUpdate de la liste locale de l'inventaire
                         ResourceAmount r = Recipe.getReciepAtIndex(crafts.get(i).getRecipeIndex()).getFinalProduct();
                         resourceAmounts.put(r.getRessource(), resourceAmounts.getOrDefault(r.getRessource(), new ResourceAmount(r.getRessource(), 0)).addQuantity(r.getQuantity()));
                     }
                 }
-                for(Craft c : toRemove) {
-                    crafts.remove(c);
-                }
+                for(Craft c : craftToRemove) crafts.remove(c);
 
                 // 2) localUpdate des ressources en cours de minage //
                 for(WagonMining w : wagonMining) {
@@ -95,6 +93,29 @@ public class Client {
 
                 // 3) localUpdate des déplacements de train //
                 train.decreaseTrainStationETA(1);
+
+                // 4) localUpdate des améliorations de wagons //
+                ArrayList<UpgradeWagon> upgradeWagonToRemove = new ArrayList<>();
+                for(UpgradeWagon u : upgradeWagons) {
+                    u.decreaseRemainingTime();
+                    if(u.getRemainingTime() <= 0) {
+                        upgradeWagonToRemove.add(u);
+                        u.getWagon_to_upgrade().levelUp();
+                    }
+                }
+                for(UpgradeWagon u : upgradeWagonToRemove) upgradeWagons.remove(u);
+
+                // 4) localUpdate des améliorations de wagons //
+                ArrayList<CreateWagon> createWagonToRemove = new ArrayList<>();
+                for(CreateWagon c : createWagons) {
+                    c.decreaseRemainingTime();
+                    if(c.getRemainingTime() <= 0) {
+                        createWagonToRemove.add(c);
+                        // this line may bug because final product id is -1
+                        //train.getWagons().add(WagonRecipe.getAllRecipes().get(c.getWagonRecipeIndex()).getFinalProduct());
+                    }
+                }
+                for(CreateWagon c : createWagonToRemove) createWagons.remove(c);
             }
         });
     }
