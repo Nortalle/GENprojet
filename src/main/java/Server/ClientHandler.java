@@ -59,7 +59,7 @@ ClientHandler implements Runnable {
         return line;
     }
 
-    public void sendBooleanResult(boolean b) {
+    private void sendBooleanResult(boolean b) {
         writer.println(b ? OTrainProtocol.SUCCESS : OTrainProtocol.FAILURE);
         writer.flush();
     }
