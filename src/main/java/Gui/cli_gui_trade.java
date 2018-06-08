@@ -6,6 +6,7 @@ import Utils.OTrainProtocol;
 import Utils.Ressource;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Optional;
@@ -99,6 +100,7 @@ public class cli_gui_trade {
                 button.setText("BUY");
                 button.addActionListener(e -> Client.getInstance().buyOffer(offer.getId()));
             }
+            button.setPreferredSize(new Dimension(button.getPreferredSize().width, 20));
 
             panel.add(label);
             panel.add(button);
