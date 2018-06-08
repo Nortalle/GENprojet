@@ -23,6 +23,10 @@ public class TrainStation {
         fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
+    public TrainStation(int id, int x, int y){
+
+    }
+
     public TrainStation(int id, int x, int y, int nbPlat, int sizePlat, ArrayList<Mine> m) {
         this.id = id;
         posX = x;

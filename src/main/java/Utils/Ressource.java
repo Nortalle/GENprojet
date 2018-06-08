@@ -1,6 +1,7 @@
 package Utils;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Ressource {
     /**
@@ -41,6 +42,82 @@ public class Ressource {
 
     }
 
+    public static double amountMofifier(Type t){
+        switch (t){
+            case WATER: {
+                return 1;
+            }
+            case WOOD_LOG: {
+                return 1;
+            }
+            case CHARCOAL: {
+                return 0.3;
+            }
+            case OIL: {
+                return 0.2;
+            }
+            case IRON_ORE: {
+                return 1;
+            }
+            case COPPER_ORE: {
+                return 0.7;
+            }
+            case GOLD_ORE: {
+                return 0.1;
+            }
+            default:
+                return 0;
+        }
+    }
+    public static Type southOccurence(){
+        Random r = new Random();
+        int randomNumber = r.nextInt(100);
+
+        if(randomNumber < 30){
+            return Type.IRON_ORE;       //30%
+        }
+        if(randomNumber < 50){
+            return Type.WOOD_LOG;       //20%
+        }
+        if(randomNumber < 70) {
+            return Type.CHARCOAL;       //20%
+        }
+        if(randomNumber < 90) {
+            return Type.COPPER_ORE;     //20%
+        }
+        if(randomNumber < 95){
+            return Type.OIL;            //5%
+        }
+        if(randomNumber < 100){
+            return Type.WATER;          //5%
+        }
+        return Type.IRON_ORE;           // ????
+    }
+
+    public static Type northOccurence(){
+        Random r = new Random();
+        int randomNumber = r.nextInt(100);
+
+        if(randomNumber < 30){
+            return Type.IRON_ORE;       //30%
+        }
+        if(randomNumber < 35){
+            return Type.WOOD_LOG;       //5%
+        }
+        if(randomNumber < 60) {
+            return Type.CHARCOAL;       //25%
+        }
+        if(randomNumber < 85) {
+            return Type.COPPER_ORE;     //25%
+        }
+        if(randomNumber < 95){
+            return Type.WATER;          //10%
+        }
+        if(randomNumber < 100){
+            return Type.GOLD_ORE;       //5%
+        }
+        return Type.IRON_ORE;           // ????
+    }
 
     /**
      * Retourne le string proprement formatté correspondant au type d'une ressource
