@@ -124,6 +124,6 @@ public class cli_gui_Gare {
     public void updateStationList() {
         select_station.removeAllItems();
         for(TrainStation ts : Client.getInstance().getTrainStations()) select_station.addItem(ts);
-        if(select_station != null && select_station.getItemCount() > 0) select_station.setSelectedIndex(viewingStationIndex);
+        if(select_station != null && select_station.getItemCount() > 0 && viewingStationIndex < select_station.getItemCount()) select_station.setSelectedIndex(viewingStationIndex);
     }
 }
