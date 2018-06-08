@@ -145,6 +145,24 @@ CREATE TABLE IF NOT EXISTS `Wagon` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+-- table offre
+CREATE TABLE IF NOT EXISTS `Offres` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `trader` VARCHAR(45) NOT NULL,
+  `offerType` INT NOT NULL DEFAULT 0,
+  `offerAmount` INT NOT NULL DEFAULT 0,
+  `priceType` INT NOT NULL,
+  `priceAmount` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  CONSTRAINT `fk_joueur_offre`
+    FOREIGN KEY (`trader`)
+    REFERENCES `Joueur` (`nomJoueur`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
 SET FOREIGN_KEY_CHECKS = 1;
 
 

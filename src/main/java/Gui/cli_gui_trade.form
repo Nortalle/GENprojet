@@ -77,7 +77,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="5cfbb" layout-manager="GridBagLayout">
+          <grid id="5cfbb" binding="offersPanel" layout-manager="GridBagLayout">
             <constraints/>
             <properties/>
             <border type="none" title="Offres Disponibles"/>

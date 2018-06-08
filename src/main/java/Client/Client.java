@@ -50,8 +50,11 @@ public class Client {
 
 
     //TODO TEST DE MERDE
-    public Client(){
+    private Client(){
 
+    }
+
+    private void addLocalUpdater() {
         SyncClock.getInstance().addUpdater(new Updater() {
             @Override
             public void sync() {
@@ -181,6 +184,7 @@ public class Client {
     }
 
     public void setClientLogged(boolean clientLogged) {
+        if(clientLogged) addLocalUpdater();
         this.clientLogged = clientLogged;
     }
 
@@ -255,6 +259,14 @@ public class Client {
     public static Client getInstance() {
         if(instance == null) instance = new Client();
         return instance;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public static void setClientLogComponent(JTextArea component) {

@@ -47,6 +47,8 @@ public class LoginForm {
         });
         button_login.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                Client.getInstance().setUsername(input_username.getText());//
+
                 String answer = client.sendLogin(input_username.getText(), String.valueOf(input_password.getPassword()));
 
                 if(answer.equals(OTrainProtocol.SUCCESS)) {

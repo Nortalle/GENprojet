@@ -74,7 +74,7 @@ public class ClientForm {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public synchronized void run() {
-                frequentLocalUpdate();
+                if(Client.getInstance().isClientLogged())frequentLocalUpdate();
             }
         }, 0, 500);
 
