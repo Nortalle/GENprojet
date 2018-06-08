@@ -144,18 +144,9 @@ ClientHandler implements Runnable {
                     writer.println(JsonUtility.listToJson(Server.getInstance().getCreateController().getPlayerCreateWagons(username), CreateWagon::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GET_OFFERS)) {
-                    String offerTypeLine = readLine();
-                    String priceTypeLine = readLine();
-                    // TEMP FOR TESTING
-                    ArrayList<Offer> offers = new ArrayList<>();
-                    offers.add(new Offer(1, "a", 1, 1, 2, 1));
-                    offers.add(new Offer(1, "a", 3, 1, 2, 1));
-                    offers.add(new Offer(1, "u1", 1, 1, 4, 1));
-                    offers.add(new Offer(1, "u1", 5, 1, 2, 1));
-                    offers.add(new Offer(1, "u2", 6, 1, 7, 1));
-                    writer.println(JsonUtility.listToJson(offers, Offer::toJson));
-                    //
-                    //writer.println("CMD NOT READY");
+                    int offerTypeLine = Integer.valueOf(readLine());
+                    int priceTypeLine = Integer.valueOf(readLine());
+                    writer.println(JsonUtility.listToJson(db.getOffers(offerTypeLine, priceTypeLine), Offer::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.SET_OFFER)) {
                     String offerTypeLine = readLine();

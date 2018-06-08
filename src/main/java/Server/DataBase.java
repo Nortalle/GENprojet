@@ -1124,4 +1124,48 @@ public class DataBase {
         return false;
     }
 
+    // OFFERS REQUESTS
+
+    public ArrayList<Offer> getOffers(int offer, int price) {
+        ArrayList<Offer> offers = new ArrayList<>();
+
+        PreparedStatement ps;
+
+        try {
+            ResultSet resultSet;
+            if(offer == -1 && price == -1) {
+                ps = connection.prepareStatement("SELECT * FROM Offers");
+            }
+            else if(offer != -1 && price == -1) {
+                ps = connection.prepareStatement("SELECT * FROM Offers WHERE offerType=?");
+                ps.setObject(1, offer);
+            }
+            else if(offer == -1 && price != -1) {
+                ps = connection.prepareStatement("SELECT * FROM Offers WHERE priceType=?");
+                ps.setObject(1, price);
+            }
+            else {
+                ps = connection.prepareStatement("SELECT * FROM Offers WHERE offerType=? AND priceType=?");
+                ps.setObject(1, offer);
+                ps.setObject(2, price);
+            }
+            resultSet = ps.executeQuery();
+            while(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String trader = resultSet.getString("trader");
+                int offerType = resultSet.getInt("offerType");
+                int offerAmount = resultSet.getInt("offerAmount");
+                int priceType = resultSet.getInt("priceType");
+                int priceAmount = resultSet.getInt("priceAmount");
+
+                offers.add(new Offer(id, trader, offerType, offerAmount, priceType, priceAmount));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return offers;
+    }
+
 }
