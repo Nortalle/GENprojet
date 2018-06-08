@@ -1167,7 +1167,7 @@ public class DataBase {
     public boolean addOffer(String playerName, int offerType, int offerAmount, int priceType, int priceAmount) {
         // TODO TESTS AND REMOVE RESOURCES FORM PLAYER
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Offres VALUES(default,?,?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Offres VALUES(default,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, playerName);
             ps.setObject(2, offerType);
             ps.setObject(3, offerAmount);
@@ -1177,6 +1177,34 @@ public class DataBase {
             if(status != 0){
                 return true;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean buyOffer(int id) {
+        // TODO ALL
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM Offres WHERE id=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, id);
+            int status = ps.executeUpdate();
+            if(status == 1) return true;
+            else return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean cancelOffer(int id) {
+        // TODO ALL
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM Offres WHERE id=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, id);
+            int status = ps.executeUpdate();
+            if(status == 1) return true;
+            else return false;
         } catch (SQLException e) {
             e.printStackTrace();
         }

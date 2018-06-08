@@ -106,11 +106,25 @@ public class cli_gui_trade {
             // own offer -> cancel
             if(Client.getInstance().getUsername().equals(offer.getPlayerName())) {
                 button.setText("CANCEL");
-                button.addActionListener(e -> Client.getInstance().cancelOffer(offer.getId()));
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Client.getInstance().cancelOffer(offer.getId());
+                        Client.getInstance().updateOffers(getType(dropdown_ressource_offer).orElse(-1), getType(dropdown_ressource_price).orElse(-1));
+                        localUpdate();
+                    }
+                });
                 // someone else offer -> by
             } else {
                 button.setText("BUY");
-                button.addActionListener(e -> Client.getInstance().buyOffer(offer.getId()));
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Client.getInstance().buyOffer(offer.getId());
+                        Client.getInstance().updateOffers(getType(dropdown_ressource_offer).orElse(-1), getType(dropdown_ressource_price).orElse(-1));
+                        localUpdate();
+                    }
+                });
             }
             button.setPreferredSize(new Dimension(button.getPreferredSize().width, 20));
 

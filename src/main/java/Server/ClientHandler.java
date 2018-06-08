@@ -155,13 +155,11 @@ ClientHandler implements Runnable {
                     int priceAmountLine = Integer.valueOf(readLine());
                     sendBooleanResult(db.addOffer(username, offerTypeLine, offerAmountLine, priceTypeLine, priceAmountLine));
                 } else if(line.equals(OTrainProtocol.BUY_OFFER)) {
-                    String idLine = readLine();
-                    writer.println("CMD NOT READY");
-                    writer.flush();
+                    int idLine = Integer.valueOf(readLine());
+                    sendBooleanResult(db.buyOffer(idLine));
                 } else if(line.equals(OTrainProtocol.CANCEL_OFFER)) {
-                    String idLine = readLine();
-                    writer.println("CMD NOT READY");
-                    writer.flush();
+                    int idLine = Integer.valueOf(readLine());
+                    sendBooleanResult(db.cancelOffer(idLine));
                 }
 
                 line = readLine();
