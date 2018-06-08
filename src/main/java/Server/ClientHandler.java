@@ -143,6 +143,26 @@ ClientHandler implements Runnable {
                 } else if(line.equals(OTrainProtocol.GET_CREATION_QUEUE)) {
                     writer.println(JsonUtility.listToJson(Server.getInstance().getCreateController().getPlayerCreateWagons(username), CreateWagon::toJson));
                     writer.flush();
+                } else if(line.equals(OTrainProtocol.GET_OFFERS)) {
+                    String offerTypeLine = readLine();
+                    String priceTypeLine = readLine();
+                    writer.println("CMD NOT READY");
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.SET_OFFER)) {
+                    String offerTypeLine = readLine();
+                    String offerAmountLine = readLine();
+                    String priceTypeLine = readLine();
+                    String priceAmountLine = readLine();
+                    writer.println("CMD NOT READY");
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.BUY_OFFER)) {
+                    String idLine = readLine();
+                    writer.println("CMD NOT READY");
+                    writer.flush();
+                } else if(line.equals(OTrainProtocol.CANCEL_OFFER)) {
+                    String idLine = readLine();
+                    writer.println("CMD NOT READY");
+                    writer.flush();
                 }
 
                 line = readLine();

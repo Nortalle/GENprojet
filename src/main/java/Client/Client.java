@@ -36,6 +36,7 @@ public class Client {
     private ArrayList<CreateWagon> createWagons = new ArrayList<>();
     private ArrayList<Train> trainsAtStation = new ArrayList<>();
     private ArrayList<TrainStation> trainStations = new ArrayList<>();
+    private ArrayList<Offer> offers = new ArrayList<>();
     private int baseResources[] = new int[8];
 
     // start admin
@@ -449,23 +450,21 @@ public class Client {
         updateTrainsAtStation(train.getTrainStation().getId());
     }
 
-    // TODO
     public void updateOffers(int offerType, int priceType) {
-        writer.println(OTrainProtocol.SUCCESS);
+        writer.println(OTrainProtocol.GET_OFFERS);
         writer.println(offerType);
         writer.println(priceType);
         writer.flush();
         String answer = readLine();
-        //offers = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), Offer::new);
+        offers = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), Offer::new);
     }
 
-    // TODO
-    public ArrayList<Object> getOffers() {
-        return null;
+    public ArrayList<Offer> getOffers() {
+        return offers;
     }
 
     public String placeOffer(int offerType, int offerAmount, int priceType, int priceAmount) {
-        writer.println(OTrainProtocol.SUCCESS);
+        writer.println(OTrainProtocol.SET_OFFER);
         writer.println(offerType);
         writer.println(offerAmount);
         writer.println(priceType);
@@ -475,14 +474,14 @@ public class Client {
     }
 
     public String buyOffer(int id) {
-        writer.println(OTrainProtocol.SUCCESS);
+        writer.println(OTrainProtocol.BUY_OFFER);
         writer.println(id);
         writer.flush();
         return readLine();
     }
 
     public String cancelOffer(int id) {
-        writer.println(OTrainProtocol.SUCCESS);
+        writer.println(OTrainProtocol.CANCEL_OFFER);
         writer.println(id);
         writer.flush();
         return readLine();
