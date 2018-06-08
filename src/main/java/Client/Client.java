@@ -469,6 +469,11 @@ public class Client {
         writer.flush();
         String answer = readLine();
         trainStations = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), TrainStation::new);
+
+        // sort to have the closest station to the center on top of the list
+        trainStations = trainStations.stream()
+                .sorted(Comparator.comparing(station -> Math.abs(station.getPosX()) + Math.abs(station.getPosY())))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<TrainStation> getTrainStations() {
@@ -499,6 +504,11 @@ public class Client {
         writer.flush();
         String answer = readLine();
         offers = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), Offer::new);
+
+        // sort
+        offers = offers.stream()
+                .sorted(Comparator.comparing(offer -> - offer.getRatio()))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<Offer> getOffers() {

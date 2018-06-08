@@ -83,4 +83,8 @@ public class Offer {
                 + "x"
                 + Ressource.RessourceToString(price.getRessource().ordinal());
     }
+
+    public double getRatio() {
+        return ((double )price.getQuantity()) / ((double) offer.getQuantity());
+    }
 }
