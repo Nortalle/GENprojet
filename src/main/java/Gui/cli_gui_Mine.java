@@ -4,7 +4,6 @@ import Client.*;
 import Game.Mine;
 import Game.Train;
 import Game.Wagon;
-import Game.WagonMining;
 import Utils.GuiUtility;
 import Utils.OTrainProtocol;
 import Utils.WagonStats;
@@ -12,7 +11,6 @@ import Utils.WagonStats;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ public class cli_gui_Mine {
 
     public cli_gui_Mine() {
         train = Client.getInstance().getTrain();
-        update();
+        localUpdate();
 
         startMiningButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -40,8 +38,8 @@ public class cli_gui_Mine {
                 Wagon wagon = (Wagon) select_wagon.getSelectedItem();
 
                 String line = Client.getInstance().startMining(wagon.getId(), mine.getId());
-                Client.getInstance().updateWagonMining();// MANUAL UPDATE
-                if(line.equals(OTrainProtocol.SUCCESS)) update();
+                Client.getInstance().updateAll();
+                if(line.equals(OTrainProtocol.SUCCESS)) localUpdate();
             }
         });
         stopMiningButton.addActionListener(new ActionListener() {
@@ -49,7 +47,7 @@ public class cli_gui_Mine {
             public void actionPerformed(ActionEvent e) {
                 String line = Client.getInstance().stopMining(((Wagon) select_wagon.getSelectedItem()).getId());
                 Client.getInstance().updateWagonMining();// MANUAL UPDATE
-                if(line.equals(OTrainProtocol.SUCCESS)) update();
+                if(line.equals(OTrainProtocol.SUCCESS)) localUpdate();
             }
         });
         select_mine.addPopupMenuListener(new PopupMenuListener() {
@@ -78,15 +76,19 @@ public class cli_gui_Mine {
         });
     }
 
-    public void update(){
-        updateMinesPanel();
-        updateCurrentlyMiningWagons();
+    public void localUpdate(){
+        frequentLocalUpdate();
         updateMinesList();
         updateWagonsList();
+        updateCurrentlyMiningWagons();
+    }
+
+    public void frequentLocalUpdate(){
+        updateMinesPanel();
     }
 
     public void updateMinesPanel() {
-        GuiUtility.listInPanel(availableMinesPanel, train.getTrainStation().getMines(), mine -> new JLabel(mine.toString()));
+        GuiUtility.listInPanel(availableMinesPanel, train.getTrainStation().getMines(), mine -> new JLabel( mine.printInfo()));
     }
 
     public void updateCurrentlyMiningWagons() {

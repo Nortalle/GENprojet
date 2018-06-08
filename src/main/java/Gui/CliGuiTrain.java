@@ -44,7 +44,7 @@ public class CliGuiTrain {
     public CliGuiTrain() {
         train = Client.getInstance().getTrain();
         init();
-        update();
+        localUpdate();
         //selectedWagon = (Wagon) upgradeList.getSelectedItem();
         //updateUpgradeCostPanel();
 
@@ -56,7 +56,7 @@ public class CliGuiTrain {
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 selectedWagon = (Wagon) upgradeList.getSelectedItem();
                 selectedWagonIndex = upgradeList.getSelectedIndex();
-                update();
+                localUpdate();
             }
 
             @Override
@@ -69,7 +69,7 @@ public class CliGuiTrain {
             @Override
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 selectedWagonRecipe = (WagonRecipe) createList.getSelectedItem();
-                update();
+                localUpdate();
             }
 
             @Override
@@ -81,7 +81,7 @@ public class CliGuiTrain {
                 if(selectedWagon == null) return;
                 String line = Client.getInstance().startUpgrade(selectedWagon.getId());
                 Client.getInstance().updateUpgradeWagons();// MANUAL UPDATE
-                if(line.equals(OTrainProtocol.SUCCESS)) update();
+                if(line.equals(OTrainProtocol.SUCCESS)) localUpdate();
             }
         });
         createButton.addActionListener(new ActionListener() {
@@ -90,7 +90,7 @@ public class CliGuiTrain {
                 if(selectedWagonRecipe == null) return;
                 String line = Client.getInstance().startCreation(selectedWagonRecipe.getRecipeIndex());
                 Client.getInstance().updateCreateWagons();// MANUAL UPDATE
-                if(line.equals(OTrainProtocol.SUCCESS)) update();
+                if(line.equals(OTrainProtocol.SUCCESS)) localUpdate();
             }
         });
     }
@@ -105,7 +105,7 @@ public class CliGuiTrain {
         infoNamePanel.add(new JLabel("crafts : "));
     }
 
-    public void update() {
+    public void localUpdate() {
         updateInfoPanel();
         updateWagonsPanel();
         updateUpgradeCostPanel();
@@ -114,6 +114,15 @@ public class CliGuiTrain {
         updateCreateQueuePanel();
         updateWagonsList();
         updateCreateList();
+    }
+
+    public void frequentLocalUpdate() {
+        updateInfoPanel();
+        updateWagonsPanel();
+        updateUpgradeCostPanel();
+        updateUpgradeQueuePanel();
+        updateCreateCostPanel();
+        updateCreateQueuePanel();
     }
 
     public void updateInfoPanel() {
@@ -154,8 +163,9 @@ public class CliGuiTrain {
 
     public void updateUpgradeQueuePanel() {
         ArrayList<UpgradeWagon> upgrades = Client.getInstance().getUpgradeWagons();
-        GuiUtility.listInPanel(upgradeQueueNamePanel, upgrades, uw -> new JLabel(uw.toString()));
-        GuiUtility.listInPanel(upgradeQueueBarPanel, upgrades, uw -> GuiUtility.getProgressBar(uw, UpgradeWagon::getRemainingTime, u -> WagonStats.getUpgradeTime(u.getWagon_to_upgrade().getLevel())));
+        //GuiUtility.listInPanel(upgradeQueueNamePanel, upgrades, uw -> new JLabel(uw.toString()));
+        //GuiUtility.listInPanel(upgradeQueueBarPanel, upgrades, uw -> GuiUtility.getProgressBar(uw, UpgradeWagon::getRemainingTime, u -> WagonStats.getUpgradeTime(u.getWagon_to_upgrade().getLevel())));
+        GuiUtility.listProgressBar(upgradeQueuePanel, upgrades, UpgradeWagon::getRemainingTime, u -> WagonStats.getUpgradeTime(u.getWagon_to_upgrade().getLevel()));
     }
 
     public void updateCreateList() {
@@ -172,7 +182,8 @@ public class CliGuiTrain {
 
     public void updateCreateQueuePanel() {
         ArrayList<CreateWagon> upgrades = Client.getInstance().getCreateWagons();
-        GuiUtility.listInPanel(createQueueNamePanel, upgrades, cw -> new JLabel(cw.toString()));
-        GuiUtility.listInPanel(createQueueBarPanel, upgrades, cw -> GuiUtility.getProgressBar(cw, CreateWagon::getRemainingTime, c -> WagonRecipe.getAllRecipes().get(c.getWagonRecipeIndex()).getProductionTime()), GridBagConstraints.NORTHEAST);
+        //GuiUtility.listInPanel(createQueueNamePanel, upgrades, cw -> new JLabel(cw.toString()));
+        //GuiUtility.listInPanel(createQueueBarPanel, upgrades, cw -> GuiUtility.getProgressBar(cw, CreateWagon::getRemainingTime, c -> WagonRecipe.getAllRecipes().get(c.getWagonRecipeIndex()).getProductionTime()), GridBagConstraints.NORTHEAST);
+        GuiUtility.listProgressBar(createQueuePanel, upgrades, CreateWagon::getRemainingTime, c -> WagonRecipe.getAllRecipes().get(c.getWagonRecipeIndex()).getProductionTime());
     }
 }

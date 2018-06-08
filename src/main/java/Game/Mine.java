@@ -10,6 +10,8 @@ public class Mine {
     private int id;
     private int resource = 0;// change to ID ?
     private int amount;
+    private int max;
+    private int regen;
     private int place;
 
     public Mine() {}
@@ -22,11 +24,13 @@ public class Mine {
         fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
-    public Mine(int i, int r, int a, int p) {
-        id = i;
-        resource = r;
-        amount = a;
-        place = p;
+    public Mine(int id, int resource, int amout, int max, int regen, int place) {
+        this.id = id;
+        this.resource = resource;
+        this.amount = amout;
+        this.max = max;
+        this.regen = regen;
+        this.place = place;
     }
 
     public int getResource() {
@@ -38,6 +42,8 @@ public class Mine {
         mine.add("id", new JsonPrimitive(id));
         mine.add("resource", new JsonPrimitive(resource));
         mine.add("amount", new JsonPrimitive(amount));
+        mine.add("max", new JsonPrimitive(max));
+        mine.add("regen", new JsonPrimitive(regen));
         mine.add("place", new JsonPrimitive(place));
 
         return mine;
@@ -47,6 +53,8 @@ public class Mine {
         id = from.get("id").getAsInt();
         resource = from.get("resource").getAsInt();
         amount = from.get("amount").getAsInt();
+        max = from.get("max").getAsInt();
+        regen = from.get("regen").getAsInt();
         place = from.get("place").getAsInt();
     }
 
@@ -58,6 +66,14 @@ public class Mine {
         return amount;
     }
 
+    public int getMax() {
+        return max;
+    }
+
+    public int getRegen() {
+        return regen;
+    }
+
     public int getPlace() {
         return place;
     }
@@ -66,8 +82,17 @@ public class Mine {
         this.amount = new_amount;
     }
 
+    public Mine reduceAmount(int i) {
+        amount -= i;
+        return this;
+    }
+
     @Override
     public String toString() {
-        return id + " " + Ressource.RessourceToString(Ressource.Type.values()[resource]) + " : " + amount;
+        return Ressource.RessourceToString(resource) + " Mine " + id;
+    }
+
+    public String printInfo() {
+        return toString() + " [" + amount + "] left";
     }
 }

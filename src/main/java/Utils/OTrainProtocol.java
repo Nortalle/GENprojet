@@ -40,11 +40,13 @@ public class OTrainProtocol {
 
     /* Buy/Sell related commands*/
     // place an offer
-    public static final String SET_OFFRE = "SET_OFFRE";
+    public static final String SET_OFFER = "SET_OFFER";
     // get the offer lists
-    public static final String GET_OFFRES = "GET_OFFRES";
+    public static final String GET_OFFERS = "GET_OFFERS";
     // acquire an offer
-    public static final String BUY_OFFRE = "BUY_OFFRE";
+    public static final String BUY_OFFER = "BUY_OFFER";
+    // cancel an offer
+    public static final String CANCEL_OFFER = "CANCEL_OFFER";
 
     /* Production related commands */
     // get the list of production
@@ -72,6 +74,23 @@ public class OTrainProtocol {
     // create a new account
     public static final String SIGN_UP = "SIGN_UP";
 
+
+    /* ---------{ Admin commands }--------- */
+    // get list of all players
+    public static final String GET_ALL_PLAYER = "GET_ALL_PLAYER";
+    // get player cargo
+    public static final String GET_PLAYER_CARGO = "GET_PLAYER_CARGO";
+    // get player object
+    public static final String GET_PLAYER_OBJECT = "GET_PLAYER_OBJECT";
+
+    public static final String NEW_STATION = "NEW_STATION";
+    public static final String CHANGE_STATION = "CHANGE_STATION";
+    public static final String DELETE_STATION = "DELETE_STATION";
+    public static final String NEW_MINE = "NEW_MINE";
+    public static final String CHANGE_MINE = "CHANGE_MINE";
+    public static final String DELETE_MINE = "DELETE_MINE";
+    public static final String CHANGE_PLAYER_OBJECT = "CHANGE_PLAYER_OBJECT";
+    public static final String DELETE_PLAYER = "DELETE_PLAYER";
 
     /* ---------{ Server side commands }--------- */
 

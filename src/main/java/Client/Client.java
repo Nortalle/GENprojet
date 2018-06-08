@@ -3,10 +3,7 @@ package Client;
 import Game.*;
 import Gui.LoginForm;
 import Server.ClientHandler;
-import Utils.JsonUtility;
-import Utils.OTrainProtocol;
-import Utils.ResourceAmount;
-import Utils.Ressource;
+import Utils.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -15,7 +12,11 @@ import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class Client {
     private static final java.util.logging.Logger LOG = Logger.getLogger(ClientHandler.class.getName());
@@ -28,14 +29,228 @@ public class Client {
     private BufferedReader reader;
     private PrintWriter writer;
     private String username;
+    private boolean clientLogged;
+    private boolean adminLogged;
     private Train train;
     private ArrayList<WagonMining> wagonMining = new ArrayList<>();
-    private ArrayList<ResourceAmount> resourceAmounts = new ArrayList<>();
+    private HashMap<Ressource.Type,ResourceAmount> resourceAmounts = new HashMap<>();
     private ArrayList<Craft> crafts = new ArrayList<>();
     private ArrayList<UpgradeWagon> upgradeWagons = new ArrayList<>();
     private ArrayList<CreateWagon> createWagons = new ArrayList<>();
     private ArrayList<Train> trainsAtStation = new ArrayList<>();
     private ArrayList<TrainStation> trainStations = new ArrayList<>();
+    private ArrayList<Offer> offers = new ArrayList<>();
+    private int baseResources[] = new int[8];
+
+    // start admin
+    private ArrayList<TrainStation> adminTrainStations = new ArrayList<>();
+    private ArrayList<String> adminPlayers = new ArrayList<>();
+    private String adminCargo;
+    private ResourceAmount adminResourceAmount;
+
+
+    //TODO TEST DE MERDE
+    public Client(){
+
+        SyncClock.getInstance().addUpdater(new Updater() {
+            @Override
+            public void sync() {
+                updateAll();
+            }
+
+            @Override
+            public void localUpdate() {
+
+                // 1) localUpdate des crafts en cours //
+                ArrayList<Craft> craftToRemove = new ArrayList<>();
+                for(int i = 0; i < crafts.size() && i < WagonStats.getMaxParallelCraft(train); i++) {
+                    crafts.get(i).decreaseRemainingTime();
+                    if(crafts.get(i).getRemainingTime() <= 0){
+                        craftToRemove.add(crafts.get(i));
+                        // localUpdate de la liste locale de l'inventaire
+                        ResourceAmount r = Recipe.getReciepAtIndex(crafts.get(i).getRecipeIndex()).getFinalProduct();
+                        resourceAmounts.put(r.getRessource(), resourceAmounts.getOrDefault(r.getRessource(), new ResourceAmount(r.getRessource(), 0)).addQuantity(r.getQuantity()));
+                    }
+                }
+                for(Craft c : craftToRemove) crafts.remove(c);
+
+                // 2) localUpdate des ressources en cours de minage //
+                for(WagonMining w : wagonMining) {
+                    if(w.isMining()){
+                        // la quantité maximale que va miner le wagon
+                        int amount = WagonStats.getMiningAmount(w.getWagon());
+                        // on déduit de la mine
+                        w.getCurrentMine().reduceAmount(amount);
+
+                        // si la mine passe en négatif on corrige
+                        if(w.getCurrentMine().getAmount() < 0){
+                            amount += w.getCurrentMine().getAmount();
+                            w.getCurrentMine().setAmount(0);
+                        }
+
+                        // maj des ressources disponibles du joueur
+                        Ressource.Type type = Ressource.Type.values()[w.getCurrentMine().getResource()];
+                        resourceAmounts.put(type, resourceAmounts.getOrDefault(type, new ResourceAmount(type, 0)).addQuantity(amount));
+                    }
+                }
+
+                // 3) localUpdate des déplacements de train //
+                train.decreaseTrainStationETA(1);
+
+                // 4) localUpdate des améliorations de wagons //
+                ArrayList<UpgradeWagon> upgradeWagonToRemove = new ArrayList<>();
+                for(UpgradeWagon u : upgradeWagons) {
+                    u.decreaseRemainingTime();
+                    if(u.getRemainingTime() <= 0) {
+                        upgradeWagonToRemove.add(u);
+                        u.getWagon_to_upgrade().levelUp();
+                    }
+                }
+                for(UpgradeWagon u : upgradeWagonToRemove) upgradeWagons.remove(u);
+
+                // 4) localUpdate des améliorations de wagons //
+                ArrayList<CreateWagon> createWagonToRemove = new ArrayList<>();
+                for(CreateWagon c : createWagons) {
+                    c.decreaseRemainingTime();
+                    if(c.getRemainingTime() <= 0) {
+                        createWagonToRemove.add(c);
+                        // this line may bug because final product id is -1
+                        //train.getWagons().add(WagonRecipe.getAllRecipes().get(c.getWagonRecipeIndex()).getFinalProduct());
+                    }
+                }
+                for(CreateWagon c : createWagonToRemove) createWagons.remove(c);
+            }
+        });
+    }
+
+    public void updateAdminTrainStations() {
+        writer.println(OTrainProtocol.GET_GARES);
+        writer.flush();
+        String answer = readLine();
+        adminTrainStations = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), TrainStation::new);
+    }
+
+    public ArrayList<TrainStation> getAdminTrainStations() {
+        return adminTrainStations;
+    }
+
+    public void updateAdminPlayers() {
+        writer.println(OTrainProtocol.GET_ALL_PLAYER);
+        writer.flush();
+        String answer = readLine();
+        adminPlayers = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), p -> p.get("p").getAsString());
+    }
+
+    public ArrayList<String> getAdminPlayers() {
+        return adminPlayers;
+    }
+
+    public void updateAdminCargo(String playerName) {
+        writer.println(OTrainProtocol.GET_PLAYER_CARGO);
+        writer.println(playerName);
+        writer.flush();
+        String answer = readLine();
+        //adminCargo = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), ResourceAmount::new);
+        adminCargo = answer;
+    }
+
+    public String getAdminCargo() {
+        return adminCargo;
+    }
+
+    public void updateAdminResourceAmount(String playerName, int type) {
+        writer.println(OTrainProtocol.GET_PLAYER_OBJECT);
+        writer.println(playerName);
+        writer.println(type);
+        writer.flush();
+        String answer = readLine();
+        adminResourceAmount = new ResourceAmount(answer);
+    }
+
+    public ResourceAmount getAdminResourceAmount() {
+        return adminResourceAmount;
+    }
+
+    public void updateAdminAll() {
+        updateAdminTrainStations();
+        updateAdminPlayers();
+    }
+
+    public boolean isClientLogged() {
+        return clientLogged;
+    }
+
+    public void setClientLogged(boolean clientLogged) {
+        this.clientLogged = clientLogged;
+    }
+
+    public boolean isAdminLogged() {
+        return adminLogged;
+    }
+
+    public void setAdminLogged(boolean adminLogged) {
+        this.adminLogged = adminLogged;
+    }
+
+    public String sendNewStation(TrainStation station) {
+        writer.println(OTrainProtocol.NEW_STATION);
+        writer.println(station.toJson());
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendChangeStation(TrainStation station) {
+        writer.println(OTrainProtocol.CHANGE_STATION);
+        writer.println(station.toJson());
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendDeleteStation(int id) {
+        writer.println(OTrainProtocol.DELETE_STATION);
+        writer.println(id);
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendNewMine(Mine mine) {
+        writer.println(OTrainProtocol.NEW_MINE);
+        writer.println(mine.toJson());
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendChangeMine(Mine mine) {
+        writer.println(OTrainProtocol.CHANGE_MINE);
+        writer.println(mine.toJson());
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendDeleteMine(int id) {
+        writer.println(OTrainProtocol.DELETE_MINE);
+        writer.println(id);
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendChangePlayerObject(String playerName, int type, int amount) {
+        writer.println(OTrainProtocol.CHANGE_PLAYER_OBJECT);
+        writer.println(playerName);
+        writer.println(type);
+        writer.println(amount);
+        writer.flush();
+        return readLine();
+    }
+
+    public String sendDeletePlayer(String playerName) {
+        writer.println(OTrainProtocol.DELETE_PLAYER);
+        writer.println(playerName);
+        writer.flush();
+        return readLine();
+    }
+
+    // end admin
 
     public static Client getInstance() {
         if(instance == null) instance = new Client();
@@ -73,10 +288,12 @@ public class Client {
 
     public void disconnect() {
         try {
+            clientLogged = false;
+            adminLogged = false;
+            SyncClock.getInstance().removeAllUpdaters();
             socket.close();
             reader.close();
             writer.close();
-            setConnectionPanel();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,10 +322,8 @@ public class Client {
     }
 
     public int getSpecificResource(Ressource.Type type) {
-        for(ResourceAmount ra : resourceAmounts) {
-            if(ra.getRessource() == type) {
-                return ra.getQuantity();
-            }
+        if(resourceAmounts.containsKey(type)){
+            return resourceAmounts.get(type).getQuantity();
         }
         return 0;
     }
@@ -149,11 +364,22 @@ public class Client {
         writer.println(OTrainProtocol.GET_OBJECTS);
         writer.flush();
         String answer = readLine();
-        resourceAmounts = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), ResourceAmount::new);
+        ArrayList<ResourceAmount> list = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), ResourceAmount::new);
+        resourceAmounts.clear();
+
+        list.forEach(r -> resourceAmounts.put(r.getRessource(), r));
     }
 
     public ArrayList<ResourceAmount> getResourceAmounts() {
-        return resourceAmounts;
+        //ArrayList<ResourceAmount> list = new ArrayList<>();
+        //resourceAmounts.forEach((k,v) -> list.add(v));
+        //return list;
+
+        return resourceAmounts.entrySet().stream()
+                .map(Map.Entry::getValue)
+                .sorted(Comparator.comparing(r -> r.getRessource().ordinal()))
+                .collect(Collectors.toCollection(ArrayList::new));
+
     }
 
     public void updateCrafts() {
@@ -194,10 +420,14 @@ public class Client {
         writer.flush();
         String answer = readLine();
         train.fromJson((JsonObject) JsonUtility.fromJson(answer));
+
+        for(WagonMining w : wagonMining){
+            w.linkWagonToTrain(train);
+            w.linkMineToTrain(train);
+        }
     }
 
     public Train getTrain() {
-        updateTrain();
         return train;
     }
 
@@ -235,15 +465,54 @@ public class Client {
         return trainStations;
     }
 
-    public void updateAll() {
-        updateTrain();
+
+    public synchronized void updateAll() {
+        if(!clientLogged) return;
+        updateWagonMining();
+        updateTrain();          // doit se faire après updateWagonMining;
         updateResourceAmount();
         updateCrafts();
         updateUpgradeWagons();
         updateCreateWagons();
-        updateWagonMining();
         updateTrainStations();
         updateTrainsAtStation(train.getTrainStation().getId());
+    }
+
+    public void updateOffers(int offerType, int priceType) {
+        writer.println(OTrainProtocol.GET_OFFERS);
+        writer.println(offerType);
+        writer.println(priceType);
+        writer.flush();
+        String answer = readLine();
+        offers = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), Offer::new);
+    }
+
+    public ArrayList<Offer> getOffers() {
+        return offers;
+    }
+
+    public String placeOffer(int offerType, int offerAmount, int priceType, int priceAmount) {
+        writer.println(OTrainProtocol.SET_OFFER);
+        writer.println(offerType);
+        writer.println(offerAmount);
+        writer.println(priceType);
+        writer.println(priceAmount);
+        writer.flush();
+        return readLine();
+    }
+
+    public String buyOffer(int id) {
+        writer.println(OTrainProtocol.BUY_OFFER);
+        writer.println(id);
+        writer.flush();
+        return readLine();
+    }
+
+    public String cancelOffer(int id) {
+        writer.println(OTrainProtocol.CANCEL_OFFER);
+        writer.println(id);
+        writer.flush();
+        return readLine();
     }
 
     public String changeStation(int stationId) {
@@ -268,9 +537,10 @@ public class Client {
         return readLine();
     }
 
-    public String startCraft(int recipeIndex) {
+    public String startCraft(int recipeIndex, int amount) {
         writer.println(OTrainProtocol.CRAFT);
         writer.println(recipeIndex);
+        writer.println(amount);
         writer.flush();
         return readLine();
     }

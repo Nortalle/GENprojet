@@ -8,6 +8,7 @@ import Client.*;
 import Utils.Ressource;
 
 import java.awt.event.*;
+import java.util.Timer;
 import java.util.TimerTask;
 
 public class ClientForm {
@@ -21,7 +22,6 @@ public class ClientForm {
     private JTabbedPane tabs;
     private JPanel TabGare;
     private JPanel Hangar;
-    private JPanel Inventaire;
     private JPanel Mine;
     private JPanel Factory;
 
@@ -44,34 +44,44 @@ public class ClientForm {
     private CliGuiInventory cliGuiInventory;
     private CliGuiTrain cliGuiTrain;
     private JButton disconnectButton;
+    private JPanel Inventory;
+    private Gui.cli_gui_trade cli_gui_trade;
 
     public ClientForm() {
         Client.setClientLogComponent(logTextArea);
-        update();
+        sync();
 
         updateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                update();
+                sync();
             }
         });
         tabs.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                update();
+                sync();
             }
         });
         disconnectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Client.getInstance().disconnect();
+                Client.getInstance().setConnectionPanel();
             }
         });
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public synchronized void run() {
+                frequentLocalUpdate();
+            }
+        }, 0, 500);
+
+
     }
 
     private void updateResources(){
-        //String answer = Client.getInstance().getResources();
-        //Resources resources = new Resources(answer);
-        //Resources resources = Client.getInstance().getResources();
         int resources[] = Ressource.getPlayerBaseResources(Client.getInstance().getResourceAmounts());
         scrum_i.setText(Integer.toString(resources[0]));
         eau_i.setText(Integer.toString(resources[1]));
@@ -88,14 +98,35 @@ public class ClientForm {
         return panel_main;
     }
 
-    public void update() {
-        //Client.getInstance().getTrain();
+    public void sync(){
         Client.getInstance().updateAll();
-        updateResources();
-        cli_gui_gare.update();
-        cli_gui_mine.update();
-        cli_gui_craft.update();
-        cliGuiInventory.update();
-        cliGuiTrain.update();
+        localUpdate();
     }
+
+    /**
+     * Maj de la GUI complête, appelée après un sync
+     */
+    public void localUpdate() {
+        updateResources();
+        cli_gui_gare.localUpdate();
+        cli_gui_mine.localUpdate();
+        cli_gui_craft.localUpdate();
+        cliGuiInventory.localUpdate();
+        cliGuiTrain.localUpdate();
+        cli_gui_trade.localUpdate();
+    }
+
+    /**
+     * Met a jour les parties de la GUI qui nécessitent une maj continue
+     */
+    public void frequentLocalUpdate() {
+        updateResources();
+        cli_gui_gare.frequentLocalUpdate();
+        cli_gui_mine.frequentLocalUpdate();
+        cli_gui_craft.frequentLocalUpdate();
+        cliGuiInventory.frequentLocalUpdate();
+        cliGuiTrain.frequentLocalUpdate();
+        cli_gui_trade.frequentLocalUpdate();
+    }
+
 }

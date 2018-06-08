@@ -68,8 +68,8 @@ public class TestDataBase {
         dataBase.insertTrainStation(x, y, 10, 10);
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         TrainStation tsPrev = dataBase.getTrainStation(stationId);
-        dataBase.addMine(stationId, 400, Ressource.Type.COPPER_ORE.ordinal());
-        dataBase.addMine(stationId, 0, Ressource.Type.CHARCOAL.ordinal());
+        dataBase.addMine(stationId, 400, 1000, 10, Ressource.Type.COPPER_ORE.ordinal());
+        dataBase.addMine(stationId, 0, 1000, 10, Ressource.Type.CHARCOAL.ordinal());
         TrainStation tsNext = dataBase.getTrainStation(stationId);
         assertEquals(tsPrev.getMines().size() + 2, tsNext.getMines().size());
     }

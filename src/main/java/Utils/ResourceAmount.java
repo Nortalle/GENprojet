@@ -33,6 +33,11 @@ public class ResourceAmount {
         return quantity;
     }
 
+    public ResourceAmount addQuantity(int i){
+        quantity += i;
+        return this;
+    }
+
     @Override
     public String toString() {
         return quantity + "x" + Ressource.RessourceToString(ressource);
@@ -50,4 +55,5 @@ public class ResourceAmount {
         ressource = Ressource.Type.values()[from.get("ressource").getAsInt()];
         quantity = from.get("quantity").getAsInt();
     }
+
 }

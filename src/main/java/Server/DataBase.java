@@ -147,6 +147,24 @@ public class DataBase {
     }
 
     /**
+     * @return list of all players
+     */
+    public ArrayList<String> getAllPlayers() {
+        ArrayList<String> result = new ArrayList<>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT nomJoueur FROM Joueur;", Statement.RETURN_GENERATED_KEYS);
+            resultSet = ps.executeQuery();
+            while(resultSet.next()) {
+                result.add(resultSet.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
      * @param username player
      * @param password password
      * @return if login was successful
@@ -491,7 +509,7 @@ public class DataBase {
      * @param level new level
      * @param type new type
      * @param id DataBase id of the wagon
-     * @return if update has been applied
+     * @return if localUpdate has been applied
      */
     public boolean updateWagon(String username, int weight, int level, int type, int id){
         try {
@@ -514,7 +532,7 @@ public class DataBase {
     /**
      * @param id wagon DataBase id
      * @param level new level
-     * @return if update has been applied
+     * @return if localUpdate has been applied
      */
     public boolean updateWagonLevel(int id, int level){
         try {
@@ -750,7 +768,7 @@ public class DataBase {
      * @param y y coordinate
      * @param nbPlat number of platforms
      * @param sizePlat ize of platforms
-     * @return if train station has benn added to DataBase
+     * @return if train station has been added to DataBase
      */
     public boolean insertTrainStation(int x, int y, int nbPlat, int sizePlat) {
         if(!canCreateStationAt(x, y)) return false;
@@ -760,6 +778,31 @@ public class DataBase {
             ps.setObject(2, y);
             ps.setObject(3, nbPlat);
             ps.setObject(4, sizePlat);
+            int status = ps.executeUpdate();
+            if(status == 0) return false;
+            else return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * @param id station id
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param nbPlat number of platforms
+     * @param sizePlat ize of platforms
+     * @return if train station has been changed in DataBase
+     */
+    public boolean updateTrainStation(int id, int x, int y, int nbPlat, int sizePlat) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE Gare SET posX=?, posY=?, nbrQuai=?, tailleQuai=? WHERE id=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, x);
+            ps.setObject(2, y);
+            ps.setObject(3, nbPlat);
+            ps.setObject(4, sizePlat);
+            ps.setObject(5, id);
             int status = ps.executeUpdate();
             if(status == 0) return false;
             else return true;
@@ -835,7 +878,7 @@ public class DataBase {
     public boolean changeStationOfTrain(String username, int newTsId){
         try {
             // NOT SAFE !
-            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET gareActuelle=? WHERE proprietaire=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, newTsId);
             ps.setObject(2, username);
             ps.executeUpdate();
@@ -882,24 +925,26 @@ public class DataBase {
 
     /**
      * @param emplacement station where the mine will be added
-     * @param qteResources quantity of ressources of the mine
+     * @param qteResources quantity of resources of the mine
      * @param type type of the mine
      * @return true if the mine has been added, else false
      */
-    public int addMine(int emplacement, int qteResources, int type){
+    public int addMine(int emplacement, int qteResources, int max, int regen, int type){
         int result = -1;
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Mine VALUES(default,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO Mine VALUES(default,?,?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, type);
             ps.setObject(2, qteResources);
-            ps.setObject(3, emplacement);
+            ps.setObject(3, max);
+            ps.setObject(4, regen);
+            ps.setObject(5, emplacement);
             int status = ps.executeUpdate();
             if(status != 0){
                 ResultSet resultSet = ps.getGeneratedKeys();
                 resultSet.next();
                 result = resultSet.getInt(1);
                 // need tests
-                Server.getInstance().getRegenerationController().addMine(new Mine(resultSet.getInt(1), type, qteResources, emplacement));
+                Server.getInstance().getRegenerationController().addMine(new Mine(resultSet.getInt(1), type, qteResources, max, regen, emplacement));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -915,16 +960,18 @@ public class DataBase {
     public ArrayList<Mine> getAllMinesOfStation(int trainStation){
         ArrayList<Mine> result = new ArrayList<>();
         try {
-            ResultSet resultSet;
+            ResultSet resultSet;// TODO
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Mine WHERE `emplacement` = " + trainStation + ";", Statement.RETURN_GENERATED_KEYS);
             resultSet = ps.executeQuery();
             while(resultSet.next()) {
                 int id = resultSet.getInt("id");
                 int type = resultSet.getInt("type");
                 int qteRessources = resultSet.getInt("qteRessources");
+                int max = resultSet.getInt("max");
+                int regen = resultSet.getInt("regen");
                 int emplacement = resultSet.getInt("emplacement");
 
-                Mine mine = new Mine(id, type, qteRessources, emplacement);
+                Mine mine = new Mine(id, type, qteRessources, max, regen, emplacement);
                 result.add(mine);
 
             }
@@ -948,9 +995,11 @@ public class DataBase {
                 int id = resultSet.getInt("id");
                 int type = resultSet.getInt("type");
                 int qteRessources = resultSet.getInt("qteRessources");
+                int max = resultSet.getInt("max");
+                int regen = resultSet.getInt("regen");
                 int emplacement = resultSet.getInt("emplacement");
 
-                Mine mine = new Mine(id, type, qteRessources, emplacement);
+                Mine mine = new Mine(id, type, qteRessources, max, regen, emplacement);
                 result.add(mine);
 
             }
@@ -975,9 +1024,11 @@ public class DataBase {
                 int idMine = resultSet.getInt("id");
                 int type = resultSet.getInt("type");
                 int qteRessources = resultSet.getInt("qteRessources");
+                int max = resultSet.getInt("max");
+                int regen = resultSet.getInt("regen");
                 int emplacement = resultSet.getInt("emplacement");
 
-                mine = new Mine(idMine, type, qteRessources, emplacement);
+                mine = new Mine(idMine, type, qteRessources, max, regen, emplacement);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -986,25 +1037,44 @@ public class DataBase {
     }
 
     /**
-     * Deprecated because you should use changeMineAmount() instead
-     * Mets à jour la mine donnée avec la quantité donnée
-     *
-     * @param id     : mine à mettre à jour
-     * @param amount : quantité à mettre à jour
+     * @param id mine id
+     * @param resource new type of resource
+     * @param amount new amount
+     * @param place new station DataBase id
      */
-    @Deprecated// Deprecated because you should use changeMineAmount() instead
-    public boolean setMineAmount(int id, int amount){
+    public boolean updateMine(int id, int resource, int amount, int max, int regen, int place){
 
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE `id`=?", Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, amount);
-            ps.setObject(2, id);
+            PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET type=?, qteRessources=?, max=?, regen=?, emplacement=? WHERE id=?", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, resource);
+            ps.setObject(2, amount);
+            ps.setObject(3, max);
+            ps.setObject(4, regen);
+            ps.setObject(5, place);
+            ps.setObject(6, id);
             int status = ps.executeUpdate();
             if(status != 0){
                 return true;
             }
             ps.executeUpdate();
         }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * @param id id of mine
+     * @return if mine was delete
+     */
+    public boolean deleteMine(int id) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM Mine WHERE id=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, id);
+            int status = ps.executeUpdate();
+            if(status == 1) return true;
+            else return false;
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -1019,9 +1089,11 @@ public class DataBase {
     public int canChangeMineAmount(int id, int changeAmount) {
         int maxChange = changeAmount;
 
-        int MAX = 1000;// int MAX = getMine(id).getMax(); lorsqu'il y aura le MAX dans la database
+        Mine mine = getMine(id);
+        if(mine == null) return 0;
+        int MAX = mine.getMax();
         int MIN = 0;
-        int currentAmount = getMine(id).getAmount();
+        int currentAmount = mine.getAmount();
         if(currentAmount > MAX || currentAmount < MIN) return 0;
         int newAmount =  currentAmount + changeAmount;
         if(newAmount > MAX) maxChange = MAX - currentAmount;
@@ -1038,7 +1110,7 @@ public class DataBase {
      */
     public boolean changeMineAmount(int id, int changeAmount){
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE `id`=?", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE id=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, getMine(id).getAmount() + changeAmount);
             ps.setObject(2, id);
             int status = ps.executeUpdate();

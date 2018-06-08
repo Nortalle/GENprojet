@@ -10,6 +10,8 @@ public class Recipe {
         return allRecipes;
     }
 
+    public static Recipe getReciepAtIndex(int i) { return allRecipes.get(i); }
+
     private ArrayList<ResourceAmount> cost;
     private String name;
     private ResourceAmount finalProduct;

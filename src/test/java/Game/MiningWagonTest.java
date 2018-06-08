@@ -17,7 +17,7 @@ public class MiningWagonTest {
     public static void setUpBeforeAll() {
         mineId = 1;
         wagonId = 1;
-        mine = new Mine(mineId, 2, 1000, 1);
+        mine = new Mine(mineId, 2, 1000, 1000, 10, 1);
         wagon = new Wagon();
         wm = new WagonMining(wagon, mine);
     }

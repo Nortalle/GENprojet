@@ -32,7 +32,7 @@ public class ChangeStationTest {
     public  void setUpBeforeEach(){
         System.out.println("---");
         Server.getInstance().getTravelController().removeTrain(username);
-        client = new Client();
+        client = Client.getInstance();
         client.connectServer();
         dataBase.deleteUser(username);
         dataBase.insertPlayer(username, password);
@@ -47,7 +47,6 @@ public class ChangeStationTest {
         if(nbStation < 1) fail("No stations, insert one or more");
         client.updateTrainStations();
         assertEquals(nbStation, client.getTrainStations().size());
-
     }
 
     @Test
@@ -55,6 +54,7 @@ public class ChangeStationTest {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         String line = client.changeStation(stationId);
         System.out.println(line);
+        client.updateTrain();
         assertEquals(dataBase.getTrainStation(stationId).toString(), client.getTrain().getTrainStation().toString());
     }
 
@@ -65,20 +65,22 @@ public class ChangeStationTest {
             dataBase.deleteUser(u);
             dataBase.insertPlayer(u, u);
         }
-        Client clients[] = {new Client(), new Client(), new Client()};
-        for(int i = 0; i < clients.length; i++) {
-            clients[i].connectServer();
-            clients[i].sendLogin(users[i], users[i]);
-            clients[i].readLine();
-        }
         int posX = 20;
         int posY = 10;
         dataBase.deleteTrainStation(dataBase.getTrainStationIdByPos(posX, posY));
         dataBase.insertTrainStation(posX, posY, 2, 5);
         int stationId = dataBase.getTrainStationIdByPos(posX, posY);
-        clients[0].changeStation(stationId);
-        clients[1].changeStation(stationId);
-        assertEquals(OTrainProtocol.FAILURE, clients[2].changeStation(stationId));
+
+        String answer = "";
+        for(int i = 0; i < users.length; i++) {
+            client.disconnect();
+            client.connectServer();
+            client.sendLogin(users[i], users[i]);
+            client.readLine();
+            answer = client.changeStation(stationId);
+        }
+
+        assertEquals(OTrainProtocol.FAILURE, answer);
     }
 
     @Test
@@ -86,6 +88,7 @@ public class ChangeStationTest {
         int stationId = dataBase.getTrainStationIdByPos(x, y);
         String line = client.changeStation(stationId);
         System.out.println(line);
+        client.updateTrain();
         assertTrue(client.getTrain().getTrainStationETA() > 0);
     }
 }

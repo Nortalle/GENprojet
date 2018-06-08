@@ -162,6 +162,7 @@ public class WagonStats {
      * @return max cargo capacity of the train
      */
     public static int getMaxCapacity(Train train) {
+        if(train == null) return 0;
         int capacity = 0;
         for(Wagon w : train.getWagons()) if(w.getType() == WagonType.CARGO) capacity += linearValuePerLevel(w.getLevel(), BASE_CARGO_CAPACITY);//CARGO_CAPACITY[w.getLevel() - 1];
         return capacity;

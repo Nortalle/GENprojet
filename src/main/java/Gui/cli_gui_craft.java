@@ -10,7 +10,6 @@ import Utils.ResourceAmount;
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -24,13 +23,17 @@ public class cli_gui_craft {
     private JPanel orderQueuePanel;
     private JPanel orderQueueNamePanel;
     private JPanel orderQueueBarPanel;
-
+    private JTextField orderAmountTextField;
     private Recipe selectedRecipe;
 
+
+
     public cli_gui_craft() {
-        update();
+        localUpdate();
         selectedRecipe = (Recipe) recipeDropdown.getSelectedItem();
         updateCraftCost();
+        GuiUtility.addChangeListener(orderAmountTextField);
+        orderAmountTextField.setText("1");
 
         recipeDropdown.addPopupMenuListener(new PopupMenuListener() {
             @Override
@@ -50,9 +53,15 @@ public class cli_gui_craft {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(selectedRecipe == null) return;
-                String line = Client.getInstance().startCraft(selectedRecipe.getRecipeIndex());
-                Client.getInstance().updateCrafts();// MANUAL UPDATE
-                if(line.equals(OTrainProtocol.SUCCESS)) update();
+                String line = "";
+                try {
+                    int amount = GuiUtility.getValueFromTextField(orderAmountTextField);
+                    line = Client.getInstance().startCraft(selectedRecipe.getRecipeIndex(), amount);
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                }
+                Client.getInstance().updateAll();
+                if(line.equals(OTrainProtocol.SUCCESS)) localUpdate();
             }
         });
     }
@@ -70,8 +79,9 @@ public class cli_gui_craft {
 
     public void updateOrderQueue() {
         ArrayList<Craft> crafts = Client.getInstance().getCrafts();
-        GuiUtility.listInPanel(orderQueueNamePanel, crafts, craft -> new JLabel(craft.toString()));
-        GuiUtility.listInPanel(orderQueueBarPanel, crafts, craft -> GuiUtility.getProgressBar(craft, Craft::getRemainingTime, c -> Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime()));
+        //GuiUtility.listInPanel(orderQueueNamePanel, crafts, craft -> new JLabel(craft.toString()));
+        //GuiUtility.listInPanel(orderQueueBarPanel, crafts, craft -> GuiUtility.getProgressBar(craft, Craft::getRemainingTime, c -> Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime()));
+        GuiUtility.listProgressBar(orderQueueBarPanel, crafts, Craft::getRemainingTime, c -> Recipe.getAllRecipes().get(c.getRecipeIndex()).getProductionTime());
     }
 
     public void updateAvailableCrafts(){
@@ -92,9 +102,15 @@ public class cli_gui_craft {
         return true;
     }
 
-    public void update() {
+    public void localUpdate() {
         updateAvailableCrafts();
         updateRecipeDropdown();
+        updateCraftCost();
+        updateOrderQueue();
+    }
+
+    public void frequentLocalUpdate() {
+        updateAvailableCrafts();
         updateCraftCost();
         updateOrderQueue();
     }
