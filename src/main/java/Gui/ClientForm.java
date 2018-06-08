@@ -45,6 +45,7 @@ public class ClientForm {
     private CliGuiTrain cliGuiTrain;
     private JButton disconnectButton;
     private JPanel Inventory;
+    private Gui.cli_gui_trade cli_gui_trade;
 
     public ClientForm() {
         Client.setClientLogComponent(logTextArea);
@@ -112,6 +113,7 @@ public class ClientForm {
         cli_gui_craft.localUpdate();
         cliGuiInventory.localUpdate();
         cliGuiTrain.localUpdate();
+        cli_gui_trade.localUpdate();
     }
 
     /**
@@ -124,6 +126,7 @@ public class ClientForm {
         cli_gui_craft.frequentLocalUpdate();
         cliGuiInventory.frequentLocalUpdate();
         cliGuiTrain.frequentLocalUpdate();
+        cli_gui_trade.frequentLocalUpdate();
     }
 
 }

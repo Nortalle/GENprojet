@@ -93,7 +93,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <nested-form id="3395c" form-file="Gui/cli_gui_trade.form">
+                  <nested-form id="3395c" form-file="Gui/cli_gui_trade.form" binding="cli_gui_trade">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>

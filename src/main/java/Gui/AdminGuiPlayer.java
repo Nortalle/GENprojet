@@ -57,14 +57,13 @@ public class AdminGuiPlayer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int newAmount;
-                String line = "";
                 try {
                     newAmount = GuiUtility.getValueFromTextField(amountTextField);
                 } catch (NumberFormatException ex) {
                     ex.printStackTrace();
                     return;
                 }
-                line = Client.getInstance().sendChangePlayerObject(selectedPlayer, selectedType.ordinal(), newAmount);
+                String line = Client.getInstance().sendChangePlayerObject(selectedPlayer, selectedType.ordinal(), newAmount);
                 if(line.equals(OTrainProtocol.SUCCESS)) {
                     Client.getInstance().updateAdminAll();
                     update();
