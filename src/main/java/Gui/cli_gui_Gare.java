@@ -90,7 +90,7 @@ public class cli_gui_Gare {
     public void updateStationInfo() {
         if(viewingStation == null) viewingStation = Client.getInstance().getTrain().getTrainStation();
         label_stationName.setText(viewingStation.toString());
-        label_stationCoords.setText(viewingStation.getPosX() + ";" + viewingStation.getPosY());
+        label_stationCoords.setText(Client.getInstance().getTrain().getTrainStation().getPosX() + ";" + Client.getInstance().getTrain().getTrainStation().getPosY());
         stationInfosLabel.setText(viewingStation.getInfos());
     }
 
