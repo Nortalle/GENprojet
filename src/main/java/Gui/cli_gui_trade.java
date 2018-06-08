@@ -53,7 +53,7 @@ public class cli_gui_trade {
 
     private Optional<Integer> getType(JComboBox list) {
         if(!(list.getSelectedItem() instanceof Ressource.Type)) return Optional.empty();
-        return Optional.of(((Ressource.Type) list.getSelectedItem()).ordinal());
+        else return Optional.of(((Ressource.Type) list.getSelectedItem()).ordinal());
     }
 
     private void noResourceTypeError() throws NoResourceTypeError {
