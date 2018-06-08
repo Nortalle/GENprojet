@@ -50,7 +50,7 @@ public class Client {
 
 
     //TODO TEST DE MERDE
-    public Client(){
+    private Client(){
 
     }
 

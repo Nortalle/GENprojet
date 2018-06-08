@@ -21,7 +21,7 @@ public class TestConnection {
     @BeforeEach
     public  void setUpBeforeEach(){
         System.out.println("---");
-        client = new Client();
+        client = Client.getInstance();
         client.connectServer();
         dataBase.deleteUser(username);
         dataBase.insertPlayer(username, username);
