@@ -45,27 +45,6 @@ CREATE TABLE IF NOT EXISTS `Joueur` (
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
--- table RessourcesParJoueur
-CREATE TABLE IF NOT EXISTS `RessourcesParJoueur` (
-  `nomJoueur` VARCHAR(45) NOT NULL,
-  `qteScrum` INT NOT NULL DEFAULT 1000,
-  `qteEau` INT NOT NULL DEFAULT 0,
-  `qteBois` INT NOT NULL DEFAULT 0,
-  `qteCharbon` INT NOT NULL DEFAULT 0,
-  `qtePetrol` INT NOT NULL DEFAULT 0,
-  `qteFer` INT NOT NULL DEFAULT 0,
-  `qteCuivre` INT NOT NULL DEFAULT 0,
-  `qteAcier` INT NOT NULL DEFAULT 0,
-  `qteOr` INT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`nomJoueur`),
-  UNIQUE INDEX `joueur_UNIQUE` (`nomJoueur` ASC),
-  CONSTRAINT `fk_joueur_ressources`
-    FOREIGN KEY (`nomJoueur`)
-    REFERENCES `Joueur` (`nomJoueur`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
 -- table ObjetsParJoueurs
 CREATE TABLE IF NOT EXISTS `ObjetsParJoueur` (
   `id` INT NOT NULL AUTO_INCREMENT,

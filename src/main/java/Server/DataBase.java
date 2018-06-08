@@ -37,14 +37,12 @@ public class DataBase {
             ps.setObject(1, username);
             ps.setObject(2, password);
             int status = ps.executeUpdate();
-            if(status == 0) return false;
+            if (status == 0) return false;
 
             ps = connection.prepareStatement("INSERT INTO Admin VALUES(?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             status = ps.executeUpdate();
-            if(status == 0) return false;
-
-            return true;
+            return status != 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -103,10 +101,7 @@ public class DataBase {
             ps.setObject(1, username);
             ps.setObject(2, WagonStats.WagonType.CRAFT.ordinal());
             status = ps.executeUpdate();
-            if(status == 0) return false;
-            // //
-
-            return true;
+            return status != 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -122,8 +117,7 @@ public class DataBase {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Utilisateur WHERE nomUtilisateur=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             int status = ps.executeUpdate();
-            if(status == 1) return true;
-            else return false;
+            return status == 1;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -186,30 +180,6 @@ public class DataBase {
     }
 
     /**
-     * use getPlayerResourcesViaObjects instead
-     * @param username player
-     * @return tab of resources (Scrum, Eau, Bois, Charbon, Petrol, Fer, Cuivre, Or); -1 means unknown
-     */
-    @Deprecated
-    public int[] getPlayerResources(String username) {
-        int resources[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
-        try {
-            ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM RessourcesParJoueur WHERE nomJoueur=?", Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, username);
-            resultSet = ps.executeQuery();
-            if(resultSet.next()) {
-                for(int i = 1; i < 10; i++) {
-                    resources[i-1] = resultSet.getInt(i+1);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return resources;
-    }
-
-    /**
      * @param wagonId DataBase wagon id
      * @return username
      */
@@ -227,21 +197,6 @@ public class DataBase {
             e.printStackTrace();
         }
         return result;
-    }
-
-    /**
-     * @param username player
-     * @return tab of resources (Scrum, Eau, Bois, Charbon, Petrol, Fer, Cuivre, Or);
-     */
-    public int[] getPlayerResourcesViaObjects(String username) {
-        int resources[] = {0, 0, 0, 0, 0, 0, 0, 0};
-        for(int i : Ressource.getBaseResourcesId()) {
-            getPlayerObjectOfType(username, i).ifPresent(ra -> resources[i] = ra.getQuantity());
-            //ResourceAmount ra = getPlayerObjectOfType(username, i);
-            //if(ra == null) continue;
-            //resources[i] = ra.getQuantity();
-        }
-        return resources;
     }
 
     /**
@@ -269,7 +224,7 @@ public class DataBase {
      * @param username player
      * @return how many resources the player's train is carrying + reserved cargo
      */
-    public int getPlayerCurrentCargoAmount(String username) {
+    private int getPlayerCurrentCargoAmount(String username) {
         int currentCargo = 0;
         for(ResourceAmount ra : getPlayerObjects(username)) currentCargo += ra.getQuantity();
         return currentCargo + Server.getInstance().getReserveCargoController().getReservedCargo(username);
@@ -287,8 +242,8 @@ public class DataBase {
             ps.setObject(1, username);
             resultSet = ps.executeQuery();
             while(resultSet.next()) {
-                int id = resultSet.getInt(1);
-                String user = resultSet.getString(2);
+                //int id = resultSet.getInt(1);
+                //String user = resultSet.getString(2);
                 int typeId = resultSet.getInt(3);
                 int amount = resultSet.getInt(4);
                 resourceAmounts.add(new ResourceAmount(Ressource.Type.values()[typeId], amount));
@@ -405,27 +360,6 @@ public class DataBase {
     // TRAIN REQUESTS
 
     /**
-     *
-     * @param username player owner of the train
-     * @param trainName name of the train
-     * @return true if the train has been created, else false
-     */
-    public boolean createTrain(String username, String trainName){
-        try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO Train VALUES(?,?);", Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, username);
-            ps.setObject(2, trainName);
-            int status = ps.executeUpdate();
-            if(status != 0){
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
      * @param username player owner of the train
      * @return the player's train
      */
@@ -437,8 +371,8 @@ public class DataBase {
             ps.setObject(1, username);
             resultSet = ps.executeQuery();
             if(resultSet.next()){
-                String user = resultSet.getString("proprietaire");
-                String name = resultSet.getString("nom");
+                //String user = resultSet.getString("proprietaire");
+                //String name = resultSet.getString("nom");
                 int currentTs = resultSet.getInt("gareActuelle");
 
                 int eta[] = Server.getInstance().getTravelController().getETA(username);
@@ -466,7 +400,7 @@ public class DataBase {
             resultSet = ps.executeQuery();
             while(resultSet.next()){
                 String user = resultSet.getString("proprietaire");
-                String name = resultSet.getString("nom");
+                //String name = resultSet.getString("nom");
                 int currentTs = resultSet.getInt("gareActuelle");
 
                 int eta[] = Server.getInstance().getTravelController().getETA(user);
@@ -556,39 +490,10 @@ public class DataBase {
 
     /**
      *
-     * @param username the player owner of the train
-     * @param type type of the wagons that want to be get
-     * @return a list containing all the owner's wagons of this type
-     */
-    public ArrayList<Wagon> getWagonsOfType(String username, int type){
-        ArrayList<Wagon> result = new ArrayList<>();
-        try {
-            ResultSet resultSet;
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE proprietaire=? AND typeID=?;", Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, username);
-            ps.setObject(2, type);
-            resultSet = ps.executeQuery();
-            while(resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String owner = resultSet.getString("proprietaire");
-                int weight = resultSet.getInt("poids");
-                int level = resultSet.getInt("niveau");
-                int _type = resultSet.getInt("typeID");
-
-                result.add(new Wagon(id, weight, level, WagonStats.WagonType.values()[_type]));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    /**
-     *
      * @param username player owner of the train
      * @return the liste of all the wagons of the train
      */
-    public ArrayList<Wagon> getAllWagons(String username){
+    private ArrayList<Wagon> getAllWagons(String username){
         ArrayList<Wagon> result = new ArrayList<>();
         try {
             ResultSet resultSet;
@@ -639,7 +544,7 @@ public class DataBase {
      * @param username player
      * @return the player loco (null if not found)
      */
-    public Wagon getPlayerLoco(String username){
+    private Wagon getPlayerLoco(String username){
         Wagon wagon = null;
         try {
             ResultSet resultSet;
@@ -662,31 +567,6 @@ public class DataBase {
     }
 
     // STATION REQUESTS
-
-    /**
-     * @param posX position X of the station
-     * @param posY position Y of the station
-     * @param nbrPlatforms number of platforms in the station
-     * @param platformSize size of the platforms in the station
-     *
-     * @return true if the station has been added, else falee
-     */
-    public boolean createStation(int posX, int posY, int nbrPlatforms, int platformSize){
-        try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO TrainStation VALUES(?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, posX);
-            ps.setObject(2, posY);
-            ps.setObject(3, nbrPlatforms);
-            ps.setObject(4, platformSize);
-            int status = ps.executeUpdate();
-            if(status != 0){
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     /**
      * @param tsId the id of the station
@@ -716,11 +596,11 @@ public class DataBase {
 
     /**
      * gets station from pos
-     * @param x
-     * @param y
-     * @return
+     * @param x pos x
+     * @param y pos y
+     * @return the corresponding station
      */
-    public TrainStation getTrainStationByPos(int x, int y){
+    private TrainStation getTrainStationByPos(int x, int y){
         TrainStation trainStation = null;
         try {
             ResultSet resultSet;
@@ -746,10 +626,10 @@ public class DataBase {
     /**
      * all station at range of range from pos x,y
      * Creates them if they don't exist in database
-     * @param range
-     * @param x
-     * @param y
-     * @return
+     * @param range the search distance
+     * @param x pos x
+     * @param y pos y
+     * @return all stations at range
      */
     public ArrayList<TrainStation> getAllTrainStationsWithinRange(int range, int x, int y){
         ArrayList<TrainStation> result = new ArrayList<>();
@@ -878,7 +758,7 @@ public class DataBase {
     /**
      * @return the id of the starting station
      */
-    public int getStartingStationId() {
+    private int getStartingStationId() {
         return getTrainStationIdByPos(0, 0);
     }
 
@@ -898,8 +778,7 @@ public class DataBase {
             ps.setObject(3, nbPlat);
             ps.setObject(4, sizePlat);
             int status = ps.executeUpdate();
-            if(status == 0) return false;
-            else return true;
+            return status != 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -923,8 +802,7 @@ public class DataBase {
             ps.setObject(4, sizePlat);
             ps.setObject(5, id);
             int status = ps.executeUpdate();
-            if(status == 0) return false;
-            else return true;
+            return status != 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -941,8 +819,7 @@ public class DataBase {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Gare WHERE id=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, id);
             int status = ps.executeUpdate();
-            if(status == 1) return true;
-            else return false;
+            return status == 1;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -952,9 +829,9 @@ public class DataBase {
     /**
      * @param x position x where we want to create a station
      * @param y position y where we want to create a station
-     * @return
+     * @return if it's possible to create a station at given position
      */
-    public boolean canCreateStationAt(int x, int y) {
+    private boolean canCreateStationAt(int x, int y) {
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT posX, posY FROM Gare;", Statement.RETURN_GENERATED_KEYS);
@@ -1076,7 +953,7 @@ public class DataBase {
      * @param trainStation id of the station
      * @return the list of all the mines at the station
      */
-    public ArrayList<Mine> getAllMinesOfStation(int trainStation){
+    private ArrayList<Mine> getAllMinesOfStation(int trainStation){
         ArrayList<Mine> result = new ArrayList<>();
         try {
             ResultSet resultSet;// TODO
@@ -1191,8 +1068,7 @@ public class DataBase {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Mine WHERE id=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, id);
             int status = ps.executeUpdate();
-            if(status == 1) return true;
-            else return false;
+            return status == 1;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1315,7 +1191,7 @@ public class DataBase {
         return getOfferById(id).filter(this::cancelOffer).isPresent();
     }
 
-    public boolean buyOffer(String buyer, Offer offer) {
+    private boolean buyOffer(String buyer, Offer offer) {
         Optional<ResourceAmount> buyerObject = getPlayerObjectOfType(buyer, offer.getPrice().getRessource().ordinal());
         if(!buyerObject.filter(ra -> ra.getQuantity() >= offer.getPrice().getQuantity()).isPresent()) return false;
         updatePlayerObjects(buyer, offer.getPrice().getRessource().ordinal(), -offer.getPrice().getQuantity());
@@ -1335,7 +1211,7 @@ public class DataBase {
         return false;
     }
 
-    public boolean cancelOffer(Offer offer) {
+    private boolean cancelOffer(Offer offer) {
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM Offres WHERE id=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, offer.getId());
@@ -1350,7 +1226,7 @@ public class DataBase {
         return false;
     }
 
-    public Optional<Offer> getOfferById(int id) {
+    private Optional<Offer> getOfferById(int id) {
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Offres WHERE id=?");

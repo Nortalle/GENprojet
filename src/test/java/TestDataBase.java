@@ -48,19 +48,6 @@ public class TestDataBase {
     }
 
     @Test
-    public void insertNewUserAlsoInsertNewResourcesPerUser(){
-        dataBase.insertPlayer(username, password);
-        assertTrue(dataBase.getPlayerResources(username)[0] > -1);
-    }
-
-    @Test
-    public void deleteUserAlsoDeleteResourcesPerUser() {
-        dataBase.insertPlayer(username, password);
-        dataBase.deleteUser(username);
-        assertTrue(dataBase.getPlayerResources(username)[0] == -1);
-    }
-
-    @Test
     public void addMineToStation() {
         int x = -10;
         int y = -10;
