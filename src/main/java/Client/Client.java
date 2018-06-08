@@ -484,8 +484,12 @@ public class Client {
         updateUpgradeWagons();
         updateCreateWagons();
         updateTrainStations();
-        updateTrainsAtStation(train.getTrainStation().getId());
+        updateTrainsAtStation(viewingStation);
     }
+
+    // not very good but should be working
+    public static int viewingStation = 0;
+    //
 
     public void updateOffers(int offerType, int priceType) {
         writer.println(OTrainProtocol.GET_OFFERS);

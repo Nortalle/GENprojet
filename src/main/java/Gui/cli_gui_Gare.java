@@ -39,10 +39,12 @@ public class cli_gui_Gare {
 
         localUpdate();
         viewingStation = Client.getInstance().getTrain().getTrainStation();// maybe useless
+        Client.viewingStation = viewingStation.getId();
 
         button_travel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
+                Client.viewingStation = viewingStation.getId();
                 String line = Client.getInstance().changeStation(viewingStation.getId());
                 Client.getInstance().updateAll();// MANUAL UPDATE
                 if(line.equals(OTrainProtocol.SUCCESS)) localUpdate();
@@ -52,6 +54,7 @@ public class cli_gui_Gare {
         button_view.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = (TrainStation) select_station.getSelectedItem();
+                Client.viewingStation = viewingStation.getId();
                 viewingStationIndex = select_station.getSelectedIndex();
                 Client.getInstance().updateAll();// MANUAL UPDATE
                 localUpdate();
@@ -60,6 +63,7 @@ public class cli_gui_Gare {
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewingStation = Client.getInstance().getTrain().getTrainStation();
+                Client.viewingStation = viewingStation.getId();
                 Client.getInstance().updateAll();// MANUAL UPDATE
                 localUpdate();
             }
@@ -88,7 +92,10 @@ public class cli_gui_Gare {
     }
 
     public void updateStationInfo() {
-        if(viewingStation == null) viewingStation = Client.getInstance().getTrain().getTrainStation();
+        if(viewingStation == null) {
+            viewingStation = Client.getInstance().getTrain().getTrainStation();
+            Client.viewingStation = viewingStation.getId();
+        }
         label_stationName.setText(viewingStation.toString());
         label_stationCoords.setText(Client.getInstance().getTrain().getTrainStation().getPosX() + ";" + Client.getInstance().getTrain().getTrainStation().getPosY());
         stationInfosLabel.setText(viewingStation.getInfos());
