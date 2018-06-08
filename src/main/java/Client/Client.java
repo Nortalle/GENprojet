@@ -12,8 +12,11 @@ import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class Client {
     private static final java.util.logging.Logger LOG = Logger.getLogger(ClientHandler.class.getName());
@@ -368,11 +371,15 @@ public class Client {
     }
 
     public ArrayList<ResourceAmount> getResourceAmounts() {
-        ArrayList<ResourceAmount> list = new ArrayList<>();
+        //ArrayList<ResourceAmount> list = new ArrayList<>();
+        //resourceAmounts.forEach((k,v) -> list.add(v));
+        //return list;
 
-        resourceAmounts.forEach((k,v) -> list.add(v));
+        return resourceAmounts.entrySet().stream()
+                .map(Map.Entry::getValue)
+                .sorted(Comparator.comparing(r -> r.getRessource().ordinal()))
+                .collect(Collectors.toCollection(ArrayList::new));
 
-        return list;
     }
 
     public void updateCrafts() {
