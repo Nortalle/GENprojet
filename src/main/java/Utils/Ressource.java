@@ -41,6 +41,16 @@ public class Ressource {
 
     }
 
+
+    /**
+     * Retourne le string proprement formatté correspondant au type d'une ressource
+     * @param id l'id d'un type de ressource
+     * @return le nom de la ressource tout joli
+     */
+    public static String RessourceToString(int id){
+        return RessourceToString(Type.values()[id]);
+    }
+
     /**
      * Retourne le string proprement formatté correspondant au type d'une ressource
      * @param t un type de ressource (id)
