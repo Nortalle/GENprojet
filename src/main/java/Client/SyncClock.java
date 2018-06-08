@@ -44,7 +44,6 @@ public class SyncClock {
 
 
     public synchronized void addUpdater(Updater u){
-        System.out.println("add");
         updaters.add(u);
     }
 
@@ -53,7 +52,6 @@ public class SyncClock {
     }
 
     public synchronized void removeAllUpdaters() {
-        System.out.println("remove");
         updaters.clear();
     }
 

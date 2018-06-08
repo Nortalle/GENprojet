@@ -129,7 +129,7 @@ ClientHandler implements Runnable {
                 } else if(line.equals(OTrainProtocol.GET_GARES)) {
                     //TODO query plus propre pour récupérer la portée de la loco et ses coordonnées a partir du username (voir de get carrément les gares)
                     Train t = db.getTrain(username);
-                    writer.println(JsonUtility.listToJson(db.getAllTrainStationsWithinRange(25, t.getTrainStation().getPosX(),t.getTrainStation().getPosY()), TrainStation::toJson));
+                    writer.println(JsonUtility.listToJson(db.getAllTrainStationsWithinRange(WagonStats.getLocoSpeed(t) * 10, t.getTrainStation().getPosX(),t.getTrainStation().getPosY()), TrainStation::toJson));
                     writer.flush();
                 } else if(line.equals(OTrainProtocol.GO_TO)) {
                     String newTsLine = readLine();
