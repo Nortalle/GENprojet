@@ -39,7 +39,7 @@ public class DataBase {
             int status = ps.executeUpdate();
             if (status == 0) return false;
 
-            ps = connection.prepareStatement("INSERT INTO Admin VALUES(?);", Statement.RETURN_GENERATED_KEYS);
+            ps = connection.prepareStatement("INSERT INTO `Admin` VALUES(?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             status = ps.executeUpdate();
             return status != 0;
