@@ -41,7 +41,6 @@ public class Client {
     private ArrayList<String> trainsAtStation = new ArrayList<>();
     private ArrayList<TrainStation> trainStations = new ArrayList<>();
     private ArrayList<Offer> offers = new ArrayList<>();
-    private int baseResources[] = new int[8];
 
     // start admin
     private ArrayList<TrainStation> adminTrainStations = new ArrayList<>();
@@ -150,9 +149,7 @@ public class Client {
         writer.println(OTrainProtocol.GET_PLAYER_CARGO);
         writer.println(playerName);
         writer.flush();
-        String answer = readLine();
-        //adminCargo = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), ResourceAmount::new);
-        adminCargo = answer;
+        adminCargo = readLine();
     }
 
     public String getAdminCargo() {
@@ -316,7 +313,8 @@ public class Client {
     }
 
     public void setConnectionPanel() {
-        setFrameContent(new LoginForm().getPanel_main());
+        frame.setContentPane(new LoginForm().getPanel_main());
+        frame.pack();
         frame.setVisible(true);
         connectServer();
     }
@@ -324,11 +322,6 @@ public class Client {
     public void setFrameContent(JPanel panel, Dimension d) {
         frame.setContentPane(panel);
         frame.setSize(d);
-    }
-
-    public void setFrameContent(JPanel panel) {
-        frame.setContentPane(panel);
-        frame.pack();
     }
 
     public int getSpecificResource(Ressource.Type type) {
@@ -347,11 +340,6 @@ public class Client {
         }
         LOG.info(line);
         return line;
-    }
-
-    public void sendLine(String line) {
-        writer.println(line);
-        writer.flush();
     }
 
     public String sendLogin(String username, String password) {
@@ -460,7 +448,7 @@ public class Client {
         trainsAtStation = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), p -> p.get("p").getAsString());
     }
 
-    public ArrayList<String> getTrainsAtStation(int stationId) {
+    public ArrayList<String> getTrainsAtStation() {
         return trainsAtStation;
     }
 

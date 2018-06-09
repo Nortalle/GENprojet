@@ -112,8 +112,7 @@ public class cli_gui_Gare {
 
     public void updateTrainsAtStation() {
         if (viewingStation == null) return;
-        Client.getInstance().getTrainsAtStation(viewingStation.getId());
-        GuiUtility.listInPanel(panel_liste_joueurs, Client.getInstance().getTrainsAtStation(viewingStation.getId()), train -> new JLabel(train.toString()));
+        GuiUtility.listInPanel(panel_liste_joueurs, Client.getInstance().getTrainsAtStation(), train -> new JLabel(train.toString()));
     }
 
     public void updateMines() {
