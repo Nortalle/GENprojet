@@ -172,7 +172,6 @@ public class DataBase {
             ps.setObject(1, username);
             resultSet = ps.executeQuery();
             if(resultSet.next()) return password.equals(resultSet.getString(1));
-            else return false;
         }catch (SQLException e) {
             e.printStackTrace();
         }
@@ -329,23 +328,21 @@ public class DataBase {
             PreparedStatement ps;
             Optional<ResourceAmount> existingEntry = getPlayerObjectOfType(username, typeId);// maybe we can do better
             if(!existingEntry.isPresent()) {
-                ps = connection.prepareStatement("INSERT INTO ObjetsParJoueur VALUES(default,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+                ps = connection.prepareStatement("INSERT INTO ObjetsParJoueur VALUES(default,?,?,?)", Statement.RETURN_GENERATED_KEYS);
                 ps.setObject(1, username);
                 ps.setObject(2, typeId);
                 ps.setObject(3, amount);
+            } else if (existingEntry.get().getQuantity() + amount == 0) {
+                ps = connection.prepareStatement("DELETE FROM ObjetsParJoueur WHERE nomJoueur=? AND objetId=?", Statement.RETURN_GENERATED_KEYS);
+                ps.setObject(1, username);
+                ps.setObject(2, typeId);
+                ps.executeUpdate();
             } else {
-                ps = connection.prepareStatement("UPDATE ObjetsParJoueur SET objetAmount=? WHERE nomJoueur=? AND objetId=?;", Statement.RETURN_GENERATED_KEYS);
+                ps = connection.prepareStatement("UPDATE ObjetsParJoueur SET objetAmount=? WHERE nomJoueur=? AND objetId=?", Statement.RETURN_GENERATED_KEYS);
                 ps.setObject(1, existingEntry.get().getQuantity() + amount);
                 ps.setObject(2, username);
                 ps.setObject(3, typeId);
             }
-
-            // clean
-            System.out.println("cleaning");
-            PreparedStatement deletePs = connection.prepareStatement("DELETE FROM ObjetsParJoueur WHERE nomJoueur=? AND objetId=? AND objetAmount=0;", Statement.RETURN_GENERATED_KEYS);
-            deletePs.setObject(1, username);
-            deletePs.setObject(2, typeId);
-            deletePs.executeUpdate();
 
             int status = ps.executeUpdate();
             if(status != 0){
@@ -601,22 +598,23 @@ public class DataBase {
      * @return the corresponding station
      */
     private TrainStation getTrainStationByPos(int x, int y){
-        TrainStation trainStation = null;
+        TrainStation trainStation = null;// TODO OPTIONAL<T>
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE `posX`=? AND `posY`=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, x);
             ps.setObject(2, y);
             resultSet = ps.executeQuery();
-            if(!resultSet.next()){return null;}
-            int id = resultSet.getInt("id");
-            int posX = resultSet.getInt("posX");
-            int posY = resultSet.getInt("posY");
-            int nbOfPlatforms = resultSet.getInt("nbrQuai");
-            int sizeOfPlatforms = resultSet.getInt("tailleQuai");
-            ArrayList<Mine> mines = getAllMinesOfStation(id);
+            if(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int posX = resultSet.getInt("posX");
+                int posY = resultSet.getInt("posY");
+                int nbOfPlatforms = resultSet.getInt("nbrQuai");
+                int sizeOfPlatforms = resultSet.getInt("tailleQuai");
+                ArrayList<Mine> mines = getAllMinesOfStation(id);
 
-            trainStation = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
+                trainStation = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
