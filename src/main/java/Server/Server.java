@@ -11,7 +11,7 @@ import java.util.LinkedList;
 public class Server {
     private static Server instance;
     private ServerSocket serverSocket;
-    private LinkedList<ClientHandler> clientHandlers;
+    private LinkedList<ClientHandler> clientHandlers = new LinkedList<>();
     private boolean running;
     private DataBase dataBase;
     private static String dataBaseUrl;
@@ -23,7 +23,7 @@ public class Server {
     private CreateController createController;
     private ReserveCargoController reserveCargoController;
     public static final String ADMINS_USERNAME[] = {"admin"};
-    public static final String ADMINS_PASSWORD[] = {"admin"};
+    private static final String ADMINS_PASSWORD[] = {"admin"};
 
     private Server(){}
 
@@ -35,7 +35,11 @@ public class Server {
     public void init() {
         if(dataBaseUrl == null) dataBase = new DataBase();
         else dataBase = new DataBase(dataBaseUrl);
-        for(int i = 0; i < ADMINS_USERNAME.length; i++) dataBase.insertAdmin(ADMINS_USERNAME[i], ADMINS_PASSWORD[i]);
+        for(int i = 0; i < ADMINS_USERNAME.length; i++) {
+            if(dataBase.insertAdmin(ADMINS_USERNAME[i], ADMINS_PASSWORD[i])) {
+                System.out.println("New admin add");
+            }
+        }
         dataBase.insertTrainStation(0, 0, 100, 100);// make sure the starting station exist
         travelController = new Travel();
         regenerationController = new MineRegeneration();
@@ -51,7 +55,6 @@ public class Server {
             if(serverSocket != null && serverSocket.isBound()) return;
             serverSocket = new ServerSocket(OTrainProtocol.PORT);
             init();// init after binding
-            clientHandlers = new LinkedList<>();
             running = true;
 
             Thread serverThread = new Thread(new Runnable() {
