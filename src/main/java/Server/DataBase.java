@@ -67,11 +67,6 @@ public class DataBase {
             status = ps.executeUpdate();
             if(status == 0) return false;
 
-            ps = connection.prepareStatement("INSERT INTO RessourcesParJoueur VALUES(?,default,default,default,default,default,default,default,default,default);", Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, username);
-            status = ps.executeUpdate();
-            if(status == 0) return false;
-
             ps = connection.prepareStatement("INSERT INTO Train VALUES(?,'Tom',?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             ps.setObject(2, getStartingStationId());

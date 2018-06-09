@@ -11,7 +11,7 @@ import java.util.LinkedList;
 public class Server {
     private static Server instance;
     private ServerSocket serverSocket;
-    private LinkedList<ClientHandler> clientHandlers = new LinkedList<>();
+    private LinkedList<ClientHandler> clientHandlers;
     private boolean running;
     private DataBase dataBase;
     private static String dataBaseUrl;
@@ -55,6 +55,7 @@ public class Server {
             if(serverSocket != null && serverSocket.isBound()) return;
             serverSocket = new ServerSocket(OTrainProtocol.PORT);
             init();// init after binding
+            clientHandlers = new LinkedList<>();
             running = true;
 
             Thread serverThread = new Thread(new Runnable() {
