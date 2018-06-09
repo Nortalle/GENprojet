@@ -495,7 +495,7 @@ public class Client {
 
         // sort
         offers = offers.stream()
-                .sorted(Comparator.comparing(offer -> - offer.getRatio()))
+                .sorted(Comparator.comparingDouble(Offer::getRatio))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
