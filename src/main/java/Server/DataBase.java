@@ -370,6 +370,32 @@ public class DataBase {
         return trains;
     }
 
+    /**
+     *
+     * @param stationId id of the train station
+     * @return a list of all player name in the station
+     */
+    public ArrayList<String> getAllPlayersAtStation(int stationId) {
+        ArrayList<String> players = new ArrayList<>();
+        try {
+            ResultSet resultSet;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Train WHERE gareActuelle=?;", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, stationId);
+            resultSet = ps.executeQuery();
+            while(resultSet.next()){
+                String user = resultSet.getString("proprietaire");
+                //String name = resultSet.getString("nom");
+                //int ts = resultSet.getInt("gareActuelle");
+                //int eta[] = Server.getInstance().getTravelController().getETA(user);
+
+                players.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return players;
+    }
+
     // WAGON REQUESTS
 
     /**
