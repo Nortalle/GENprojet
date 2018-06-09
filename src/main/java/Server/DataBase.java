@@ -183,7 +183,7 @@ public class DataBase {
      * @return username
      */
     public String getUsernameByWagonId(int wagonId) {
-        String result = "";
+        String result = "";// TODO OPTIONAL<T>
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT proprietaire FROM Wagon WHERE id=?", Statement.RETURN_GENERATED_KEYS);
@@ -196,27 +196,6 @@ public class DataBase {
             e.printStackTrace();
         }
         return result;
-    }
-
-    /**
-     * @param username player
-     * @param resources tab of resources
-     * @return if resources where updated
-     */
-    @Deprecated
-    public boolean setPlayerResources(String username, int resources[]){
-        try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE RessourcesParJoueur SET qteScrum=?, qteEau=?, qteBois=?, qteCharbon=?, qtePetrol=?, qteFer=?, qteCuivre=?, qteAcier=?, qteOr=? WHERE `nomJoueur`=?", Statement.RETURN_GENERATED_KEYS);
-            for(int i = 0; i < resources.length; i++) {
-                ps.setObject(i + 1, resources[i]);
-            }
-            ps.setObject(resources.length + 1, username);
-            ps.executeUpdate();
-            return true;
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
     /**
@@ -303,7 +282,7 @@ public class DataBase {
      * @return how much you actually can add or remove
      */
     public int canUpdatePlayerObjectsOnReservedCargo(String username, int amount, int reservedCargo) {
-        int maxChange = amount;
+        int maxChange = amount;//TODO BETTER FACTORING
 
         Train train = getTrain(username);
         int MAX = WagonStats.getMaxCapacity(train);
@@ -345,9 +324,7 @@ public class DataBase {
             }
 
             int status = ps.executeUpdate();
-            if(status != 0){
-                return true;
-            }
+            return status != 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -361,7 +338,7 @@ public class DataBase {
      * @return the player's train
      */
     public Train getTrain(String username){
-        Train train = null;
+        Train train = null;// TODO OPTIONAL<T>
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Train WHERE `proprietaire`=?;", Statement.RETURN_GENERATED_KEYS);
@@ -375,8 +352,6 @@ public class DataBase {
                 int eta[] = Server.getInstance().getTravelController().getETA(username);
                 train = new Train(getAllWagons(username), getTrainStation(currentTs), eta[0], eta[1]);
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -456,9 +431,7 @@ public class DataBase {
             ps.setObject(4, type);
             ps.setObject(5, id);
             int status = ps.executeUpdate();
-            if(status != 0){
-                return true;
-            }
+            return status != 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -476,9 +449,7 @@ public class DataBase {
             ps.setObject(1, level);
             ps.setObject(2, id);
             int status = ps.executeUpdate();
-            if(status != 0){
-                return true;
-            }
+            return status != 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -517,7 +488,7 @@ public class DataBase {
      * @return the wagon of this id
      */
     public Wagon getWagon(int id){
-        Wagon wagon = null;
+        Wagon wagon = null;// TODO OPTIONAL<T>
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE id=?");
@@ -542,7 +513,7 @@ public class DataBase {
      * @return the player loco (null if not found)
      */
     private Wagon getPlayerLoco(String username){
-        Wagon wagon = null;
+        Wagon wagon = null;// TODO OPTIONAL<T>
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=? AND `typeID`=?");
@@ -570,7 +541,7 @@ public class DataBase {
      * @return the station corresponding to the id
      */
     public TrainStation getTrainStation(int tsId){
-        TrainStation trainStation = null;
+        TrainStation trainStation = null;// TODO OPTIONAL<T>
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE `id`=?;", Statement.RETURN_GENERATED_KEYS);
@@ -944,7 +915,6 @@ public class DataBase {
             e.printStackTrace();
         }
         return result;
-
     }
 
     /**
@@ -954,7 +924,7 @@ public class DataBase {
     private ArrayList<Mine> getAllMinesOfStation(int trainStation){
         ArrayList<Mine> result = new ArrayList<>();
         try {
-            ResultSet resultSet;// TODO
+            ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Mine WHERE `emplacement` = " + trainStation + ";", Statement.RETURN_GENERATED_KEYS);
             resultSet = ps.executeQuery();
             while(resultSet.next()) {
@@ -967,7 +937,6 @@ public class DataBase {
 
                 Mine mine = new Mine(id, type, qteRessources, max, regen, emplacement);
                 result.add(mine);
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -995,7 +964,6 @@ public class DataBase {
 
                 Mine mine = new Mine(id, type, qteRessources, max, regen, emplacement);
                 result.add(mine);
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1008,7 +976,7 @@ public class DataBase {
      * @return the mine
      */
     public Mine getMine(int id){
-        Mine mine = null;
+        Mine mine = null;// TODO OPTIONAL<T>
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Mine WHERE id=?");
@@ -1037,7 +1005,6 @@ public class DataBase {
      * @param place new station DataBase id
      */
     public boolean updateMine(int id, int resource, int amount, int max, int regen, int place){
-
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET type=?, qteRessources=?, max=?, regen=?, emplacement=? WHERE id=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, resource);
@@ -1047,10 +1014,7 @@ public class DataBase {
             ps.setObject(5, place);
             ps.setObject(6, id);
             int status = ps.executeUpdate();
-            if(status != 0){
-                return true;
-            }
-            ps.executeUpdate();
+            return status != 0;
         }catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1107,10 +1071,7 @@ public class DataBase {
             ps.setObject(1, getMine(id).getAmount() + changeAmount);
             ps.setObject(2, id);
             int status = ps.executeUpdate();
-
-            if(status != 0) {
-                return true;
-            }
+            return status != 0;
         }catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1172,9 +1133,7 @@ public class DataBase {
             ps.setObject(4, priceType);
             ps.setObject(5, priceAmount);
             int status = ps.executeUpdate();
-            if(status != 0){
-                return true;
-            }
+            return status != 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
