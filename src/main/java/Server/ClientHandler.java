@@ -32,6 +32,11 @@ ClientHandler implements Runnable {
         username = null;
     }
 
+    /**
+     * used when the state of the server is not normal (player not having a train)
+     */
+    private class BadServerStateException extends Exception {}
+
     public void run() {
         try {
             waitForAuthentication();
@@ -53,8 +58,8 @@ ClientHandler implements Runnable {
                 handleClient();
             }
 
-        } catch (IOException e) {
-            LOG.info("IOException on : " + username + " : " + e.getMessage());
+        } catch (IOException | BadServerStateException e) {
+            LOG.info(e.getClass().getSimpleName() + " on : " + username + " : " + e.getMessage());
             Server.getInstance().removeHandler(this);
             running = false;
         }
@@ -97,13 +102,13 @@ ClientHandler implements Runnable {
         }
     }
 
-    private void handleClient() throws IOException {
+    private void handleClient() throws IOException, BadServerStateException {
         String line = readLine();
         while (running && line != null) {
             //work...
 
             if (line.equals(OTrainProtocol.GET_TRAIN_STATUS)) {
-                writer.println(db.getTrain(username).toJson());
+                writer.println(db.getTrain(username).orElseThrow(BadServerStateException::new).toJson());
                 writer.flush();
             } else if (line.equals(OTrainProtocol.GET_OBJECTS)) {
                 writer.println(JsonUtility.listToJson(db.getPlayerObjects(username), ResourceAmount::toJson));
@@ -130,7 +135,7 @@ ClientHandler implements Runnable {
                 writer.flush();
             } else if (line.equals(OTrainProtocol.GET_GARES)) {
                 //TODO query plus propre pour récupérer la portée de la loco et ses coordonnées a partir du username (voir de get carrément les gares)
-                Train t = db.getTrain(username);
+                Train t = db.getTrain(username).orElseThrow(BadServerStateException::new);
                 writer.println(JsonUtility.listToJson(db.getAllTrainStationsWithinRange(WagonStats.getLocoSpeed(t) * 5, t.getTrainStation().getPosX(), t.getTrainStation().getPosY()), TrainStation::toJson));
                 writer.flush();
             } else if (line.equals(OTrainProtocol.GO_TO)) {
@@ -185,7 +190,7 @@ ClientHandler implements Runnable {
         }
     }
 
-    private void handleAdmin() throws IOException {
+    private void handleAdmin() throws IOException, BadServerStateException{
         String line = readLine();
         while (running && line != null) {
             //work...
@@ -205,7 +210,7 @@ ClientHandler implements Runnable {
                 int currentCargo = 0;
                 for (ResourceAmount ra : db.getPlayerObjects(playerName)) currentCargo += ra.getQuantity();
                 int reservedCargo = Server.getInstance().getReserveCargoController().getReservedCargo(playerName);
-                int maxCargo = WagonStats.getMaxCapacity(db.getTrain(playerName));
+                int maxCargo = WagonStats.getMaxCapacity(db.getTrain(playerName).orElseThrow(BadServerStateException::new));
 
                 writer.println(currentCargo + "(" + reservedCargo + ")/" + maxCargo);
                 writer.flush();

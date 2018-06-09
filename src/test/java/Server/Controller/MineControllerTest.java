@@ -1,6 +1,7 @@
 package Server.Controller;
 
 import Client.Client;
+import Game.Train;
 import Game.Wagon;
 import Server.Server;
 import Utils.OTrainProtocol;
@@ -47,7 +48,7 @@ class MineControllerTest {
         server.getDataBase().addWagon(user, 2000, 1, WagonStats.WagonType.SAW.ordinal());
         server.getDataBase().addWagon(user, 2000, 1, WagonStats.WagonType.PUMP.ordinal());
 
-        for(Wagon w : server.getDataBase().getTrain(user).getWagons()) server.getDataBase().updateWagon(user, w.getWeight(), 5, w.getType().ordinal(), w.getId());
+        for(Wagon w : server.getDataBase().getTrain(user).orElse(new Train()).getWagons()) server.getDataBase().updateWagon(user, w.getWeight(), 5, w.getType().ordinal(), w.getId());
 
         client = Client.getInstance();
         client.connectServer();

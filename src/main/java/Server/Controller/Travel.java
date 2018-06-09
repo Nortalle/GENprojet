@@ -48,7 +48,7 @@ public class Travel {
     public boolean ctrlChangeStation(String username, String newStation) {
         int newTsId = Integer.valueOf(newStation);
         DataBase db = Server.getInstance().getDataBase();
-        Train train = db.getTrain(username);
+        Train train = db.getTrain(username).orElse(new Train());
         TrainStation newTrainStation = db.getTrainStation(newTsId).orElse(new TrainStation());// temp solution
 
         if(getETA(username)[0] == 0) {

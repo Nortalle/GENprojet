@@ -1,6 +1,7 @@
 package Server.Controller;
 
 import Game.Craft;
+import Game.Train;
 import Server.Server;
 import Server.DataBase;
 import Utils.Recipe;
@@ -26,7 +27,7 @@ public class CraftController {
                 HashMap<String, Integer> nbrCrafts = new HashMap<>();
                 synchronized (crafts) {
                     for (Craft c : crafts) {
-                        if (nbrCrafts.merge(c.getUsername(), 1, (a, b) -> a + b) > WagonStats.getMaxParallelCraft(db.getTrain(c.getUsername())))
+                        if (nbrCrafts.merge(c.getUsername(), 1, (a, b) -> a + b) > WagonStats.getMaxParallelCraft(db.getTrain(c.getUsername()).orElse(new Train())))
                             continue;
                         c.decreaseRemainingTime();
                         if (c.getRemainingTime() <= 0) {

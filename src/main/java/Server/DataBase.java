@@ -258,7 +258,7 @@ public class DataBase {
     public int canUpdatePlayerObjects(String username, int amount) {
         int maxChange = amount;
 
-        Train train = getTrain(username);
+        Train train = getTrain(username).orElse(new Train());
         int MAX = WagonStats.getMaxCapacity(train);
         int MIN = 0;
         int currentAmount = getPlayerCurrentCargoAmount(username);
@@ -322,8 +322,7 @@ public class DataBase {
      * @param username player owner of the train
      * @return the player's train
      */
-    public Train getTrain(String username){
-        Train train = null;// TODO OPTIONAL<T>
+    public Optional<Train> getTrain(String username) {
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Train WHERE `proprietaire`=?;", Statement.RETURN_GENERATED_KEYS);
@@ -335,12 +334,12 @@ public class DataBase {
                 int currentTs = resultSet.getInt("gareActuelle");
 
                 int eta[] = Server.getInstance().getTravelController().getETA(username);
-                train = new Train(getAllWagons(username), getTrainStation(currentTs).orElse(new TrainStation()), eta[0], eta[1]);
+                return Optional.of(new Train(getAllWagons(username), getTrainStation(currentTs).orElse(new TrainStation()), eta[0], eta[1]));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return train;
+        return Optional.empty();
     }
 
     /**
@@ -348,7 +347,7 @@ public class DataBase {
      * @param stationId id of the train station
      * @return a list of all the trains in the station
      */
-    public ArrayList<Train> getAllTrainsAtStation(int stationId){
+    public ArrayList<Train> getAllTrainsAtStation(int stationId) {
         ArrayList<Train> trains = new ArrayList<>();
         try {
             ResultSet resultSet;
@@ -552,7 +551,7 @@ public class DataBase {
      * @param y pos y
      * @return the corresponding station
      */
-    private TrainStation getTrainStationByPos(int x, int y){
+    private TrainStation getTrainStationByPos(int x, int y) {
         TrainStation trainStation = null;// TODO OPTIONAL<T>
         try {
             ResultSet resultSet;
@@ -845,7 +844,7 @@ public class DataBase {
      * @return true is the player has been able to move, else false
      */
     public boolean sendTrainToNewStation(String username, int newTsId){
-        TrainStation ts1 = getTrainStation(getTrain(username).getTrainStation().getId()).orElse(new TrainStation());
+        TrainStation ts1 = getTrainStation(getTrain(username).orElse(new Train()).getTrainStation().getId()).orElse(new TrainStation());
         TrainStation ts2 = getTrainStation(newTsId).orElse(new TrainStation());
         if(ts1.getId() == ts2.getId() || ts1.getId() == 0 || ts2.getId() == 0) return false;
 

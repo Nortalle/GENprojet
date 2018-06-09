@@ -43,7 +43,7 @@ public class MineController {
 
     public boolean tryMine(String username, String wagonLine, String mineLine) {
         DataBase db = Server.getInstance().getDataBase();
-        Train train = db.getTrain(username);
+        Train train = db.getTrain(username).orElse(new Train());
         Optional<Wagon> optionalWagon = db.getWagon(Integer.valueOf(wagonLine));
         Optional<Mine> optionalMine = db.getMine(Integer.valueOf(mineLine));
         if(!optionalWagon.isPresent() || !optionalMine.isPresent()) return false;//if wagon and mine exist
