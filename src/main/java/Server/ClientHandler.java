@@ -132,8 +132,8 @@ ClientHandler implements Runnable {
                     break;
                 case OTrainProtocol.GET_GARES:
                     //TODO query plus propre pour récupérer la portée de la loco et ses coordonnées a partir du username (voir de get carrément les gares)
-                    writer.println(JsonUtility.listToJson(db.getAllTrainStationsWithinRange(WagonStats.getLocoSpeed(t) * 20, t.getTrainStation().getPosX(),t.getTrainStation().getPosY()), TrainStation::toJson));
                     Train t = db.getTrain(username).orElseThrow(BadServerStateException::new);
+                    writer.println(JsonUtility.listToJson(db.getAllTrainStationsWithinRange(WagonStats.getLocoSpeed(t) * 20, t.getTrainStation().getPosX(),t.getTrainStation().getPosY()), TrainStation::toJson));
                     writer.flush();
                     break;
                 case OTrainProtocol.GO_TO:
