@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Mine {
     private int id;
-    private int resource = 0;// change to ID ?
+    private int resource;
     private int amount;
     private int max;
     private int regen;
@@ -24,10 +24,10 @@ public class Mine {
         fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
-    public Mine(int id, int resource, int amout, int max, int regen, int place) {
+    public Mine(int id, int resource, int amount, int max, int regen, int place) {
         this.id = id;
         this.resource = resource;
-        this.amount = amout;
+        this.amount = amount;
         this.max = max;
         this.regen = regen;
         this.place = place;

@@ -111,9 +111,9 @@ ClientHandler implements Runnable {
             } else if (line.equals(OTrainProtocol.GET_TRAINS_AT)) {
                 int stationId = Integer.valueOf(readLine());
 
-                // TODO NOTHING ...
+                // TODO NOTHING ... CREATE AND USE GET_ALL_PLAYERS_AT_STATION
                 ArrayList<String> players = db.getAllTrainsAtStation(stationId).stream()
-                        .map(train -> db.getUsernameByWagonId(train.getWagons().get(0).getId()))
+                        .map(train -> db.getUsernameByWagonId(train.getWagons().get(0).getId()).orElse(""))
                         .collect(Collectors.toCollection(ArrayList::new));
 
                 writer.println(JsonUtility.listToJson(players, string -> {

@@ -33,7 +33,7 @@ public class CraftController {
                             // insert in DB
                             ResourceAmount finalProduct = Recipe.getAllRecipes().get(c.getRecipeIndex()).getFinalProduct();
                             int finalAmount = finalProduct.getQuantity();
-                            finalAmount = db.canUpdatePlayerObjectsOnReservedCargo(c.getUsername(), finalAmount, finalAmount);
+                            //finalAmount = db.canUpdatePlayerObjectsOnReservedCargo(c.getUsername(), finalAmount, finalAmount);
                             db.updatePlayerObjects(c.getUsername(), finalProduct.getRessource().ordinal(), finalAmount);
                             Server.getInstance().getReserveCargoController().removeReservedCargo(c.getUsername(), finalProduct.getQuantity());
                             toRemove.add(c);

@@ -54,10 +54,10 @@ public class TestDataBase {
         dataBase.deleteTrainStation(dataBase.getTrainStationIdByPos(y, y));
         dataBase.insertTrainStation(x, y, 10, 10);
         int stationId = dataBase.getTrainStationIdByPos(x, y);
-        TrainStation tsPrev = dataBase.getTrainStation(stationId);
+        TrainStation tsPrev = dataBase.getTrainStation(stationId).orElse(new TrainStation());
         dataBase.addMine(stationId, 400, 1000, 10, Ressource.Type.COPPER_ORE.ordinal());
         dataBase.addMine(stationId, 0, 1000, 10, Ressource.Type.CHARCOAL.ordinal());
-        TrainStation tsNext = dataBase.getTrainStation(stationId);
+        TrainStation tsNext = dataBase.getTrainStation(stationId).orElse(new TrainStation());
         assertEquals(tsPrev.getMines().size() + 2, tsNext.getMines().size());
     }
 
@@ -68,13 +68,13 @@ public class TestDataBase {
         dataBase.insertPlayer(username, password);
         int id = dataBase.addWagon(username, 1000, 1, WagonStats.WagonType.DRILL.ordinal());
         Wagon w = new Wagon(id, 1000, 1, WagonStats.WagonType.DRILL);
-        Wagon w1 = dataBase.getWagon(id);
-        String usernamefromDB = dataBase.getUsernameByWagonId(id);
+        Wagon w1 = dataBase.getWagon(id).orElse(new Wagon());
+        String usernameFromDB = dataBase.getUsernameByWagonId(id).orElse("");
         assertEquals(w.getId(), w1.getId());
         assertEquals(w.getType().ordinal(), w1.getType().ordinal());
         assertEquals(w.getLevel(), w1.getLevel());
         assertEquals(w.getWeight(), w1.getWeight());
-        assertEquals(username, usernamefromDB);
+        assertEquals(username, usernameFromDB);
 
     }
 
@@ -84,7 +84,7 @@ public class TestDataBase {
         dataBase.insertPlayer(username, password);
         int id = dataBase.addWagon(username, 1000, 1, 1);
         boolean changeWorked = dataBase.updateWagon(username, 1200, 2, 2, id);
-        Wagon w = dataBase.getWagon(id);
+        Wagon w = dataBase.getWagon(id).orElse(new Wagon());
         assertTrue(changeWorked);
         assertEquals(1200, w.getWeight());
         assertEquals(2, w.getLevel());
@@ -96,7 +96,7 @@ public class TestDataBase {
         dataBase.insertPlayer(username, password);
         int id = dataBase.addWagon(username, 1000, 1, 1);
         boolean changeWorked = dataBase.updateWagonLevel(id, 10);
-        Wagon w = dataBase.getWagon(id);
+        Wagon w = dataBase.getWagon(id).orElse(new Wagon());
         assertTrue(changeWorked);
         assertEquals(10, w.getLevel());
     }

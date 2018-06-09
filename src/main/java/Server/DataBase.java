@@ -177,20 +177,19 @@ public class DataBase {
      * @param wagonId DataBase wagon id
      * @return username
      */
-    public String getUsernameByWagonId(int wagonId) {
-        String result = "";// TODO OPTIONAL<T>
+    public Optional<String> getUsernameByWagonId(int wagonId) {
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT proprietaire FROM Wagon WHERE id=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, wagonId);
             resultSet = ps.executeQuery();
             if(resultSet.next()) {
-                result = resultSet.getString(1);
+                return Optional.of(resultSet.getString(1));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result;
+        return Optional.empty();
     }
 
     /**
@@ -272,23 +271,14 @@ public class DataBase {
     }
 
     /**
+     * if you have reserved slot sou should be able to add what you want
      * @param username player
      * @param amount how much you want to add or remove
      * @return how much you actually can add or remove
      */
+    @Deprecated
     public int canUpdatePlayerObjectsOnReservedCargo(String username, int amount, int reservedCargo) {
-        int maxChange = amount;//TODO BETTER FACTORING
-
-        Train train = getTrain(username);
-        int MAX = WagonStats.getMaxCapacity(train);
-        int MIN = 0;
-        int currentAmount = getPlayerCurrentCargoAmount(username) - reservedCargo;
-        if(currentAmount > MAX || currentAmount < MIN) return 0;
-        int newAmount =  currentAmount + amount;
-        if(newAmount > MAX) maxChange = MAX - currentAmount;
-        if(newAmount < MIN) maxChange = MIN - currentAmount;
-
-        return maxChange;
+        return Math.max(canUpdatePlayerObjects(username, amount), reservedCargo);
     }
 
     /**
@@ -345,7 +335,7 @@ public class DataBase {
                 int currentTs = resultSet.getInt("gareActuelle");
 
                 int eta[] = Server.getInstance().getTravelController().getETA(username);
-                train = new Train(getAllWagons(username), getTrainStation(currentTs), eta[0], eta[1]);
+                train = new Train(getAllWagons(username), getTrainStation(currentTs).orElse(new TrainStation()), eta[0], eta[1]);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -365,14 +355,15 @@ public class DataBase {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Train WHERE `gareActuelle`=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, stationId);
             resultSet = ps.executeQuery();
+            TrainStation currentTs = getTrainStation(stationId).orElse(new TrainStation());
             while(resultSet.next()){
                 String user = resultSet.getString("proprietaire");
                 //String name = resultSet.getString("nom");
-                int currentTs = resultSet.getInt("gareActuelle");
+                //int ts = resultSet.getInt("gareActuelle");
 
                 int eta[] = Server.getInstance().getTravelController().getETA(user);
 
-                trains.add(new Train(getAllWagons(user), getTrainStation(currentTs), eta[0], eta[1]));
+                trains.add(new Train(getAllWagons(user), currentTs, eta[0], eta[1]));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -482,8 +473,7 @@ public class DataBase {
      * @param id wagon DataBase id
      * @return the wagon of this id
      */
-    public Wagon getWagon(int id){
-        Wagon wagon = null;// TODO OPTIONAL<T>
+    public Optional<Wagon> getWagon(int id){
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE id=?");
@@ -495,20 +485,19 @@ public class DataBase {
                 int level = resultSet.getInt("niveau");
                 int typeID = resultSet.getInt("typeID");
 
-                wagon = new Wagon(idWagon, weight, level, WagonStats.WagonType.values()[typeID]);
+                return Optional.of(new Wagon(idWagon, weight, level, WagonStats.WagonType.values()[typeID]));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return wagon;
+        return Optional.empty();
     }
 
     /**
      * @param username player
      * @return the player loco (null if not found)
      */
-    private Wagon getPlayerLoco(String username){
-        Wagon wagon = null;// TODO OPTIONAL<T>
+    private Optional<Wagon> getPlayerLoco(String username){
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Wagon WHERE `proprietaire`=? AND `typeID`=?");
@@ -521,12 +510,12 @@ public class DataBase {
                 int level = resultSet.getInt("niveau");
                 int typeID = resultSet.getInt("typeID");
 
-                wagon = new Wagon(idWagon, weight, level,  WagonStats.WagonType.values()[typeID]);
+                return Optional.of(new Wagon(idWagon, weight, level,  WagonStats.WagonType.values()[typeID]));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return wagon;
+        return Optional.empty();
     }
 
     // STATION REQUESTS
@@ -535,26 +524,26 @@ public class DataBase {
      * @param tsId the id of the station
      * @return the station corresponding to the id
      */
-    public TrainStation getTrainStation(int tsId){
-        TrainStation trainStation = null;// TODO OPTIONAL<T>
+    public Optional<TrainStation> getTrainStation(int tsId){
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE `id`=?;", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, tsId);
             resultSet = ps.executeQuery();
-            if(!resultSet.next()){return null;}
-            int id = resultSet.getInt("id");
-            int posX = resultSet.getInt("posX");
-            int posY = resultSet.getInt("posY");
-            int nbOfPlatforms = resultSet.getInt("nbrQuai");
-            int sizeOfPlatforms = resultSet.getInt("tailleQuai");
-            ArrayList<Mine> mines = getAllMinesOfStation(tsId);
+            if(resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int posX = resultSet.getInt("posX");
+                int posY = resultSet.getInt("posY");
+                int nbOfPlatforms = resultSet.getInt("nbrQuai");
+                int sizeOfPlatforms = resultSet.getInt("tailleQuai");
+                ArrayList<Mine> mines = getAllMinesOfStation(tsId);
 
-            trainStation = new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines);
+                return Optional.of(new TrainStation(id, posX, posY, nbOfPlatforms, sizeOfPlatforms, mines));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return trainStation;
+        return Optional.empty();
     }
 
     /**
@@ -856,18 +845,14 @@ public class DataBase {
      * @return true is the player has been able to move, else false
      */
     public boolean sendTrainToNewStation(String username, int newTsId){
-        TrainStation ts1 = getTrainStation(getTrain(username).getTrainStation().getId());
-        if(ts1 == null) return false;
-        TrainStation ts2 = getTrainStation(newTsId);
-        if(ts2 == null) return false;
-        if(ts1.getId() == ts2.getId()) return false;
-        Wagon loco = getPlayerLoco(username);
-        if(loco == null) return false;
+        TrainStation ts1 = getTrainStation(getTrain(username).getTrainStation().getId()).orElse(new TrainStation());
+        TrainStation ts2 = getTrainStation(newTsId).orElse(new TrainStation());
+        if(ts1.getId() == ts2.getId() || ts1.getId() == 0 || ts2.getId() == 0) return false;
 
-        int eta = WagonStats.calculateTravelETA(loco, ts1, ts2);
+        int eta = WagonStats.calculateTravelETA(getPlayerLoco(username).orElse(new Wagon()), ts1, ts2);
 
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET `gareActuelle`=? WHERE `proprietaire`=?", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement("UPDATE Train SET gareActuelle=? WHERE proprietaire=?", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, newTsId);
             ps.setObject(2, username);
             ps.executeUpdate();
@@ -970,8 +955,7 @@ public class DataBase {
      * @param id mine DataBase id
      * @return the mine
      */
-    public Mine getMine(int id){
-        Mine mine = null;// TODO OPTIONAL<T>
+    public Optional<Mine> getMine(int id){
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Mine WHERE id=?");
@@ -985,12 +969,12 @@ public class DataBase {
                 int regen = resultSet.getInt("regen");
                 int emplacement = resultSet.getInt("emplacement");
 
-                mine = new Mine(idMine, type, qteRessources, max, regen, emplacement);
+                return Optional.of(new Mine(idMine, type, qteRessources, max, regen, emplacement));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return mine;
+        return Optional.empty();
     }
 
     /**
@@ -1041,8 +1025,7 @@ public class DataBase {
     public int canChangeMineAmount(int id, int changeAmount) {
         int maxChange = changeAmount;
 
-        Mine mine = getMine(id);
-        if(mine == null) return 0;
+        Mine mine = getMine(id).orElse(new Mine());
         int MAX = mine.getMax();
         int MIN = 0;
         int currentAmount = mine.getAmount();
@@ -1063,7 +1046,7 @@ public class DataBase {
     public boolean changeMineAmount(int id, int changeAmount){
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE Mine SET qteRessources=? WHERE id=?", Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, getMine(id).getAmount() + changeAmount);
+            ps.setObject(1, getMine(id).orElse(new Mine()).getAmount() + changeAmount);
             ps.setObject(2, id);
             int status = ps.executeUpdate();
             return status != 0;

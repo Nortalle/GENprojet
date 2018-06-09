@@ -46,17 +46,16 @@ public class UpgradeController {
     }
 
     public boolean tryUpgrade(String username, String wagonId) {
-        Wagon wagonToUpgrade = dataBase.getWagon(Integer.valueOf(wagonId));
+        Optional<Wagon> optionalWagonToUpgrade = dataBase.getWagon(Integer.valueOf(wagonId));
+        if(!optionalWagonToUpgrade.isPresent()) return false;
+        Wagon wagonToUpgrade = optionalWagonToUpgrade.get();
 
-        if(wagonToUpgrade.getLevel() > WagonStats.LEVEL_MAX){
-            return false;
-        }
+        if(wagonToUpgrade.getLevel() > WagonStats.LEVEL_MAX) return false;
 
         ArrayList<ResourceAmount> resourceAmounts = WagonStats.getUpgradeCost(wagonToUpgrade);
 
-        if (resourceAmounts.equals(null)) {
-            return false;
-        }
+        if (resourceAmounts.equals(null)) return false;
+
         for (ResourceAmount ra : resourceAmounts) {
             Optional<ResourceAmount> playerObject = dataBase.getPlayerObjectOfType(username, ra.getRessource().ordinal());
             if(!playerObject.filter(po -> po.getQuantity() >= ra.getQuantity()).isPresent()) return false;

@@ -7,6 +7,7 @@ import Utils.ResourceAmount;
 import Utils.WagonStats;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.TimerTask;
 
 public class MineController {
@@ -22,9 +23,8 @@ public class MineController {
             @Override
             public void run() {
                 DataBase db = Server.getInstance().getDataBase();
-                for(int i = 0; i < wagonMining.size(); ++i) {
-                    WagonMining wm = wagonMining.get(i);
-                    String username = db.getUsernameByWagonId(wm.getWagon().getId());
+                for (WagonMining wm : wagonMining) {
+                    String username = db.getUsernameByWagonId(wm.getWagon().getId()).orElse("");
                     // TODO TEST IF TRAIN IS STILL AT STATION WHERE MINE IS
                     int miningAmount = WagonStats.getMiningAmount(wm.getWagon());
                     miningAmount = -db.canChangeMineAmount(wm.getCurrentMine().getId(), -miningAmount);
@@ -43,10 +43,12 @@ public class MineController {
 
     public boolean tryMine(String username, String wagonLine, String mineLine) {
         DataBase db = Server.getInstance().getDataBase();
-        Wagon wagon = db.getWagon(Integer.valueOf(wagonLine));
-        Mine mine = db.getMine(Integer.valueOf(mineLine));
         Train train = db.getTrain(username);
-        if(wagon == null || mine == null) return false;//if wagon and mine exist
+        Optional<Wagon> optionalWagon = db.getWagon(Integer.valueOf(wagonLine));
+        Optional<Mine> optionalMine = db.getMine(Integer.valueOf(mineLine));
+        if(!optionalWagon.isPresent() || !optionalMine.isPresent()) return false;//if wagon and mine exist
+        Wagon wagon = optionalWagon.get();
+        Mine mine = optionalMine.get();
         if(!WagonStats.canMine(wagon, mine)) return false;//if wagon can mine
         if(train.getTrainStationETA() > 0) return false;//if train is arrived
         if(train.getTrainStation().getId() != mine.getPlace()) return false;//if mine is at curr station of train
@@ -92,8 +94,8 @@ public class MineController {
     public ArrayList<WagonMining> getPlayerWagonMining(String username) {
         ArrayList<WagonMining> result = new ArrayList<>();
         for(WagonMining wm : wagonMining) {
-            if(Server.getInstance().getDataBase().getUsernameByWagonId(wm.getWagon().getId()).equals(username)) {
-                wm.setCurrentMine(Server.getInstance().getDataBase().getMine(wm.getCurrentMine().getId()));
+            if(Server.getInstance().getDataBase().getUsernameByWagonId(wm.getWagon().getId()).orElse("").equals(username)) {
+                Server.getInstance().getDataBase().getMine(wm.getCurrentMine().getId()).ifPresent(wm::setCurrentMine);
                 result.add(wm);
             }
         }

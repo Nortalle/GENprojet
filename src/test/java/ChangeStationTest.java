@@ -56,7 +56,7 @@ public class ChangeStationTest {
         String line = client.changeStation(stationId);
         System.out.println(line);
         client.updateTrain();
-        assertEquals(dataBase.getTrainStation(stationId).toString(), client.getTrain().getTrainStation().toString());
+        assertEquals(dataBase.getTrainStation(stationId).orElse(new TrainStation()).toString(), client.getTrain().getTrainStation().toString());
     }
 
     @Test

@@ -49,7 +49,7 @@ public class Travel {
         int newTsId = Integer.valueOf(newStation);
         DataBase db = Server.getInstance().getDataBase();
         Train train = db.getTrain(username);
-        TrainStation newTrainStation = db.getTrainStation(newTsId);
+        TrainStation newTrainStation = db.getTrainStation(newTsId).orElse(new TrainStation());// temp solution
 
         if(getETA(username)[0] == 0) {
             if(newTrainStation.getSizeOfPlatforms() >= train.getSize()) {
