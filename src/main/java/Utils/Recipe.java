@@ -58,7 +58,7 @@ public class Recipe {
 
     static Recipe IRON_INGOT_RCPT;
     static {
-        IRON_INGOT_RCPT = new Recipe("Iron Ingot", new ResourceAmount(Ressource.Type.IRON_INGOT, 1), 10);
+        IRON_INGOT_RCPT = new Recipe("Iron Ingot", new ResourceAmount(Ressource.Type.IRON_INGOT, 1), 5);
         IRON_INGOT_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_ORE, 10));
         IRON_INGOT_RCPT.addCost(new ResourceAmount(Ressource.Type.CHARCOAL, 1));
     }
@@ -71,32 +71,32 @@ public class Recipe {
 
     static Recipe COPPER_INGOT_RCPT;
     static {
-        COPPER_INGOT_RCPT = new Recipe("Copper Ingot", new ResourceAmount(Ressource.Type.COPPER_INGOT, 1), 10);
+        COPPER_INGOT_RCPT = new Recipe("Copper Ingot", new ResourceAmount(Ressource.Type.COPPER_INGOT, 1), 5);
         COPPER_INGOT_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_ORE, 10));
         COPPER_INGOT_RCPT.addCost(new ResourceAmount(Ressource.Type.CHARCOAL, 1));
     }
 
     static Recipe IRON_PLATE_RCPT;
     static {
-        IRON_PLATE_RCPT = new Recipe("Iron Plate", new ResourceAmount(Ressource.Type.IRON_PLATE,1), 15);
+        IRON_PLATE_RCPT = new Recipe("Iron Plate", new ResourceAmount(Ressource.Type.IRON_PLATE,1), 10);
         IRON_PLATE_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_INGOT,1));
     }
 
     static Recipe IRON_WHEEL_RCPT;
     static {
-        IRON_WHEEL_RCPT = new Recipe("Iron Wheel", new ResourceAmount(Ressource.Type.IRON_WHEEL, 1), 20);
+        IRON_WHEEL_RCPT = new Recipe("Iron Wheel", new ResourceAmount(Ressource.Type.IRON_WHEEL, 1), 15);
         IRON_WHEEL_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_INGOT, 2));
     }
     static Recipe COPPER_GEAR_RCPT;
     static {
-        COPPER_GEAR_RCPT = new Recipe("Copper Gear", new ResourceAmount(Ressource.Type.COPPER_GEAR, 1), 20);
+        COPPER_GEAR_RCPT = new Recipe("Copper Gear", new ResourceAmount(Ressource.Type.COPPER_GEAR, 1), 15);
         COPPER_GEAR_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_INGOT, 2));
     }
 
 
     static Recipe COPPER_TUBE_RCPT;
     static {
-        COPPER_TUBE_RCPT = new Recipe("Copper Tube", new ResourceAmount(Ressource.Type.COPPER_TUBE,1), 15);
+        COPPER_TUBE_RCPT = new Recipe("Copper Tube", new ResourceAmount(Ressource.Type.COPPER_TUBE,1), 10);
         COPPER_TUBE_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_INGOT,1));
     }
 
@@ -109,7 +109,7 @@ public class Recipe {
 
     static Recipe PLANK_RCPT;
     static {
-        PLANK_RCPT = new Recipe("Plank", new ResourceAmount(Ressource.Type.PLANK,1), 1);
+        PLANK_RCPT = new Recipe("Plank", new ResourceAmount(Ressource.Type.PLANK,1), 2);
         PLANK_RCPT.addCost(new ResourceAmount(Ressource.Type.WOOD_LOG, 1));
     }
 
@@ -121,14 +121,14 @@ public class Recipe {
 
     static Recipe WOODEN_CRATE_RCPT;
     static {
-        WOODEN_CRATE_RCPT = new Recipe("Wooden Crate", new ResourceAmount(Ressource.Type.WOODEN_CRATE,1), 3);
+        WOODEN_CRATE_RCPT = new Recipe("Wooden Crate", new ResourceAmount(Ressource.Type.WOODEN_CRATE,1), 15);
         WOODEN_CRATE_RCPT.addCost(new ResourceAmount(Ressource.Type.PLANK, 5));
         WOODEN_CRATE_RCPT.addCost(new ResourceAmount(Ressource.Type.NAILS, 10));
     }
 
     static Recipe STEEL_INGOT_RCPT;
     static {
-        STEEL_INGOT_RCPT = new Recipe("Steel Ingot", new ResourceAmount(Ressource.Type.STEEL_INGOT,1), 4);
+        STEEL_INGOT_RCPT = new Recipe("Steel Ingot", new ResourceAmount(Ressource.Type.STEEL_INGOT,1), 15);
         STEEL_INGOT_RCPT.addCost(new ResourceAmount(Ressource.Type.CHARCOAL, 1));
         STEEL_INGOT_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_INGOT, 1));
     }
@@ -147,7 +147,7 @@ public class Recipe {
 
     static Recipe ROBOTIC_ARM_RCPT;
     static {
-        ROBOTIC_ARM_RCPT = new Recipe("Robotic Arm", new ResourceAmount(Ressource.Type.ROBOTIC_ARM_T1,1), 60);
+        ROBOTIC_ARM_RCPT = new Recipe("Robotic Arm", new ResourceAmount(Ressource.Type.ROBOTIC_ARM_T1,1), 120);
         ROBOTIC_ARM_RCPT.addCost(new ResourceAmount(Ressource.Type.STEEL_INGOT, 2));
         ROBOTIC_ARM_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 12));
         ROBOTIC_ARM_RCPT.addCost(new ResourceAmount(Ressource.Type.RIVET, 1));
@@ -158,6 +158,7 @@ public class Recipe {
     static {
         PETROL_RCPT = new Recipe("Petrol", new ResourceAmount(Ressource.Type.PETROL,1), 5);
         PETROL_RCPT.addCost(new ResourceAmount(Ressource.Type.OIL, 10));
+        PETROL_RCPT.addCost(new ResourceAmount(Ressource.Type.WATER, 10));
     }
 
     static Recipe PLASTIC_RCPT;
@@ -181,11 +182,11 @@ public class Recipe {
     static Recipe PUMP_T1_RCPT;
     static {
         PUMP_T1_RCPT = new Recipe("Pump T1", new ResourceAmount(Ressource.Type.PUMP_T1,1), 120);
-        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 6));
+        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 3));
         PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_WHEEL, 1));
-        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_TUBE, 12));
-        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 9));
-        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.RIVET, 5));
+        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_TUBE, 6));
+        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 3));
+        PUMP_T1_RCPT.addCost(new ResourceAmount(Ressource.Type.RIVET, 15));
     }
 
     static Recipe PROCESSOR_T1_RCPT;

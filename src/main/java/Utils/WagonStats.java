@@ -210,20 +210,21 @@ public class WagonStats {
                 break;
             case SAW:
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 8)));
+                ra.add(new ResourceAmount(Ressource.Type.IRON_WHEEL, costPerLevel(w.getLevel(), 2)));
                 ra.add(new ResourceAmount(Ressource.Type.WOOD_LOG, costPerLevel(w.getLevel(), 3)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_GEAR, costPerLevel(w.getLevel(), 15)));
-                ra.add(new ResourceAmount(Ressource.Type.SAW_T1, costPerLevel(w.getLevel(), 4)));
+                ra.add(new ResourceAmount(Ressource.Type.SAW_T1, costPerLevel(w.getLevel(), 6)));
                 break;
             case PUMP:
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 9)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_TUBE, costPerLevel(w.getLevel(), 16)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_GEAR, costPerLevel(w.getLevel(), 4)));
-                ra.add(new ResourceAmount(Ressource.Type.PUMP_T1, costPerLevel(w.getLevel(), 4)));
+                ra.add(new ResourceAmount(Ressource.Type.PUMP_T1, costPerLevel(w.getLevel(), 2)));
                 break;
             case CARGO:
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 20)));
-                ra.add(new ResourceAmount(Ressource.Type.COPPER_TUBE, costPerLevel(w.getLevel(), 2)));
-                ra.add(new ResourceAmount(Ressource.Type.WOODEN_CRATE, costPerLevel(w.getLevel(), 4)));
+                ra.add(new ResourceAmount(Ressource.Type.COPPER_TUBE, costPerLevel(w.getLevel(), 10)));
+                ra.add(new ResourceAmount(Ressource.Type.WOODEN_CRATE, costPerLevel(w.getLevel(), 2)));
                 break;
             case CRAFT:
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 18)));
