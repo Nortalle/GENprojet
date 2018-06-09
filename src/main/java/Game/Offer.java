@@ -85,6 +85,6 @@ public class Offer {
     }
 
     public double getRatio() {
-        return ((double )price.getQuantity()) / ((double) offer.getQuantity());
+        return ((double) price.getQuantity()) / ((double) offer.getQuantity());
     }
 }
