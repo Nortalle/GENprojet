@@ -1092,7 +1092,7 @@ public class DataBase {
                 ps = connection.prepareStatement("SELECT * FROM Offres WHERE offerType=?");
                 ps.setObject(1, offer);
             }
-            else if(offer == -1 && price != -1) {
+            else if(offer == -1/* && price != -1*/) {
                 ps = connection.prepareStatement("SELECT * FROM Offres WHERE priceType=?");
                 ps.setObject(1, price);
             }
