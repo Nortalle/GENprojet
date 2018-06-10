@@ -30,11 +30,11 @@ public class GuiUtility {
      * @param <T> type of object
      */
     public static <T> void listInPanel(JPanel panel, ArrayList<T> list, ListToPanel<T> lambda, int anchor) {
-        panel.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = anchor;
+        panel.removeAll();
         for(T item : list) panel.add(lambda.toAdd(item), gbc);
         gbc.weighty = 1.0;
         gbc.weightx = 1.0;
