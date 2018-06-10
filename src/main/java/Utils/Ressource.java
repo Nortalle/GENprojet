@@ -61,19 +61,19 @@ public class Ressource {
                 return 1;
             }
             case CHARCOAL: {
-                return 0.3;
+                return 0.1;
             }
             case CRUDE_OIL: {
-                return 0.2;
+                return 0.5;
             }
             case IRON_ORE: {
-                return 1;
+                return 1.2;
             }
             case COPPER_ORE: {
-                return 0.7;
+                return 0.8;
             }
             case GOLD_ORE: {
-                return 0.1;
+                return 0.2;
             }
             default:
                 return 0;
@@ -84,19 +84,19 @@ public class Ressource {
         int randomNumber = r.nextInt(100);
 
         if(randomNumber < 30){
-            return Type.IRON_ORE;       //30%
+            return Type.IRON_ORE;       //35%
         }
-        if(randomNumber < 50){
-            return Type.WOOD_LOG;       //20%
+        if(randomNumber < 60){
+            return Type.WOOD_LOG;       //30%
         }
-        if(randomNumber < 70) {
-            return Type.CHARCOAL;       //20%
+        if(randomNumber < 65) {
+            return Type.CHARCOAL;       //5%
         }
-        if(randomNumber < 90) {
+        if(randomNumber < 85) {
             return Type.COPPER_ORE;     //20%
         }
         if(randomNumber < 95){
-            return Type.CRUDE_OIL;            //5%
+            return Type.CRUDE_OIL;      //10%
         }
         if(randomNumber < 100){
             return Type.WATER;          //5%
@@ -111,17 +111,17 @@ public class Ressource {
         if(randomNumber < 30){
             return Type.IRON_ORE;       //30%
         }
-        if(randomNumber < 35){
-            return Type.WOOD_LOG;       //5%
+        if(randomNumber < 45){
+            return Type.WOOD_LOG;       //15%
         }
-        if(randomNumber < 60) {
-            return Type.CHARCOAL;       //25%
+        if(randomNumber < 50) {
+            return Type.CHARCOAL;       //5%
         }
-        if(randomNumber < 85) {
-            return Type.COPPER_ORE;     //25%
+        if(randomNumber < 80) {
+            return Type.COPPER_ORE;     //20%
         }
         if(randomNumber < 95){
-            return Type.WATER;          //10%
+            return Type.WATER;          //15%
         }
         if(randomNumber < 100){
             return Type.GOLD_ORE;       //5%

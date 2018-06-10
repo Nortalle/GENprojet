@@ -113,4 +113,11 @@ public class OTrainProtocol {
     public static final String ON_THE_WAY = "ON_THE_WAY";
     public static final String ARRIVED = "ARRIVED";
 
+
+    /* ---------{ Statistics }--------- */
+    public static final String TOP_TRAIN_LVL = "TOP_TRAIN_LVL";
+    public static final String TOP_MINER = "TOP_MINER";
+    public static final String TOP_PUMP = "TOP_PUMP";
+    public static final String TOP_LUMBER = "TOP_LUMBER";
+    public static final String TOP_ITEMS = "TOP_ITEMS";
 }
