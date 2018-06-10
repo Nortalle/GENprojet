@@ -49,12 +49,22 @@ public class DataBase {
         return false;
     }
 
+
     /**
      * @param username new player
      * @param password password
      * @return if user has been inserted (false if username already is data base)
      */
     public boolean insertPlayer(String username, String password) {
+        return insertPlayer(username,password, "");
+    }
+
+    /**
+     * @param username new player
+     * @param password password
+     * @return if user has been inserted (false if username already is data base)
+     */
+    public boolean insertPlayer(String username, String password, String wagontype) {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Utilisateur VALUES(?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
@@ -80,9 +90,31 @@ public class DataBase {
             status = ps.executeUpdate();
             if(status == 0) return false;
 
+            /*
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
             ps.setObject(2, WagonStats.WagonType.DRILL.ordinal());
+            status = ps.executeUpdate();
+            if(status == 0) return false;
+            */
+
+            // default
+            int wtype = WagonStats.WagonType.DRILL.ordinal();
+
+            if(wagontype.equals("DRILL")){
+                wtype = WagonStats.WagonType.DRILL.ordinal();
+            }
+            else if(wagontype.equals("PUMP")){
+                wtype = WagonStats.WagonType.PUMP.ordinal();
+            }
+            else if(wagontype.equals("SAW")){
+                wtype = WagonStats.WagonType.SAW.ordinal();
+            }
+
+
+            ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, username);
+            ps.setObject(2, wtype);
             status = ps.executeUpdate();
             if(status == 0) return false;
 
