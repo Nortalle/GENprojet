@@ -7,6 +7,7 @@ import Utils.WagonStats;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.Optional;
 
@@ -1237,5 +1238,34 @@ public class DataBase {
         }
 
         return Optional.empty();
+    }
+
+    public Ranking getPlayerRanking(String playerName) {
+        ArrayList<Wagon> wagons = getTrain(playerName).orElse(new Train()).getWagons();
+        int globalRanking = wagons.stream()
+                .mapToInt(Wagon::getLevel)
+                .sum();
+
+        int drillRanking = wagons.stream()
+                .filter(w -> w.getType() == WagonStats.WagonType.DRILL)
+                .mapToInt(Wagon::getLevel)
+                .sum();
+
+        int sawRanking = wagons.stream()
+                .filter(w -> w.getType() == WagonStats.WagonType.SAW)
+                .mapToInt(Wagon::getLevel)
+                .sum();
+
+        int pumpRanking = wagons.stream()
+                .filter(w -> w.getType() == WagonStats.WagonType.PUMP)
+                .mapToInt(Wagon::getLevel)
+                .sum();
+
+        ArrayList<ResourceAmount> objects = getPlayerObjects(playerName);
+        int itemsRanking = objects.stream()
+                .mapToInt(ResourceAmount::getQuantity)
+                .sum();
+
+        return new Ranking(playerName, globalRanking, drillRanking, sawRanking, pumpRanking, itemsRanking);
     }
 }

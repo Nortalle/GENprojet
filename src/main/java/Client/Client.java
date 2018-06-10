@@ -41,6 +41,7 @@ public class Client {
     private ArrayList<String> trainsAtStation = new ArrayList<>();
     private ArrayList<TrainStation> trainStations = new ArrayList<>();
     private ArrayList<Offer> offers = new ArrayList<>();
+    private ArrayList<Ranking> rankings = new ArrayList<>();
 
     // start admin
     private ArrayList<TrainStation> adminTrainStations = new ArrayList<>();
@@ -471,6 +472,23 @@ public class Client {
         return trainStations;
     }
 
+    public void updateRankings() {
+        writer.println(OTrainProtocol.GET_ALL_RANKINGS);
+        writer.flush();
+        String answer = readLine();
+        rankings = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), Ranking::new);
+
+        // TODO DO IT IN GUI SO ONE CAN CHOOSE HOW TO SORT (GLOBAL, MINE, ITEMS, ...)
+        // sort
+        rankings = rankings.stream()
+                .sorted(Comparator.comparingDouble(r -> -r.getGlobal()))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public ArrayList<Ranking> getRankings() {
+        return rankings;
+    }
+
 
     public synchronized void updateAll() {
         if(!clientLogged) return;
@@ -482,6 +500,7 @@ public class Client {
         updateCreateWagons();
         updateTrainStations();
         updateTrainsAtStation(viewingStation);
+        updateRankings();
     }
 
     // not very good but should be working
