@@ -69,7 +69,7 @@ public class GuiUtility {
         GuiUtility.listInPanel(panel, list, cost -> {
             int actualAmount = Client.getInstance().getSpecificResource(cost.getRessource());
             JLabel label = new JLabel(actualAmount + "/" + cost.toString());
-            label.setForeground(actualAmount < cost.getQuantity() ? Color.RED : Color.GREEN);
+            label.setForeground(actualAmount < cost.getQuantity() ? new Color(192,0,10) : new Color(0,145,10));
             return label;
         });
     }
