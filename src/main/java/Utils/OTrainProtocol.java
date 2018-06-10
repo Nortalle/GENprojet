@@ -92,6 +92,13 @@ public class OTrainProtocol {
     public static final String CHANGE_PLAYER_OBJECT = "CHANGE_PLAYER_OBJECT";
     public static final String DELETE_PLAYER = "DELETE_PLAYER";
 
+
+    /* ---------{ Ranking commands }--------- */
+    // get list of all rankings
+    public static final String GET_ALL_RANKINGS = "GET_ALL_RANKINGS";
+    // get player rankings
+    public static final String GET_PLAYER_RANKING = "GET_PLAYER_RANKING";
+
     /* ---------{ Server side commands }--------- */
 
     /* General commands */

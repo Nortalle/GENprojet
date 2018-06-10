@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class
 ClientHandler implements Runnable {
@@ -202,6 +203,15 @@ ClientHandler implements Runnable {
                 case OTrainProtocol.CANCEL_OFFER: {
                     int idLine = Integer.valueOf(readLine());
                     sendBooleanResult(db.optionalCancelOffer(idLine));
+                    break;
+                }
+                case OTrainProtocol.GET_ALL_RANKINGS: {
+                    ArrayList<Ranking> rankings = db.getAllPlayers().stream()
+                            .map(db::getPlayerRanking)
+                            .collect(Collectors.toCollection(ArrayList::new));
+
+                    writer.println(JsonUtility.listToJson(rankings, Ranking::toJson));
+                    writer.flush();
                     break;
                 }
             }
