@@ -73,6 +73,7 @@ public class Train {
 
     public void fromJson(JsonObject from) {
         wagons = JsonUtility.listFromJson((JsonArray) from.get("wagons"), Wagon::new);
+        //TODO change
         if(trainStation == null) trainStation = new TrainStation();// to change
         trainStation.fromJson((JsonObject) from.get("trainStation"));
         trainStationETA = from.get("trainStationETA").getAsInt();

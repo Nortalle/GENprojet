@@ -82,13 +82,13 @@ public class cli_gui_Gare {
     public void localUpdate(){
         frequentLocalUpdate();
         updateStationList();
+        updateMines();
+        updateTrainsAtStation();
+        updateStationInfo();
     }
 
     public void frequentLocalUpdate(){
-        updateStationInfo();
         updateEtaBar();
-        updateTrainsAtStation();
-        updateMines();
     }
 
     public void updateStationInfo() {
@@ -107,7 +107,7 @@ public class cli_gui_Gare {
         int eta = train.getTrainStationETA();
         progressBar1.setMaximum(totalTime);
         progressBar1.setValue(totalTime - eta);
-        progressBar1.setString((eta == totalTime) ? "At Station" : "On the move");
+        progressBar1.setString((eta == 0) ? "At Station" : "On the move");
     }
 
     public void updateTrainsAtStation() {
