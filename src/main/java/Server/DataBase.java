@@ -65,7 +65,7 @@ public class DataBase {
      * @param password password
      * @return if user has been inserted (false if username already is data base)
      */
-    public boolean insertPlayer(String username, String password, String wagontype) {
+    public boolean insertPlayer(String username, String password, String wagonType) {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Utilisateur VALUES(?,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
@@ -100,22 +100,24 @@ public class DataBase {
             */
 
             // default
-            int wtype = WagonStats.WagonType.DRILL.ordinal();
+            int wType = WagonStats.WagonType.DRILL.ordinal();
 
-            if(wagontype.equals("DRILL")){
-                wtype = WagonStats.WagonType.DRILL.ordinal();
-            }
-            else if(wagontype.equals("PUMP")){
-                wtype = WagonStats.WagonType.PUMP.ordinal();
-            }
-            else if(wagontype.equals("SAW")){
-                wtype = WagonStats.WagonType.SAW.ordinal();
+            switch (wagonType) {
+                case "DRILL":
+                    wType = WagonStats.WagonType.DRILL.ordinal();
+                    break;
+                case "PUMP":
+                    wType = WagonStats.WagonType.PUMP.ordinal();
+                    break;
+                case "SAW":
+                    wType = WagonStats.WagonType.SAW.ordinal();
+                    break;
             }
 
 
             ps = connection.prepareStatement("INSERT INTO Wagon VALUES(default,?,2000,1,?);", Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, username);
-            ps.setObject(2, wtype);
+            ps.setObject(2, wType);
             status = ps.executeUpdate();
             if(status == 0) return false;
 
