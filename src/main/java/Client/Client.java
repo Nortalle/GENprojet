@@ -6,6 +6,7 @@ import Server.ClientHandler;
 import Utils.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import javafx.util.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -572,6 +573,15 @@ public class Client {
         writer.println(wagonRecipeIndex);
         writer.flush();
         return readLine();
+    }
+
+    public String getTopTrainLevels(){
+        writer.println(OTrainProtocol.TOP_TRAIN_LVL);
+        String answer = readLine();
+
+        //TODO récupérer les données
+
+        return "";
     }
 
     public static void main(String ... args) {

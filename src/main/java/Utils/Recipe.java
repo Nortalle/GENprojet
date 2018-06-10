@@ -80,17 +80,20 @@ public class Recipe {
     static {
         IRON_PLATE_RCPT = new Recipe("Iron Plate", new ResourceAmount(Ressource.Type.IRON_PLATE,1), 10);
         IRON_PLATE_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_INGOT,1));
+        IRON_PLATE_RCPT.addCost(new ResourceAmount(Ressource.Type.WATER,1));
     }
 
     static Recipe IRON_WHEEL_RCPT;
     static {
         IRON_WHEEL_RCPT = new Recipe("Iron Wheel", new ResourceAmount(Ressource.Type.IRON_WHEEL, 1), 15);
         IRON_WHEEL_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_INGOT, 2));
+        IRON_WHEEL_RCPT.addCost(new ResourceAmount(Ressource.Type.WATER,1));
     }
     static Recipe COPPER_GEAR_RCPT;
     static {
         COPPER_GEAR_RCPT = new Recipe("Copper Gear", new ResourceAmount(Ressource.Type.COPPER_GEAR, 1), 15);
         COPPER_GEAR_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_INGOT, 2));
+        COPPER_GEAR_RCPT.addCost(new ResourceAmount(Ressource.Type.WATER,1));
     }
 
 
@@ -98,6 +101,7 @@ public class Recipe {
     static {
         COPPER_TUBE_RCPT = new Recipe("Copper Tube", new ResourceAmount(Ressource.Type.COPPER_TUBE,1), 10);
         COPPER_TUBE_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_INGOT,1));
+        COPPER_TUBE_RCPT.addCost(new ResourceAmount(Ressource.Type.WATER,1));
     }
 
     static Recipe DRILL_T1_RCPT;
