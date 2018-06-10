@@ -664,7 +664,7 @@ public class DataBase {
                                 );
                         TrainStation station = getTrainStationByPos(xi, yi);
                         // ajout des mines
-                        int nbMines = 1 + r.nextInt(1 + 6 - Math.min(((xiabs + yiabs) / 30), 6));
+                        int nbMines = 1 + r.nextInt(3 + 6 - Math.min(((xiabs + yiabs) / 30), 6));
                         for(int i = 0 ; i < nbMines; i ++){
                             Ressource.Type t = yi < 0 ? Ressource.southOccurence() : Ressource.northOccurence();
                             int max = (int)(70 + r.nextInt(30 + xiabs + yiabs) * Ressource.amountMofifier(t));
