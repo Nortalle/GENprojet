@@ -44,7 +44,7 @@ public class Ranking {
     }
 
     public void fromJson(JsonObject from) {
-        playerName = from.get("trainStationETA").getAsString();
+        playerName = from.get("playerName").getAsString();
         global = from.get("global").getAsInt();
         drill = from.get("drill").getAsInt();
         saw = from.get("saw").getAsInt();

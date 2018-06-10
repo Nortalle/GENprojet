@@ -29,7 +29,10 @@ public class LoginForm {
 
         button_sign_up.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String answer = client.signUp(input_username.getText(), String.valueOf(input_password.getPassword()));
+                Object[] possibleValues = {"DRILL", "PUMP", "SAW"};
+                Object selectedValue = JOptionPane.showInputDialog(null,"Choose your first gathering wagon :", "Select first Wagon", JOptionPane.INFORMATION_MESSAGE, null, possibleValues, possibleValues[0]);
+
+                String answer = client.signUp(input_username.getText(), String.valueOf(input_password.getPassword()), selectedValue);
 
                 if(answer.equals(OTrainProtocol.SUCCESS)) {
                     label_info.setForeground(Color.GREEN);
