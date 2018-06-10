@@ -9,36 +9,46 @@ public class Ressource {
      */
     //scrum, eau, bois, charbon, petrol, fer, cuivre, acier, or
     public enum  Type {
-        SCRUM,
-        WATER,
-        WOOD_LOG,
         CHARCOAL,
-        OIL,
+        CRUDE_OIL,
         IRON_ORE,
         COPPER_ORE,
-        GOLD_ORE,
-        IRON_INGOT,
-        COPPER_INGOT,
-        IRON_PLATE,
-        IRON_WHEEL,
-        COPPER_GEAR,
-        COPPER_TUBE,// FROM HERE
-        PLANK,
-        NAILS,
-        WOODEN_CRATE,
-        STEEL_INGOT,
-        RIVET,
+        GOLD_ORE,   // basic ressources
+        CARDBOARD,
+        CARDBOARD_BOX,
         COPPER_CABLE,
-        PETROL,
-        PLASTIC_SHEET,
+        COPPER_GEAR,
+        COPPER_INGOT,
+        COPPER_TUBE,// FROM HERE
+        DRILL_T1,
         GOLD_INGOT,
         GOLD_SHEET,
+        INSULATED_CABLE,
+        IRON_INGOT,
+        IRON_PLATE,
+        IRON_WHEEL,
+        NAILS,
+        NYLON_FIBER,
+        NYLON_ROPE,
+        PAPER_PASTE,
+        PLANK,
         PLASTIC,
-        SAW_T1,
+        PLASTIC_SHEET,
+        PROCESSOR_T1,
         PUMP_T1,
+        REFINED_PETROL_BARREL,
+        RIVET,
         ROBOTIC_ARM_T1,
-        DRILL_T1,
-        PROCESSOR_T1
+        SAW_T1,
+        SCRUM,
+        STEEL_INGOT,
+        WATER,
+        WOOD_BARREL,
+        WOOD_CHIPS,
+        WOOD_CRATE,
+        WOOD_LOG,
+        WOOD_STRIP,
+
 
     }
 
@@ -53,7 +63,7 @@ public class Ressource {
             case CHARCOAL: {
                 return 0.3;
             }
-            case OIL: {
+            case CRUDE_OIL: {
                 return 0.2;
             }
             case IRON_ORE: {
@@ -86,7 +96,7 @@ public class Ressource {
             return Type.COPPER_ORE;     //20%
         }
         if(randomNumber < 95){
-            return Type.OIL;            //5%
+            return Type.CRUDE_OIL;            //5%
         }
         if(randomNumber < 100){
             return Type.WATER;          //5%
@@ -139,7 +149,7 @@ public class Ressource {
                 return "Scrum";
             case WATER:
                 return "Water";
-            case OIL:
+            case CRUDE_OIL:
                 return "Oil";
             case GOLD_ORE:
                 return "Gold Ore";
@@ -169,7 +179,7 @@ public class Ressource {
                 return "Plank";
             case NAILS:
                 return "Nail Box";
-            case WOODEN_CRATE:
+            case WOOD_CRATE:
                 return "Wooden Crate";
             case STEEL_INGOT:
                 return "Steel Ingot";
@@ -179,10 +189,10 @@ public class Ressource {
                 return "Copper Cable";
             case ROBOTIC_ARM_T1:
                 return "Robotic Arm T1";
-            case PETROL:
+            case REFINED_PETROL_BARREL:
                 return "Petrol Barrel";
             case PLASTIC_SHEET:
-                return "plastic Sheet";
+                return "Plastic Sheet";
             case GOLD_INGOT:
                 return "Gold Ingot";
             case GOLD_SHEET:
@@ -195,8 +205,26 @@ public class Ressource {
                 return "Saw T1";
             case PUMP_T1:
                 return "Pump T1";
+            case CARDBOARD:
+                return "Cardboard";
+            case WOOD_CHIPS:
+                return "Woodchips";
+            case WOOD_STRIP:
+                return "Wood Strips";
+            case PAPER_PASTE:
+                return "Paper Paste";
+            case WOOD_BARREL:
+                return "Wooden Barrel";
+            case CARDBOARD_BOX:
+                return "Cardboard box";
+            case INSULATED_CABLE:
+                return "Insulated Cable";
+            case NYLON_ROPE:
+                return "Nylon Rope";
+            case NYLON_FIBER:
+                return  "Nylon Fiber";
             default:
-                return "Not a Resource";
+                return "Not a Resource : " + t.ordinal();
         }
     }
 
@@ -206,14 +234,44 @@ public class Ressource {
      */
     public static int[] getBaseResourcesId() {
         int baseResources[] = {Type.SCRUM.ordinal(), Type.WATER.ordinal(), Type.WOOD_LOG.ordinal(), Type.CHARCOAL.ordinal(),
-                                Type.OIL.ordinal(), Type.IRON_ORE.ordinal(), Type.COPPER_ORE.ordinal(), Type.GOLD_ORE.ordinal()};
+                                Type.CRUDE_OIL.ordinal(), Type.IRON_ORE.ordinal(), Type.COPPER_ORE.ordinal(), Type.GOLD_ORE.ordinal()};
         return baseResources;
     }
 
     public static int[] getPlayerBaseResources(ArrayList<ResourceAmount> playerResources) {
         int baseResources[] = {0, 0, 0, 0, 0, 0, 0, 0};
-        int resourcesFound = 0;
+        //int resourcesFound = 0;
         for(ResourceAmount ra : playerResources) {
+
+            switch(ra.getRessource()){
+                case SCRUM:
+                    baseResources[0] = ra.getQuantity();
+                    break;
+                case WATER:
+                    baseResources[1] = ra.getQuantity();
+                    break;
+                case WOOD_LOG:
+                    baseResources[2] = ra.getQuantity();
+                    break;
+                case CHARCOAL:
+                    baseResources[3] = ra.getQuantity();
+                    break;
+                case CRUDE_OIL:
+                    baseResources[4] = ra.getQuantity();
+                    break;
+                case IRON_ORE:
+                    baseResources[5] = ra.getQuantity();
+                    break;
+                case COPPER_ORE:
+                    baseResources[6] = ra.getQuantity();
+                    break;
+                case GOLD_ORE:
+                    baseResources[7] = ra.getQuantity();
+                    break;
+                default:
+                    // donothing
+            }
+            /*   OLD WAY
             if(resourcesFound >= getBaseResourcesId().length) break;// for optimisation
             for(int id : getBaseResourcesId()) {
                 if(id == ra.getRessource().ordinal()) {
@@ -222,6 +280,7 @@ public class Ressource {
                     break;
                 }
             }
+            */
         }
         return baseResources;
     }

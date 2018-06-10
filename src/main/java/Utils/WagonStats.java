@@ -38,7 +38,7 @@ public class WagonStats {
 
     // --- PUMP WAGON --- //
     public static final String PUMP_NAME = "Pump wagon";
-    public static final int PUMP_CAN_MINE[] = {WATER.ordinal(), OIL.ordinal()};
+    public static final int PUMP_CAN_MINE[] = {WATER.ordinal(), CRUDE_OIL.ordinal()};
     public static final int PUMP_BASE_MINING_AMOUNT = 1;
 
     // --- CARGO WAGON --- //
@@ -204,7 +204,7 @@ public class WagonStats {
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 10)));
                 ra.add(new ResourceAmount(Ressource.Type.WOOD_LOG, costPerLevel(w.getLevel(), 3)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_TUBE, costPerLevel(w.getLevel(), 6)));
-                ra.add(new ResourceAmount(Ressource.Type.STEEL_INGOT, costPerLevel(w.getLevel(), 5)));
+                ra.add(new ResourceAmount(Ressource.Type.STEEL_INGOT, costPerLevel(w.getLevel(), 2)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_GEAR, costPerLevel(w.getLevel(), 12)));
                 ra.add(new ResourceAmount(Ressource.Type.DRILL_T1, costPerLevel(w.getLevel(), 1)));
                 break;
@@ -222,9 +222,10 @@ public class WagonStats {
                 ra.add(new ResourceAmount(Ressource.Type.PUMP_T1, costPerLevel(w.getLevel(), 2)));
                 break;
             case CARGO:
-                ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 20)));
+                ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 10)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_TUBE, costPerLevel(w.getLevel(), 10)));
-                ra.add(new ResourceAmount(Ressource.Type.WOODEN_CRATE, costPerLevel(w.getLevel(), 2)));
+                ra.add(new ResourceAmount(Ressource.Type.WOOD_CRATE, costPerLevel(w.getLevel(), 2)));
+                ra.add(new ResourceAmount(Ressource.Type.WOOD_BARREL, costPerLevel(w.getLevel(), 2)));
                 break;
             case CRAFT:
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 18)));
