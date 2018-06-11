@@ -139,7 +139,6 @@ public class StabilityTest {
     public static int nbrOfCall = 0;
     public static final Object lockChange = new Object();
     public static final Object lockCall = new Object();
-    //public static final Object lockETA = new Object();
     @Test
     public void testChangeStation40Times() {
         int maxChanges = 40;
