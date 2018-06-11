@@ -676,7 +676,8 @@ public class DataBase {
             r.setSeed(xi);
             for(int yi = y -range; yi < y + range; yi++){
                 r.setSeed(r.nextInt() + yi);
-                boolean isStation = r.nextInt(1000) < 2;   // séquence déterministe pour savoir si il y a une gare a cet emplacement
+                int distAbs = Math.abs(xi)+ Math.abs(yi);
+                boolean isStation = r.nextInt(100000) < (200 / Math.max(distAbs / 10, 1));   // séquence déterministe pour savoir si il y a une gare a cet emplacement
                 if(isStation){
                     //TODO remove le debug
                     System.out.println("New Station at (" + xi + ":" + yi + ")");
@@ -692,11 +693,7 @@ public class DataBase {
                         int xiabs = Math.abs(xi);
                         int yiabs = Math.abs(yi);
                         // ajout de la gare
-                        insertTrainStation(xi,
-                                yi,
-                                1 + r.nextInt(1 + 5 - Math.min(((xiabs + yiabs) / 30), 5)) ,
-                                5 + ((xiabs + yiabs) / 100) + r.nextInt(5 + Math.min(((xiabs + yiabs) / 30), 50))
-                                );
+                        insertTrainStation(xi, yi, 3 + r.nextInt(5), 5 + ((distAbs) / 100) + r.nextInt(5 + Math.min(((distAbs) / 30), 50)));
                         TrainStation station = getTrainStationByPos(xi, yi);
                         // ajout des mines
                         int nbMines = 1 + r.nextInt(3 + 6 - Math.min(((xiabs + yiabs) / 30), 6));
