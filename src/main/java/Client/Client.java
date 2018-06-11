@@ -352,9 +352,7 @@ public class Client {
         return readLine();
     }
 
-    public String signUp(String username, String password) {
-        Object[] possibleValues = { "DRILL", "PUMP", "SAW" };
-        Object selectedValue = JOptionPane.showInputDialog(null,"Choose your first gathering wagon :", "Select first Wagon", JOptionPane.INFORMATION_MESSAGE, null, possibleValues, possibleValues[0]);
+    public String signUp(String username, String password, Object selectedValue) {
         writer.println(OTrainProtocol.SIGN_UP);
         writer.println(username);
         writer.println(password);

@@ -50,11 +50,11 @@ public class TestConnection {
     public void createNewUser(){
         String username2 = "other";
         dataBase.deleteUser(username2);
-        assertEquals(OTrainProtocol.SUCCESS, client.signUp(username2, username2));
+        assertEquals(OTrainProtocol.SUCCESS, client.signUp(username2, username2, "DRILL"));
     }
 
     @Test
     public void cantCreateAlreadyUsedUsername(){
-        assertEquals(OTrainProtocol.FAILURE, client.signUp(username, username));
+        assertEquals(OTrainProtocol.FAILURE, client.signUp(username, username, "DRILL"));
     }
 }

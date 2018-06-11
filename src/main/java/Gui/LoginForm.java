@@ -29,19 +29,25 @@ public class LoginForm {
 
         button_sign_up.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String answer = client.signUp(input_username.getText(), String.valueOf(input_password.getPassword()));
+                Object[] possibleValues = {"DRILL", "PUMP", "SAW"};
+                Object selectedValue = JOptionPane.showInputDialog(null,"Choose your first gathering wagon :", "Select first Wagon", JOptionPane.INFORMATION_MESSAGE, null, possibleValues, possibleValues[0]);
+                if(selectedValue == null) return;
 
-                if(answer.equals(OTrainProtocol.SUCCESS)) {
-                    label_info.setForeground(Color.GREEN);
-                    label_info.setText("New account created");
-                }
-                else if(answer.equals(OTrainProtocol.FAILURE)) {
-                    label_info.setForeground(Color.RED);
-                    label_info.setText("Fail to create new account");
-                }
-                else {
-                    label_info.setForeground(Color.RED);
-                    label_info.setText("ERROR");
+                String answer = client.signUp(input_username.getText(), String.valueOf(input_password.getPassword()), selectedValue);
+
+                switch (answer) {
+                    case OTrainProtocol.SUCCESS:
+                        label_info.setForeground(Color.GREEN);
+                        label_info.setText("New account created");
+                        break;
+                    case OTrainProtocol.FAILURE:
+                        label_info.setForeground(Color.RED);
+                        label_info.setText("Fail to create new account");
+                        break;
+                    default:
+                        label_info.setForeground(Color.RED);
+                        label_info.setText("ERROR");
+                        break;
                 }
             }
         });

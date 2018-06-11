@@ -95,10 +95,10 @@ ClientHandler implements Runnable {
 
             } else if (request.equals(OTrainProtocol.SIGN_UP)) {
 
-                String wagontype = readLine();
+                String wagonType = readLine();
                 // check if input are correct for sign up
                 if (username == null || password == null || username.equals("")) signedUp = false;
-                else signedUp = db.insertPlayer(username, password, wagontype);
+                else signedUp = db.insertPlayer(username, password, wagonType);
                 sendBooleanResult(signedUp);
             }
         }
