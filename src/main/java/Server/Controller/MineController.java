@@ -7,8 +7,10 @@ import Utils.ResourceAmount;
 import Utils.WagonStats;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 public class MineController {
 
@@ -68,10 +70,8 @@ public class MineController {
 
         if(found) {
             wagonMining.set(i,wm);
-            //ETMs.set(i, WagonStats.getMiningTime(wm.getWagon()));
         } else {
             wagonMining.add(wm);
-            //ETMs.add(WagonStats.getMiningTime(wm.getWagon()));
         }
 
     }
@@ -84,7 +84,6 @@ public class MineController {
         for(int i = 0; i < wagonMining.size(); i++) {
             if(wagonMining.get(i).getWagon().getId() == id) {
                 wagonMining.remove(i);
-                //ETMs.remove(i);
                 return true;
             }
         }
@@ -99,6 +98,11 @@ public class MineController {
                 result.add(wm);
             }
         }
+
         return result;
+        // TODO TEST AND USE STREAM
+        /*return wagonMining.stream()
+                .filter(Comparator.comparing(wm -> Server.getInstance().getDataBase().getUsernameByWagonId(wm).orElse("").equals(username)))
+                .collect(Collectors.toCollection(ArrayList::new));*/
     }
 }
