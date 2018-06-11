@@ -155,7 +155,7 @@ public class StabilityTest {
                     }
                     c.setFinished(true);
                 }
-            }, 100, 100);
+            }, 1, 1);
         }
 
         while((System.currentTimeMillis() - start < 1000*20) && (Arrays.stream(clients).filter(TestClient::isFinished).count() < clients.length) && nbrOfChange < 30) {}
