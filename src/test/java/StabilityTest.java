@@ -1,9 +1,11 @@
 
+import Game.Train;
 import Game.TrainStation;
 import Server.Server;
 import Utils.JsonUtility;
 import Utils.OTrainProtocol;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -93,11 +95,14 @@ public class StabilityTest {
             }
         }
 
+        private int lastETA = 0;
+        public int totalETA = 0;
         public String changeStation(int stationId) {
             writer.println(OTrainProtocol.GO_TO);
             writer.println(stationId);
             writer.flush();
-            return readLine();
+            String line = readLine();
+            return line;
         }
 
         public String getName() {
@@ -131,8 +136,13 @@ public class StabilityTest {
     }
 
     public static int nbrOfChange = 0;
+    public static int nbrOfCall = 0;
+    public static final Object lockChange = new Object();
+    public static final Object lockCall = new Object();
+    //public static final Object lockETA = new Object();
     @Test
-    public void testChangeStation30Times() {
+    public void testChangeStation40Times() {
+        int maxChanges = 40;
         Random random = new Random();
         long start = System.currentTimeMillis();
         for (TestClient c : clients) {
@@ -140,7 +150,10 @@ public class StabilityTest {
                 @Override
                 public void run() {
                     c.setFinished(false);
-                    while(nbrOfChange < 30) {
+                    while(nbrOfChange < maxChanges) {
+                        synchronized (lockCall) {
+                            nbrOfCall++;
+                        }
                         c.updateTrainStations();
                         int nbrOfStations = c.getTrainStations().size();
                         if (nbrOfStations == 0) {
@@ -149,8 +162,11 @@ public class StabilityTest {
                         }
                         int newStationId = c.getTrainStations().get(random.nextInt(nbrOfStations)).getId();
                         String line = c.changeStation(newStationId);
-                        if (line.equals(OTrainProtocol.SUCCESS)) nbrOfChange++;
-                        System.out.println(line);
+                        if (line.equals(OTrainProtocol.SUCCESS)) {
+                            synchronized (lockChange) {
+                                nbrOfChange++;
+                            }
+                        }
                         System.out.println("nbrOfChange : " + nbrOfChange);
                     }
                     c.setFinished(true);
@@ -158,6 +174,9 @@ public class StabilityTest {
             }, 1, 1);
         }
 
-        while((System.currentTimeMillis() - start < 1000*20) && (Arrays.stream(clients).filter(TestClient::isFinished).count() < clients.length) && nbrOfChange < 30) {}
+        while(((System.currentTimeMillis() - start) < (1000 * maxChanges))
+                && (Arrays.stream(clients).filter(TestClient::isFinished).count() < clients.length)
+                && nbrOfChange < maxChanges) {}
+        System.out.println("calls " + nbrOfCall);
     }
 }
