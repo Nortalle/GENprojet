@@ -32,13 +32,15 @@ public class MineRegeneration {
             @Override
             public void run() {
                 DataBase db = Server.getInstance().getDataBase();
-                for (Mine mine : mines) {
-                    int miningAmount = mine.getRegen();
-                    miningAmount = db.canChangeMineAmount(mine.getId(), miningAmount);
-                    if(db.changeMineAmount(mine.getId(), miningAmount)) {
-                        // all good
-                    } else {
-                        System.out.println("mine : " + mine.getId() + " might not exist and must be removed from regen ctrl");
+                synchronized (mines) {
+                    for (Mine mine : mines) {
+                        int miningAmount = mine.getRegen();
+                        miningAmount = db.canChangeMineAmount(mine.getId(), miningAmount);
+                        if (db.changeMineAmount(mine.getId(), miningAmount)) {
+                            // all good
+                        } else {
+                            System.out.println("mine : " + mine.getId() + " might not exist and must be removed from regen ctrl");
+                        }
                     }
                 }
             }
@@ -46,7 +48,9 @@ public class MineRegeneration {
     }
 
     public void addMine(Mine mine_to_add) {
-        this.mines.add(mine_to_add);
+        synchronized (mines) {
+            this.mines.add(mine_to_add);
+        }
     }
 
     public ArrayList<Mine> getMines() {

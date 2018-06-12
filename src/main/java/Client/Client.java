@@ -345,7 +345,7 @@ public class Client {
     }
 
     public String sendLogin(String username, String password) {
-        writer.println(OTrainProtocol.CONNECT);
+        writer.println(OTrainProtocol.CONNECT);// TODO READ PLAYER OR ADMIN
         writer.println(username);
         writer.println(password);
         writer.flush();
