@@ -646,6 +646,8 @@ public class DataBase {
      */
     public ArrayList<TrainStation> getAllTrainStationsWithinRange(int range, int x, int y){
         ArrayList<TrainStation> result = new ArrayList<>();
+        int extendedRange = 2 * range;
+        extendedRange = range;
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE posX BETWEEN ? AND ? AND posY BETWEEN ? AND ?;", Statement.RETURN_GENERATED_KEYS);
@@ -669,32 +671,36 @@ public class DataBase {
             e.printStackTrace();
         }
 
-        new Thread(new Runnable() {
+
+        /*new Thread(new Runnable() {
             @Override
-            public void run() {
+            public void run() {*/
 
 
 
         Random r = new Random();
         // parcours de toutes les gares qui devraient s'y trouver et check si elles existent déjà
-        for(int xi = x - range; xi < x + range; xi++ ){
+        for(int xi = x - extendedRange; xi < x + extendedRange; xi++ ){
             r.setSeed(xi);
-            for(int yi = y -range; yi < y + range; yi++){
-                r.setSeed(r.nextInt() + yi);
+            int xSeed = r.nextInt();
+            for(int yi = y -extendedRange; yi < y + extendedRange; yi++){
+                r.setSeed(xSeed + yi);
                 int distAbs = Math.abs(xi)+ Math.abs(yi);
-                boolean isStation = r.nextInt(100000) < (200 / Math.max(distAbs / 10, 1));   // séquence déterministe pour savoir si il y a une gare a cet emplacement
+                boolean isStation = r.nextInt(100000) < (500 / Math.max(distAbs / 10, 1));   // séquence déterministe pour savoir si il y a une gare a cet emplacement
                 if(isStation){
                     //TODO remove le debug
-                    System.out.println("New Station at (" + xi + ":" + yi + ")");
+                    System.out.println("Station at (" + xi + ":" + yi + ") ?");
                     boolean found = false;
-                    for(TrainStation ts : result){
+                    found = !canCreateStationAt(xi, yi);
+                    /*for(TrainStation ts : result){
                         if(ts.getPosX() == xi && ts.getPosY() == yi){
                             found = true;
                             break;
                         }
-                    }
+                    }*/
                     // si elle y est pas on doit la rajouter
                     if(!found){
+                        System.out.println("New Station at (" + xi + ":" + yi + ")");
                         int xiabs = Math.abs(xi);
                         int yiabs = Math.abs(yi);
                         // ajout de la gare
@@ -721,8 +727,8 @@ public class DataBase {
 
 
 
-            }
-        }).start();
+            /*}
+        }).start();*/
 
         return result;
     }
