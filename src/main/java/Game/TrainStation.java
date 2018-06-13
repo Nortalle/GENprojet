@@ -11,7 +11,7 @@ public class TrainStation {
     private int posY;
     private int nbOfPlatforms;
     private int sizeOfPlatforms;
-    private ArrayList<Mine> mines = new ArrayList<Mine>();
+    private ArrayList<Mine> mines = new ArrayList<>();
 
     public TrainStation() {}
 
@@ -21,10 +21,6 @@ public class TrainStation {
 
     public TrainStation(String json) {
         fromJson((JsonObject) JsonUtility.fromJson(json));
-    }
-
-    public TrainStation(int id, int x, int y){
-
     }
 
     public TrainStation(int id, int x, int y, int nbPlat, int sizePlat, ArrayList<Mine> m) {

@@ -38,4 +38,9 @@ public class MinesTest {
         for(Mine m : newMines) System.out.println("- " + m.getResource());
         assertEquals(mines.get(1).getResource(), newMines.get(1).getResource());
     }
+
+    @Test
+    void testSimpleMine() {
+        
+    }
 }
