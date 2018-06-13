@@ -1,4 +1,5 @@
 
+import Game.SimpleStation;
 import Game.Train;
 import Game.TrainStation;
 import Server.Server;
@@ -28,7 +29,7 @@ public class StabilityTest {
         private Socket socket;
         private BufferedReader reader;
         private PrintWriter writer;
-        private ArrayList<TrainStation> trainStations = new ArrayList<>();
+        private ArrayList<SimpleStation> trainStations = new ArrayList<>();
 
         public TestClient(String name) {
             this.name = name;
@@ -75,13 +76,13 @@ public class StabilityTest {
         }
 
         public void updateTrainStations() {
-            writer.println(OTrainProtocol.GET_GARES);
+            writer.println(OTrainProtocol.GET_SIMPLE_GARE);
             writer.flush();
             String answer = readLine();
-            trainStations = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), TrainStation::new);
+            trainStations = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), SimpleStation::new);
         }
 
-        public ArrayList<TrainStation> getTrainStations() {
+        public ArrayList<SimpleStation> getTrainStations() {
             return trainStations;
         }
 
