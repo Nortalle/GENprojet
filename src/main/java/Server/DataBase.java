@@ -669,6 +669,11 @@ public class DataBase {
             e.printStackTrace();
         }
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+
 
         Random r = new Random();
         // parcours de toutes les gares qui devraient s'y trouver et check si elles existent déjà
@@ -713,6 +718,11 @@ public class DataBase {
                 }
             }
         }
+
+
+
+            }
+        }).start();
 
         return result;
     }
