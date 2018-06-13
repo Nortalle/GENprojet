@@ -332,6 +332,8 @@ public class Client {
         return 0;
     }
 
+    //TODO
+    private int dataSize = 0;
     public String readLine() {
         String line = "ERROR";
         try {
@@ -340,6 +342,7 @@ public class Client {
             e.printStackTrace();
         }
         LOG.info(line);
+        dataSize += line.length();
         return line;
     }
 
@@ -490,6 +493,7 @@ public class Client {
 
     public synchronized void updateAll() {
         if(!clientLogged) return;
+        dataSize = 0;
         updateWagonMining();
         updateTrain();          // doit se faire après updateWagonMining;
         updateResourceAmount();
@@ -499,6 +503,7 @@ public class Client {
         updateSimpleStations();
         updateTrainsAtStation(viewingStation);
         updateRankings();
+        System.out.println("DATA SIZE : " + dataSize);
     }
 
     // not very good but should be working
