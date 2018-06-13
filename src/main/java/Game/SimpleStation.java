@@ -2,6 +2,7 @@ package Game;
 
 import Utils.JsonUtility;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -52,7 +53,10 @@ public class SimpleStation {
         trainStation.add("n", new JsonPrimitive(nbOfPlatforms));
         trainStation.add("s", new JsonPrimitive(sizeOfPlatforms));
         if(mines == null) mines = new ArrayList<>();
-        trainStation.add("m", JsonUtility.listToJson(mines, SimpleMine::toJson));
+
+        JsonArray list = new JsonArray();
+        for(SimpleMine m : mines) list.add(new JsonPrimitive(m.toSimpleFormat()));
+        trainStation.add("m", list);
 
         return trainStation;
     }
@@ -63,7 +67,14 @@ public class SimpleStation {
         posY = from.get("y").getAsInt();
         nbOfPlatforms = from.get("n").getAsInt();
         sizeOfPlatforms = from.get("s").getAsInt();
-        mines = JsonUtility.listFromJson((JsonArray) from.get("m"), SimpleMine::new);
+
+        mines = new ArrayList<>();
+        for(JsonElement j : (JsonArray)from.get("m")) {
+            SimpleMine mine = new SimpleMine();
+            mine.fromSimpleFormat(j.getAsString());
+            mines.add(mine);
+        }
+        //mines = JsonUtility.listFromJson((JsonArray) from.get("m"), SimpleMine::new);
     }
 
     public int getId() {

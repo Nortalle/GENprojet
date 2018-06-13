@@ -2,6 +2,7 @@ package Game;
 
 import Utils.JsonUtility;
 import Utils.Ressource;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -43,6 +44,24 @@ public class SimpleMine {
     public void fromJson(JsonObject from) {
         id = from.get("i").getAsInt();
         resource = from.get("r").getAsInt();
+    }
+
+    public String toSimpleFormat() {
+        return id + "," + resource;
+    }
+
+    public void fromSimpleFormat(String from) {
+        int splitAt = from.indexOf(',');
+        id = Integer.valueOf(from.substring(0, splitAt));
+        resource = Integer.valueOf(from.substring(splitAt + 1));
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getResource() {
+        return resource;
     }
 
     @Override

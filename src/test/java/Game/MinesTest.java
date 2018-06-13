@@ -41,6 +41,23 @@ public class MinesTest {
 
     @Test
     void testSimpleMine() {
+        SimpleMine mine1 = new SimpleMine(153, 45);
+        SimpleMine mine3 = new SimpleMine(453, 4);
+        SimpleMine mine2 = new SimpleMine(1, 455);
 
+        SimpleMine newMine1 = new SimpleMine();
+        SimpleMine newMine3 = new SimpleMine();
+        SimpleMine newMine2 = new SimpleMine();
+
+        newMine1.fromSimpleFormat(mine1.toSimpleFormat());
+        newMine2.fromSimpleFormat(mine2.toSimpleFormat());
+        newMine3.fromSimpleFormat(mine3.toSimpleFormat());
+
+        assertEquals(mine1.getId(), newMine1.getId());
+        assertEquals(mine1.getResource(), newMine1.getResource());
+        assertEquals(mine2.getId(), newMine2.getId());
+        assertEquals(mine2.getResource(), newMine2.getResource());
+        assertEquals(mine3.getId(), newMine3.getId());
+        assertEquals(mine3.getResource(), newMine3.getResource());
     }
 }
