@@ -39,18 +39,18 @@ public class WagonMining  {
     public JsonObject toJson() {
         JsonObject miningWagon = new JsonObject();
         if(wagon == null) wagon = new Wagon();
-        miningWagon.add("wagon", wagon.toJson());
+        miningWagon.add("w", wagon.toJson());
         if(currentMine == null) currentMine = new Mine();
-        miningWagon.add("currentMine", currentMine.toJson());
+        miningWagon.add("m", currentMine.toJson());
 
         return miningWagon;
     }
 
     public void fromJson(JsonObject from) {
         if(wagon == null) wagon = new Wagon();// can we do better ?
-        wagon.fromJson((JsonObject) from.get("wagon"));
+        wagon.fromJson((JsonObject) from.get("w"));
         if(currentMine == null) currentMine = new Mine();// can we do better ?
-        currentMine.fromJson((JsonObject) from.get("currentMine"));
+        currentMine.fromJson((JsonObject) from.get("m"));
     }
 
     public Wagon getWagon() {

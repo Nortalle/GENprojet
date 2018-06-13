@@ -63,21 +63,21 @@ public class Train {
 
     public JsonObject toJson() {
         JsonObject train = new JsonObject();
-        train.add("wagons", JsonUtility.listToJson(wagons, Wagon::toJson));
-        train.add("trainStation", trainStation.toJson());
-        train.add("trainStationETA", new JsonPrimitive(trainStationETA));
-        train.add("trainStationTotalETA", new JsonPrimitive(trainStationTotalETA));
+        train.add("w", JsonUtility.listToJson(wagons, Wagon::toJson));
+        train.add("s", trainStation.toJson());
+        train.add("e", new JsonPrimitive(trainStationETA));
+        train.add("t", new JsonPrimitive(trainStationTotalETA));
 
         return train;
     }
 
     public void fromJson(JsonObject from) {
-        wagons = JsonUtility.listFromJson((JsonArray) from.get("wagons"), Wagon::new);
+        wagons = JsonUtility.listFromJson((JsonArray) from.get("w"), Wagon::new);
         //TODO change
         if(trainStation == null) trainStation = new TrainStation();// to change
-        trainStation.fromJson((JsonObject) from.get("trainStation"));
-        trainStationETA = from.get("trainStationETA").getAsInt();
-        trainStationTotalETA = from.get("trainStationTotalETA").getAsInt();
+        trainStation.fromJson((JsonObject) from.get("s"));
+        trainStationETA = from.get("e").getAsInt();
+        trainStationTotalETA = from.get("t").getAsInt();
     }
 
     @Override

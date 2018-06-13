@@ -29,18 +29,18 @@ public class UpgradeWagon {
 
     public JsonObject toJson() {
         JsonObject craft = new JsonObject();
-        craft.add("username", new JsonPrimitive(username));
-        craft.add("wagon_to_upgrade", wagon_to_upgrade.toJson());
-        craft.add("remainingTime", new JsonPrimitive(remainingTime));
+        craft.add("u", new JsonPrimitive(username));
+        craft.add("w", wagon_to_upgrade.toJson());
+        craft.add("t", new JsonPrimitive(remainingTime));
 
         return craft;
     }
 
     public void fromJson(JsonObject from) {
-        username = from.get("username").getAsString();
+        username = from.get("u").getAsString();
         if(wagon_to_upgrade == null) wagon_to_upgrade = new Wagon();
-        wagon_to_upgrade.fromJson(from.get("wagon_to_upgrade").getAsJsonObject());
-        remainingTime = from.get("remainingTime").getAsInt();
+        wagon_to_upgrade.fromJson(from.get("w").getAsJsonObject());
+        remainingTime = from.get("t").getAsInt();
     }
 
     public void decreaseRemainingTime() {

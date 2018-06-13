@@ -34,24 +34,24 @@ public class TrainStation {
 
     public JsonObject toJson() {
         JsonObject trainStation = new JsonObject();
-        trainStation.add("id", new JsonPrimitive(id));
-        trainStation.add("posX", new JsonPrimitive(posX));
-        trainStation.add("posY", new JsonPrimitive(posY));
-        trainStation.add("nbOfPlatforms", new JsonPrimitive(nbOfPlatforms));
-        trainStation.add("sizeOfPlatforms", new JsonPrimitive(sizeOfPlatforms));
+        trainStation.add("i", new JsonPrimitive(id));
+        trainStation.add("x", new JsonPrimitive(posX));
+        trainStation.add("y", new JsonPrimitive(posY));
+        trainStation.add("n", new JsonPrimitive(nbOfPlatforms));
+        trainStation.add("s", new JsonPrimitive(sizeOfPlatforms));
         if(mines == null) mines = new ArrayList<>();
-        trainStation.add("mines", JsonUtility.listToJson(mines, Mine::toJson));
+        trainStation.add("m", JsonUtility.listToJson(mines, Mine::toJson));
 
         return trainStation;
     }
 
     public void fromJson(JsonObject from) {
-        id = from.get("id").getAsInt();
-        posX = from.get("posX").getAsInt();
-        posY = from.get("posY").getAsInt();
-        nbOfPlatforms = from.get("nbOfPlatforms").getAsInt();
-        sizeOfPlatforms = from.get("sizeOfPlatforms").getAsInt();
-        mines = JsonUtility.listFromJson((JsonArray) from.get("mines"), Mine::new);
+        id = from.get("i").getAsInt();
+        posX = from.get("x").getAsInt();
+        posY = from.get("y").getAsInt();
+        nbOfPlatforms = from.get("n").getAsInt();
+        sizeOfPlatforms = from.get("s").getAsInt();
+        mines = JsonUtility.listFromJson((JsonArray) from.get("m"), Mine::new);
     }
 
     public int getId() {

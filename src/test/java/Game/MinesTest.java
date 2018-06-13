@@ -41,6 +41,6 @@ public class MinesTest {
 
     @Test
     void testSimpleMine() {
-        
+
     }
 }
