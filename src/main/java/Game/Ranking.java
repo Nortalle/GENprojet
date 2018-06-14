@@ -14,6 +14,45 @@ public class Ranking {
 
     public Ranking() {}
 
+    public class Rank{
+        public final int value;
+        public final String name;
+
+        Rank(int value, String name){
+            this.value = value;
+            this.name = name;
+        }
+
+        public int value(){
+            return value;
+        }
+
+        public String name(){
+            return name;
+        }
+
+    }
+
+    public Rank getGlobalRank(){
+        return new Rank(global, playerName);
+    }
+
+    public Rank getDrillRank(){
+        return new Rank(drill, playerName);
+    }
+
+    public Rank getPumplRank(){
+        return new Rank(pump, playerName);
+    }
+
+    public Rank getSawRank(){
+        return new Rank(saw, playerName);
+    }
+
+    public Rank getItemsRank(){
+        return new Rank(items, playerName);
+    }
+
     public Ranking(String playerName, int global, int drill, int saw, int pump, int items) {
         this.playerName = playerName;
         this.global = global;

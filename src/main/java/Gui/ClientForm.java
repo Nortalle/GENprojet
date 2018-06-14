@@ -46,6 +46,7 @@ public class ClientForm {
     private JButton disconnectButton;
     private JPanel Inventory;
     private Gui.cli_gui_trade cli_gui_trade;
+    private Gui.cli_gui_Rank cli_gui_Rank;
 
     public ClientForm() {
         Client.setClientLogComponent(logTextArea);
@@ -54,6 +55,7 @@ public class ClientForm {
         updateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 sync();
+                cli_gui_Rank.SyncAll();
             }
         });
         tabs.addChangeListener(new ChangeListener() {

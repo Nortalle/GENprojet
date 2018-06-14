@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="iso-8859-15" standalone="no"?>
+<classDiagram>
+  <diagramElements defaultViewEntities="ALL" defaultViewEnum="true" defaultViewMethods="TYPE_AND_NAME" defaultVisibleTypes="true" informations="" name="UML - Client"/>
+  <umlView grid="10" name="Main view" open="true"/>
+</classDiagram>
