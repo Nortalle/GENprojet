@@ -4,6 +4,7 @@ import Game.UpgradeWagon;
 import Game.Wagon;
 import Server.DataBase;
 import Server.Server;
+import Utils.ReadWriteLock;
 import Utils.ResourceAmount;
 import Utils.WagonStats;
 
@@ -15,6 +16,8 @@ public class UpgradeController {
 
     private ArrayList<UpgradeWagon> upgrades = new ArrayList<>();
     private final int INTERVAL_MS = 1000;
+    private ReadWriteLock lock = new ReadWriteLock();
+
     private DataBase dataBase;
 
     public UpgradeController() {
@@ -24,23 +27,24 @@ public class UpgradeController {
             public void run() {
 
                 ArrayList<UpgradeWagon> toRemove = new ArrayList<>();
-
-                for(UpgradeWagon upgrade : upgrades ){
-                    upgrade.decreaseRemainingTime();
-
-                    if(upgrade.getRemainingTime() <= 0){
-                        Wagon current = upgrade.getWagon_to_upgrade();
-
-                        current.levelUp();
-
-                        dataBase.updateWagonLevel(current.getId(), current.getLevel());
-
-                        toRemove.add(upgrade);
-
+                try {
+                    lock.lockRead();
+                    for (UpgradeWagon upgrade : upgrades) {
+                        upgrade.decreaseRemainingTime();
+                        if (upgrade.getRemainingTime() <= 0) {
+                            Wagon current = upgrade.getWagon_to_upgrade();
+                            current.levelUp();
+                            dataBase.updateWagonLevel(current.getId(), current.getLevel());
+                            toRemove.add(upgrade);
+                        }
                     }
+                    lock.unlockRead();
+                    lock.lockWrite();
+                    for (UpgradeWagon upgrade : toRemove) upgrades.remove(upgrade);
+                    lock.unlockWrite();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-
-                for(UpgradeWagon upgrade : toRemove) upgrades.remove(upgrade);
             }
         }, INTERVAL_MS, INTERVAL_MS);
     }
@@ -49,13 +53,9 @@ public class UpgradeController {
         Optional<Wagon> optionalWagonToUpgrade = dataBase.getWagon(Integer.valueOf(wagonId));
         if(!optionalWagonToUpgrade.isPresent()) return false;
         Wagon wagonToUpgrade = optionalWagonToUpgrade.get();
-
         if(wagonToUpgrade.getLevel() > WagonStats.LEVEL_MAX) return false;
-
         ArrayList<ResourceAmount> resourceAmounts = WagonStats.getUpgradeCost(wagonToUpgrade);
-
         if (resourceAmounts.equals(null)) return false;
-
         for (ResourceAmount ra : resourceAmounts) {
             Optional<ResourceAmount> playerObject = dataBase.getPlayerObjectOfType(username, ra.getRessource().ordinal());
             if(!playerObject.filter(po -> po.getQuantity() >= ra.getQuantity()).isPresent()) return false;
@@ -72,15 +72,27 @@ public class UpgradeController {
     }
 
     public void addUpgrade(UpgradeWagon upgrade) {
-        upgrades.add(upgrade);
+        try {
+            lock.lockWrite();
+            upgrades.add(upgrade);
+            lock.unlockWrite();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public ArrayList<UpgradeWagon> getPlayerUpgrades(String username) {
         ArrayList<UpgradeWagon> result = new ArrayList<>();
-        for(UpgradeWagon uw : upgrades) {
-            if(uw.getUsername().equals(username)) {
-                result.add(uw);
+        try {
+            lock.lockRead();
+            for (UpgradeWagon uw : upgrades) {
+                if (uw.getUsername().equals(username)) {
+                    result.add(uw);
+                }
             }
+            lock.unlockRead();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         return result;
     }

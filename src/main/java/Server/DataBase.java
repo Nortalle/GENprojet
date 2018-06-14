@@ -646,8 +646,6 @@ public class DataBase {
      */
     public ArrayList<TrainStation> getAllTrainStationsWithinRange(int range, int x, int y){
         ArrayList<TrainStation> result = new ArrayList<>();
-        int extendedRange = 2 * range;
-        extendedRange = range;
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE posX BETWEEN ? AND ? AND posY BETWEEN ? AND ?;", Statement.RETURN_GENERATED_KEYS);
@@ -672,12 +670,18 @@ public class DataBase {
         }
 
 
-        /*new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
-            public void run() {*/
+            public void run() {
+                generateRandomStations(range, x, y);
+            }
+        }).start();
 
+        return result;
+    }
 
-
+    public synchronized void generateRandomStations(int range, int x, int y) {
+        int extendedRange = 2 * range;
         Random r = new Random();
         // parcours de toutes les gares qui devraient s'y trouver et check si elles existent déjà
         for(int xi = x - extendedRange; xi < x + extendedRange; xi++ ){
@@ -689,17 +693,10 @@ public class DataBase {
                 boolean isStation = r.nextInt(100000) < (500 / Math.max(distAbs / 10, 1));   // séquence déterministe pour savoir si il y a une gare a cet emplacement
                 if(isStation){
                     //TODO remove le debug
-                    System.out.println("Station at (" + xi + ":" + yi + ") ?");
-                    boolean found = false;
-                    found = !canCreateStationAt(xi, yi);
-                    /*for(TrainStation ts : result){
-                        if(ts.getPosX() == xi && ts.getPosY() == yi){
-                            found = true;
-                            break;
-                        }
-                    }*/
+                    //System.out.println("Station at (" + xi + ":" + yi + ") ?");
                     // si elle y est pas on doit la rajouter
-                    if(!found){
+                    boolean notFound = canCreateStationAt(xi, yi);
+                    if(notFound){
                         System.out.println("New Station at (" + xi + ":" + yi + ")");
                         int xiabs = Math.abs(xi);
                         int yiabs = Math.abs(yi);
@@ -716,21 +713,12 @@ public class DataBase {
                                     max,
                                     1 + (int)((max / 120.0) * (1 + r.nextInt(20) / 5.0)),
                                     t.ordinal()
-                                    );
+                            );
                         }
-                        station = getTrainStationByPos(xi, yi);
-                        result.add(station);
                     }
                 }
             }
         }
-
-
-
-            /*}
-        }).start();*/
-
-        return result;
     }
 
     /**

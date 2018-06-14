@@ -4,6 +4,7 @@ import Game.Craft;
 import Game.Train;
 import Server.Server;
 import Server.DataBase;
+import Utils.ReadWriteLock;
 import Utils.Recipe;
 import Utils.ResourceAmount;
 import Utils.WagonStats;
@@ -17,6 +18,7 @@ public class CraftController {
     private ArrayList<Craft> crafts = new ArrayList<>();
 
     private final int INTERVAL_MS = 1000;
+    private ReadWriteLock lock = new ReadWriteLock();
 
     public CraftController() {
         new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
@@ -25,7 +27,8 @@ public class CraftController {
                 DataBase db = Server.getInstance().getDataBase();
                 ArrayList<Craft> toRemove = new ArrayList<>();
                 HashMap<String, Integer> nbrCrafts = new HashMap<>();
-                synchronized (crafts) {
+                try {
+                    lock.lockWrite();
                     for (Craft c : crafts) {
                         if (nbrCrafts.merge(c.getUsername(), 1, (a, b) -> a + b) > WagonStats.getMaxParallelCraft(db.getTrain(c.getUsername()).orElse(new Train())))
                             continue;
@@ -40,16 +43,22 @@ public class CraftController {
                             toRemove.add(c);
                         }
                     }
-
                     for (Craft c : toRemove) crafts.remove(c);
+                    lock.unlockWrite();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }, INTERVAL_MS, INTERVAL_MS);
     }
 
     public void addCraft(Craft craft) {
-        synchronized (crafts) {
+        try {
+            lock.lockWrite();
             crafts.add(craft);
+            lock.unlockWrite();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -73,12 +82,16 @@ public class CraftController {
 
     public ArrayList<Craft> getPlayerCrafts(String username) {
         ArrayList<Craft> result = new ArrayList<>();
-        synchronized (crafts) {
+        try {
+            lock.lockRead();
             for (Craft c : crafts) {
                 if (c.getUsername().equals(username)) {
                     result.add(c);
                 }
             }
+            lock.unlockRead();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         return result;
     }

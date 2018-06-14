@@ -3,6 +3,7 @@ package Server.Controller;
 import Game.Mine;
 import Server.Server;
 import Server.DataBase;
+import Utils.ReadWriteLock;
 
 import java.util.*;
 
@@ -12,6 +13,7 @@ public class MineRegeneration {
     private ArrayList<Mine> mines;
 
     private int INTERVAL_MS = 1000 * 60;
+    private ReadWriteLock lock = new ReadWriteLock();
 
 
     public MineRegeneration() {
@@ -32,7 +34,8 @@ public class MineRegeneration {
             @Override
             public void run() {
                 DataBase db = Server.getInstance().getDataBase();
-                synchronized (mines) {
+                try {
+                    lock.lockRead();
                     for (Mine mine : mines) {
                         int miningAmount = mine.getRegen();
                         miningAmount = db.canChangeMineAmount(mine.getId(), miningAmount);
@@ -42,14 +45,21 @@ public class MineRegeneration {
                             System.out.println("mine : " + mine.getId() + " might not exist and must be removed from regen ctrl");
                         }
                     }
+                    lock.unlockRead();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }, INTERVAL_MS, INTERVAL_MS);
     }
 
     public void addMine(Mine mine_to_add) {
-        synchronized (mines) {
+        try {
+            lock.lockWrite();
             this.mines.add(mine_to_add);
+            lock.unlockWrite();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
