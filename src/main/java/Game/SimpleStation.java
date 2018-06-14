@@ -1,29 +1,42 @@
 package Game;
 
 import Utils.JsonUtility;
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
-public class TrainStation {
+public class SimpleStation {
     private int id;
     private int posX;
     private int posY;
     private int nbOfPlatforms;
     private int sizeOfPlatforms;
-    private ArrayList<Mine> mines = new ArrayList<>();
+    private ArrayList<SimpleMine> mines = new ArrayList<>();
 
-    public TrainStation() {}
+    public SimpleStation() {}
 
-    public TrainStation(JsonObject json) {
+    public SimpleStation(JsonObject json) {
         fromJson(json);
     }
 
-    public TrainStation(String json) {
+    public SimpleStation(String json) {
         fromJson((JsonObject) JsonUtility.fromJson(json));
     }
 
-    public TrainStation(int id, int x, int y, int nbPlat, int sizePlat, ArrayList<Mine> m) {
+    public SimpleStation(TrainStation ts) {
+        this.id = ts.getId();
+        posX = ts.getPosX();
+        posY = ts.getPosY();
+        nbOfPlatforms = ts.getNbOfPlatforms();
+        sizeOfPlatforms = ts.getSizeOfPlatforms();
+        mines = SimpleMine.listToSimple(ts.getMines());
+    }
+
+    public SimpleStation(int id, int x, int y, int nbPlat, int sizePlat, ArrayList<SimpleMine> m) {
         this.id = id;
         posX = x;
         posY = y;
@@ -40,7 +53,10 @@ public class TrainStation {
         trainStation.add("n", new JsonPrimitive(nbOfPlatforms));
         trainStation.add("s", new JsonPrimitive(sizeOfPlatforms));
         if(mines == null) mines = new ArrayList<>();
-        trainStation.add("m", JsonUtility.listToJson(mines, Mine::toJson));
+
+        JsonArray list = new JsonArray();
+        for(SimpleMine m : mines) list.add(new JsonPrimitive(m.toSimpleFormat()));
+        trainStation.add("m", list);
 
         return trainStation;
     }
@@ -51,7 +67,14 @@ public class TrainStation {
         posY = from.get("y").getAsInt();
         nbOfPlatforms = from.get("n").getAsInt();
         sizeOfPlatforms = from.get("s").getAsInt();
-        mines = JsonUtility.listFromJson((JsonArray) from.get("m"), Mine::new);
+
+        mines = new ArrayList<>();
+        for(JsonElement j : (JsonArray)from.get("m")) {
+            SimpleMine mine = new SimpleMine();
+            mine.fromSimpleFormat(j.getAsString());
+            mines.add(mine);
+        }
+        //mines = JsonUtility.listFromJson((JsonArray) from.get("m"), SimpleMine::new);
     }
 
     public int getId() {
@@ -74,7 +97,7 @@ public class TrainStation {
         return sizeOfPlatforms;
     }
 
-    public ArrayList<Mine> getMines() {
+    public ArrayList<SimpleMine> getMines() {
         return mines;
     }
 
@@ -85,5 +108,11 @@ public class TrainStation {
 
     public String getInfos() {
         return "Nbr of Platforms: " + nbOfPlatforms + " Size of Platforms: " + sizeOfPlatforms;
+    }
+
+    public static ArrayList<SimpleStation> listToSimple(ArrayList<TrainStation> stations) {
+        return  stations.stream()
+                .map(SimpleStation::new)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

@@ -77,7 +77,7 @@ public class WagonRecipe {
         WAGON_SAW_RCPT = new WagonRecipe("Saw Wagon", new Wagon(-1, 1000, 1,WagonStats.WagonType.SAW), 300);
         WAGON_SAW_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 135));
         WAGON_SAW_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_WHEEL, 8));
-        WAGON_DRILL_RCPT.addCost(new ResourceAmount(Ressource.Type.STEEL_INGOT, 8));
+        WAGON_SAW_RCPT.addCost(new ResourceAmount(Ressource.Type.STEEL_INGOT, 8));
         WAGON_SAW_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 22));
         WAGON_SAW_RCPT.addCost(new ResourceAmount(Ressource.Type.WOOD_STRIP, 20));
         WAGON_SAW_RCPT.addCost(new ResourceAmount(Ressource.Type.PLASTIC_SHEET, 12));
@@ -89,7 +89,7 @@ public class WagonRecipe {
         WAGON_PUMP_RCPT = new WagonRecipe("Pump Wagon", new Wagon(-1, 1000, 1,WagonStats.WagonType.PUMP), 300);
         WAGON_PUMP_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 85));
         WAGON_PUMP_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_WHEEL, 8));
-        WAGON_DRILL_RCPT.addCost(new ResourceAmount(Ressource.Type.STEEL_INGOT, 8));
+        WAGON_PUMP_RCPT.addCost(new ResourceAmount(Ressource.Type.STEEL_INGOT, 8));
         WAGON_PUMP_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_TUBE, 100));
         WAGON_PUMP_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 20));
         WAGON_PUMP_RCPT.addCost(new ResourceAmount(Ressource.Type.WOOD_BARREL, 12));
@@ -108,12 +108,12 @@ public class WagonRecipe {
         */
         WAGON_CARGO_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 45));
         WAGON_CARGO_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_WHEEL, 16));
-        WAGON_DRILL_RCPT.addCost(new ResourceAmount(Ressource.Type.STEEL_INGOT, 4));
+        WAGON_CARGO_RCPT.addCost(new ResourceAmount(Ressource.Type.STEEL_INGOT, 4));
         WAGON_CARGO_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_TUBE, 24));
         WAGON_CARGO_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 22));
         WAGON_CARGO_RCPT.addCost(new ResourceAmount(Ressource.Type.WOOD_CRATE, 4));
         WAGON_CARGO_RCPT.addCost(new ResourceAmount(Ressource.Type.WOOD_STRIP, 18));
-        WAGON_DRILL_RCPT.addCost(new ResourceAmount(Ressource.Type.PLASTIC_SHEET, 10));
+        WAGON_CARGO_RCPT.addCost(new ResourceAmount(Ressource.Type.PLASTIC_SHEET, 10));
 
     }
 
@@ -122,11 +122,11 @@ public class WagonRecipe {
         WAGON_CRAFT_RCPT = new WagonRecipe("Craft Wagon", new Wagon(-1, 1000, 1,WagonStats.WagonType.CRAFT), 300);
         WAGON_CRAFT_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_PLATE, 145));
         WAGON_CRAFT_RCPT.addCost(new ResourceAmount(Ressource.Type.IRON_WHEEL, 12));
-        WAGON_DRILL_RCPT.addCost(new ResourceAmount(Ressource.Type.STEEL_INGOT, 12));
+        WAGON_CRAFT_RCPT.addCost(new ResourceAmount(Ressource.Type.STEEL_INGOT, 12));
         WAGON_CRAFT_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_TUBE, 85));
         WAGON_CRAFT_RCPT.addCost(new ResourceAmount(Ressource.Type.COPPER_GEAR, 22));
-        WAGON_CARGO_RCPT.addCost(new ResourceAmount(Ressource.Type.WOOD_STRIP, 22));
-        WAGON_DRILL_RCPT.addCost(new ResourceAmount(Ressource.Type.PLASTIC_SHEET, 25));
+        WAGON_CRAFT_RCPT.addCost(new ResourceAmount(Ressource.Type.WOOD_STRIP, 22));
+        WAGON_CRAFT_RCPT.addCost(new ResourceAmount(Ressource.Type.PLASTIC_SHEET, 25));
         WAGON_CRAFT_RCPT.addCost(new ResourceAmount(Ressource.Type.ROBOTIC_ARM_T1, 8));
         WAGON_CRAFT_RCPT.addCost(new ResourceAmount(Ressource.Type.PROCESSOR_T1, 8));
     }

@@ -164,7 +164,7 @@ public class Recipe {
 
     static Recipe REFINED_PETROL_BARREL_RCPT;
     static {
-        REFINED_PETROL_BARREL_RCPT = new Recipe("Petrol", new ResourceAmount(Ressource.Type.REFINED_PETROL_BARREL,1), 5);
+        REFINED_PETROL_BARREL_RCPT = new Recipe("Petrol", new ResourceAmount(Ressource.Type.REFINED_PETROL_BARREL,5), 5);
         REFINED_PETROL_BARREL_RCPT.addCost(new ResourceAmount(Ressource.Type.CRUDE_OIL, 50));
         REFINED_PETROL_BARREL_RCPT.addCost(new ResourceAmount(Ressource.Type.WATER, 10));
         REFINED_PETROL_BARREL_RCPT.addCost(new ResourceAmount(Ressource.Type.WOOD_BARREL, 1));

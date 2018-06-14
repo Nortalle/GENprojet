@@ -2,6 +2,7 @@ package Gui;
 
 import Client.Client;
 import Game.Mine;
+import Game.SimpleStation;
 import Game.Train;
 import Game.TrainStation;
 import Utils.GuiUtility;
@@ -32,18 +33,18 @@ public class cli_gui_Gare {
     private JPanel panel_infos;
     private JLabel stationInfosLabel;
 
-    private TrainStation viewingStation;
+    private SimpleStation viewingStation;
     private int viewingStationIndex = 0;
 
     public cli_gui_Gare() {
 
         localUpdate();
-        viewingStation = Client.getInstance().getTrain().getTrainStation();// maybe useless
+        viewingStation = new SimpleStation(Client.getInstance().getTrain().getTrainStation());// maybe useless
         Client.viewingStation = viewingStation.getId();
 
         button_travel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                viewingStation = (TrainStation) select_station.getSelectedItem();
+                viewingStation = (SimpleStation) select_station.getSelectedItem();
                 Client.viewingStation = viewingStation.getId();
                 String line = Client.getInstance().changeStation(viewingStation.getId());
                 Client.getInstance().updateAll();// MANUAL UPDATE
@@ -53,7 +54,7 @@ public class cli_gui_Gare {
         });
         button_view.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                viewingStation = (TrainStation) select_station.getSelectedItem();
+                viewingStation = (SimpleStation) select_station.getSelectedItem();
                 Client.viewingStation = viewingStation.getId();
                 viewingStationIndex = select_station.getSelectedIndex();
                 Client.getInstance().updateAll();// MANUAL UPDATE
@@ -62,7 +63,7 @@ public class cli_gui_Gare {
         });
         button_currentStation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                viewingStation = Client.getInstance().getTrain().getTrainStation();
+                viewingStation = new SimpleStation(Client.getInstance().getTrain().getTrainStation());
                 Client.viewingStation = viewingStation.getId();
                 Client.getInstance().updateAll();// MANUAL UPDATE
                 localUpdate();
@@ -93,7 +94,7 @@ public class cli_gui_Gare {
 
     public void updateStationInfo() {
         if(viewingStation == null) {
-            viewingStation = Client.getInstance().getTrain().getTrainStation();
+            viewingStation = new SimpleStation(Client.getInstance().getTrain().getTrainStation());
             Client.viewingStation = viewingStation.getId();
         }
         label_stationName.setText(viewingStation.toString());
@@ -122,7 +123,7 @@ public class cli_gui_Gare {
 
     public void updateStationList() {
         select_station.removeAllItems();
-        for(TrainStation ts : Client.getInstance().getTrainStations()) select_station.addItem(ts);
+        for(SimpleStation ts : Client.getInstance().getSimpleStations()) select_station.addItem(ts);
         if(select_station != null && select_station.getItemCount() > 0 && viewingStationIndex < select_station.getItemCount()) select_station.setSelectedIndex(viewingStationIndex);
     }
 }

@@ -39,23 +39,23 @@ public class Mine {
 
     public JsonObject toJson() {
         JsonObject mine = new JsonObject();
-        mine.add("id", new JsonPrimitive(id));
-        mine.add("resource", new JsonPrimitive(resource));
-        mine.add("amount", new JsonPrimitive(amount));
-        mine.add("max", new JsonPrimitive(max));
-        mine.add("regen", new JsonPrimitive(regen));
-        mine.add("place", new JsonPrimitive(place));
+        mine.add("i", new JsonPrimitive(id));
+        mine.add("r", new JsonPrimitive(resource));
+        mine.add("a", new JsonPrimitive(amount));
+        mine.add("m", new JsonPrimitive(max));
+        mine.add("g", new JsonPrimitive(regen));
+        mine.add("p", new JsonPrimitive(place));
 
         return mine;
     }
 
     public void fromJson(JsonObject from) {
-        id = from.get("id").getAsInt();
-        resource = from.get("resource").getAsInt();
-        amount = from.get("amount").getAsInt();
-        max = from.get("max").getAsInt();
-        regen = from.get("regen").getAsInt();
-        place = from.get("place").getAsInt();
+        id = from.get("i").getAsInt();
+        resource = from.get("r").getAsInt();
+        amount = from.get("a").getAsInt();
+        max = from.get("m").getAsInt();
+        regen = from.get("g").getAsInt();
+        place = from.get("p").getAsInt();
     }
 
     public int getId() {

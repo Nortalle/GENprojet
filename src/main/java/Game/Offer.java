@@ -54,21 +54,21 @@ public class Offer {
 
     public JsonObject toJson() {
         JsonObject train = new JsonObject();
-        train.add("id", new JsonPrimitive(id));
-        train.add("playerName", new JsonPrimitive(playerName));
-        train.add("offer", offer.toJson());
-        train.add("price", price.toJson());
+        train.add("i", new JsonPrimitive(id));
+        train.add("n", new JsonPrimitive(playerName));
+        train.add("o", offer.toJson());
+        train.add("p", price.toJson());
 
         return train;
     }
 
     public void fromJson(JsonObject from) {
-        id = from.get("id").getAsInt();
-        playerName = from.get("playerName").getAsString();
-        if(offer == null) offer = new ResourceAmount((JsonObject) from.get("offer"));
-        else offer.fromJson((JsonObject) from.get("offer"));
-        if(price == null) price = new ResourceAmount((JsonObject) from.get("price"));
-        else price.fromJson((JsonObject) from.get("price"));
+        id = from.get("i").getAsInt();
+        playerName = from.get("n").getAsString();
+        if(offer == null) offer = new ResourceAmount((JsonObject) from.get("o"));
+        else offer.fromJson((JsonObject) from.get("o"));
+        if(price == null) price = new ResourceAmount((JsonObject) from.get("p"));
+        else price.fromJson((JsonObject) from.get("p"));
     }
 
     @Override

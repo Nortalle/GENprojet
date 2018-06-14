@@ -45,17 +45,17 @@ public class Craft {
 
     public JsonObject toJson() {
         JsonObject craft = new JsonObject();
-        craft.add("username", new JsonPrimitive(username));
-        craft.add("recipeIndex", new JsonPrimitive(recipeIndex));
-        craft.add("remainingTime", new JsonPrimitive(remainingTime));
+        craft.add("u", new JsonPrimitive(username));
+        craft.add("r", new JsonPrimitive(recipeIndex));
+        craft.add("t", new JsonPrimitive(remainingTime));
 
         return craft;
     }
 
     public void fromJson(JsonObject from) {
-        username = from.get("username").getAsString();
-        recipeIndex = from.get("recipeIndex").getAsInt();
-        remainingTime = from.get("remainingTime").getAsInt();
+        username = from.get("u").getAsString();
+        recipeIndex = from.get("r").getAsInt();
+        remainingTime = from.get("t").getAsInt();
     }
 
     @Override
