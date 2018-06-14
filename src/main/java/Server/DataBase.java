@@ -1187,8 +1187,8 @@ public class DataBase {
     }
 
     private boolean buyOffer(String buyer, Offer offer) {
-        Optional<ResourceAmount> buyerObject = getPlayerObjectOfType(buyer, offer.getPrice().getRessource().ordinal());
-        if(!buyerObject.filter(ra -> ra.getQuantity() >= offer.getPrice().getQuantity()).isPresent()) return false;
+        ResourceAmount buyerObject = getPlayerObjectOfType(buyer, offer.getPrice().getRessource().ordinal()).orElse(new ResourceAmount(offer.getPrice().getRessource(), 0));
+        if(buyerObject.getQuantity() < offer.getPrice().getQuantity()) return false;
         updatePlayerObjects(buyer, offer.getPrice().getRessource().ordinal(), -offer.getPrice().getQuantity());
 
         try {
