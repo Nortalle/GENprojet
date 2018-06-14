@@ -8,8 +8,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestDataBase {
@@ -100,7 +98,4 @@ public class TestDataBase {
         assertTrue(changeWorked);
         assertEquals(10, w.getLevel());
     }
-
-
-
 }

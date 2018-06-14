@@ -30,17 +30,17 @@ public class CreateWagon {
 
     public JsonObject toJson() {
         JsonObject craft = new JsonObject();
-        craft.add("username", new JsonPrimitive(username));
-        craft.add("wagonRecipeIndex", new JsonPrimitive(wagonRecipeIndex));
-        craft.add("remainingTime", new JsonPrimitive(remainingTime));
+        craft.add("u", new JsonPrimitive(username));
+        craft.add("r", new JsonPrimitive(wagonRecipeIndex));
+        craft.add("t", new JsonPrimitive(remainingTime));
 
         return craft;
     }
 
     public void fromJson(JsonObject from) {
-        username = from.get("username").getAsString();
-        wagonRecipeIndex = from.get("wagonRecipeIndex").getAsInt();
-        remainingTime = from.get("remainingTime").getAsInt();
+        username = from.get("u").getAsString();
+        wagonRecipeIndex = from.get("r").getAsInt();
+        remainingTime = from.get("t").getAsInt();
     }
 
     public void decreaseRemainingTime() {

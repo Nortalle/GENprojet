@@ -31,22 +31,22 @@ public class Wagon {
 
     public JsonObject toJson() {
         JsonObject wagon = new JsonObject();
-        wagon.add("id", new JsonPrimitive(id));
-        wagon.add("weight", new JsonPrimitive(weight));
-        wagon.add("level", new JsonPrimitive(level));
+        wagon.add("i", new JsonPrimitive(id));
+        wagon.add("w", new JsonPrimitive(weight));
+        wagon.add("l", new JsonPrimitive(level));
         if(type == null){
             type = WagonStats.WagonType.LOCO;
         }
-        wagon.add("typeID", new JsonPrimitive(type.ordinal()));
+        wagon.add("t", new JsonPrimitive(type.ordinal()));
 
         return wagon;
     }
 
     public void fromJson(JsonObject from) {
-        id = from.get("id").getAsInt();
-        weight = from.get("weight").getAsInt();
-        level = from.get("level").getAsInt();
-        type = WagonStats.WagonType.values()[from.get("typeID").getAsInt()];
+        id = from.get("i").getAsInt();
+        weight = from.get("w").getAsInt();
+        level = from.get("l").getAsInt();
+        type = WagonStats.WagonType.values()[from.get("t").getAsInt()];
     }
 
     public void levelUp(){

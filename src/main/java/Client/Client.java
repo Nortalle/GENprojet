@@ -38,9 +38,8 @@ public class Client {
     private ArrayList<Craft> crafts = new ArrayList<>();
     private ArrayList<UpgradeWagon> upgradeWagons = new ArrayList<>();
     private ArrayList<CreateWagon> createWagons = new ArrayList<>();
-    //private ArrayList<Train> trainsAtStation = new ArrayList<>();
     private ArrayList<String> trainsAtStation = new ArrayList<>();
-    private ArrayList<TrainStation> trainStations = new ArrayList<>();
+    private ArrayList<SimpleStation> simpleStations = new ArrayList<>();
     private ArrayList<Offer> offers = new ArrayList<>();
     private ArrayList<Ranking> rankings = new ArrayList<>();
 
@@ -333,6 +332,8 @@ public class Client {
         return 0;
     }
 
+    //TODO
+    private int dataSize = 0;
     public String readLine() {
         String line = "ERROR";
         try {
@@ -341,11 +342,12 @@ public class Client {
             e.printStackTrace();
         }
         LOG.info(line);
+        dataSize += line.length();
         return line;
     }
 
     public String sendLogin(String username, String password) {
-        writer.println(OTrainProtocol.CONNECT);
+        writer.println(OTrainProtocol.CONNECT);// TODO READ PLAYER OR ADMIN
         writer.println(username);
         writer.println(password);
         writer.flush();
@@ -455,20 +457,20 @@ public class Client {
         return trainsAtStation;
     }
 
-    public void updateTrainStations() {
-        writer.println(OTrainProtocol.GET_GARES);
+    public void updateSimpleStations() {
+        writer.println(OTrainProtocol.GET_SIMPLE_GARE);
         writer.flush();
         String answer = readLine();
-        trainStations = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), TrainStation::new);
+        simpleStations = JsonUtility.listFromJson((JsonArray) JsonUtility.fromJson(answer), SimpleStation::new);
 
         // sort to have the closest station to the center on top of the list
-        trainStations = trainStations.stream()
+        simpleStations = simpleStations.stream()
                 .sorted(Comparator.comparing(station -> Math.abs(station.getPosX()) + Math.abs(station.getPosY())))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public ArrayList<TrainStation> getTrainStations() {
-        return trainStations;
+    public ArrayList<SimpleStation> getSimpleStations() {
+        return simpleStations;
     }
 
     public void updateRankings() {
@@ -491,15 +493,17 @@ public class Client {
 
     public synchronized void updateAll() {
         if(!clientLogged) return;
+        dataSize = 0;
         updateWagonMining();
         updateTrain();          // doit se faire après updateWagonMining;
         updateResourceAmount();
         updateCrafts();
         updateUpgradeWagons();
         updateCreateWagons();
-        updateTrainStations();
+        updateSimpleStations();
         updateTrainsAtStation(viewingStation);
         updateRankings();
+        System.out.println("DATA SIZE : " + dataSize);
     }
 
     // not very good but should be working

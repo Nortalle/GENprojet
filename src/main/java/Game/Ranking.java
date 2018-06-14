@@ -33,23 +33,23 @@ public class Ranking {
 
     public JsonObject toJson() {
         JsonObject ranking = new JsonObject();
-        ranking.add("playerName", new JsonPrimitive(playerName));
-        ranking.add("global", new JsonPrimitive(global));
-        ranking.add("drill", new JsonPrimitive(drill));
-        ranking.add("saw", new JsonPrimitive(saw));
-        ranking.add("pump", new JsonPrimitive(pump));
-        ranking.add("items", new JsonPrimitive(items));
+        ranking.add("n", new JsonPrimitive(playerName));
+        ranking.add("g", new JsonPrimitive(global));
+        ranking.add("d", new JsonPrimitive(drill));
+        ranking.add("s", new JsonPrimitive(saw));
+        ranking.add("p", new JsonPrimitive(pump));
+        ranking.add("i", new JsonPrimitive(items));
 
         return ranking;
     }
 
     public void fromJson(JsonObject from) {
-        playerName = from.get("playerName").getAsString();
-        global = from.get("global").getAsInt();
-        drill = from.get("drill").getAsInt();
-        saw = from.get("saw").getAsInt();
-        pump = from.get("pump").getAsInt();
-        items = from.get("items").getAsInt();
+        playerName = from.get("n").getAsString();
+        global = from.get("g").getAsInt();
+        drill = from.get("d").getAsInt();
+        saw = from.get("s").getAsInt();
+        pump = from.get("p").getAsInt();
+        items = from.get("i").getAsInt();
     }
 
     public String getPlayerName() {
