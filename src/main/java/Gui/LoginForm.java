@@ -65,10 +65,10 @@ public class LoginForm {
                     if(answer.equals(OTrainProtocol.PLAYER)) {
                         client.setClientLogged(true);
                         client.updateAll();// place somewhere else
-                        client.setFrameContent(new ClientForm().getPanel_main(), new Dimension(900, 600));
+                        client.setFrameContent(new ClientForm().getPanel_main(), new Dimension(1120, 850));
                     } else if(answer.equals(OTrainProtocol.ADMIN)) {
                         client.setAdminLogged(true);
-                        client.setFrameContent(new AdminGuiMain().getMainPanel(), new Dimension(900, 600));
+                        client.setFrameContent(new AdminGuiMain().getMainPanel(), new Dimension(1120, 850));
                     }
                 } else if(answer.equals(OTrainProtocol.FAILURE)) {
                     label_info.setForeground(Color.RED);
