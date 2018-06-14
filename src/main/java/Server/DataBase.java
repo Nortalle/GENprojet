@@ -646,8 +646,6 @@ public class DataBase {
      */
     public ArrayList<TrainStation> getAllTrainStationsWithinRange(int range, int x, int y){
         ArrayList<TrainStation> result = new ArrayList<>();
-        int extendedRange = 2 * range;
-        extendedRange = range;
         try {
             ResultSet resultSet;
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Gare WHERE posX BETWEEN ? AND ? AND posY BETWEEN ? AND ?;", Statement.RETURN_GENERATED_KEYS);
@@ -672,12 +670,13 @@ public class DataBase {
         }
 
 
-        /*new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
-            public void run() {*/
+            public void run() {
 
 
 
+        int extendedRange = 2 * range;
         Random r = new Random();
         // parcours de toutes les gares qui devraient s'y trouver et check si elles existent déjà
         for(int xi = x - extendedRange; xi < x + extendedRange; xi++ ){
@@ -727,8 +726,8 @@ public class DataBase {
 
 
 
-            /*}
-        }).start();*/
+            }
+        }).start();
 
         return result;
     }
