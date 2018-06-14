@@ -220,7 +220,7 @@ ClientHandler implements Runnable {
         }
     }
 
-    private void handleAdmin() throws IOException, BadServerStateException{
+    private void handleAdmin() throws IOException {
         String line = readLine();
         while (running && line != null) {
             //work...
@@ -243,7 +243,12 @@ ClientHandler implements Runnable {
                     int currentCargo = 0;
                     for (ResourceAmount ra : db.getPlayerObjects(playerName)) currentCargo += ra.getQuantity();
                     int reservedCargo = Server.getInstance().getReserveCargoController().getReservedCargo(playerName);
-                    int maxCargo = WagonStats.getMaxCapacity(db.getTrain(playerName).orElseThrow(BadServerStateException::new));
+                    int maxCargo = 0;
+                    try {
+                        maxCargo = WagonStats.getMaxCapacity(db.getTrain(playerName).orElseThrow(BadServerStateException::new));
+                    } catch (BadServerStateException e) {
+                        e.printStackTrace();
+                    }
 
                     writer.println(currentCargo + "(" + reservedCargo + ")/" + maxCargo);
                     writer.flush();

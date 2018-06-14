@@ -9,20 +9,20 @@ public class Ressource {
      */
     //scrum, eau, bois, charbon, petrol, fer, cuivre, acier, or
     public enum  Type {
-        CHARCOAL,
-        CRUDE_OIL,
-        IRON_ORE,
-        COPPER_ORE,
-        GOLD_ORE,   // basic ressources
         CARDBOARD,
         CARDBOARD_BOX,
+        CHARCOAL,
         COPPER_CABLE,
         COPPER_GEAR,
         COPPER_INGOT,
-        COPPER_TUBE,// FROM HERE
+        COPPER_ORE,
+        CRUDE_OIL,
+        IRON_ORE,
+        COPPER_TUBE,
         DRILL_T1,
         GOLD_INGOT,
         GOLD_SHEET,
+        GOLD_ORE,
         INSULATED_CABLE,
         IRON_INGOT,
         IRON_PLATE,
@@ -36,7 +36,7 @@ public class Ressource {
         PLASTIC_SHEET,
         PROCESSOR_T1,
         PUMP_T1,
-        REFINED_PETROL_BARREL,
+        PETROL_BARREL,
         RIVET,
         ROBOTIC_ARM_T1,
         SAW_T1,
@@ -48,8 +48,6 @@ public class Ressource {
         WOOD_CRATE,
         WOOD_LOG,
         WOOD_STRIP,
-
-
     }
 
     public static double amountMofifier(Type t){
@@ -189,7 +187,7 @@ public class Ressource {
                 return "Copper Cable";
             case ROBOTIC_ARM_T1:
                 return "Robotic Arm T1";
-            case REFINED_PETROL_BARREL:
+            case PETROL_BARREL:
                 return "Petrol Barrel";
             case PLASTIC_SHEET:
                 return "Plastic Sheet";
@@ -222,7 +220,7 @@ public class Ressource {
             case NYLON_ROPE:
                 return "Nylon Rope";
             case NYLON_FIBER:
-                return  "Nylon Fiber";
+                return "Nylon Fiber";
             default:
                 return "Not a Resource : " + t.ordinal();
         }

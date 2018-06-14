@@ -28,6 +28,12 @@ public class cli_gui_Rank {
         Client.getInstance().updateRankings();
         ArrayList<Ranking> rankings = Client.getInstance().getRankings();
 
+        globalRanking.clear();
+        drillRanking.clear();
+        sawRanking.clear();
+        pumpRanking.clear();
+        itemsRanking.clear();
+
         for(Ranking r : rankings){
             globalRanking.add(r.getGlobalRank());
             drillRanking.add(r.getDrillRank());

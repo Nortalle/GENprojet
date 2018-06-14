@@ -73,10 +73,12 @@ public class AdminGuiPlayer {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                selectedPlayer = (String) select_player.getSelectedItem();
                 String line = Client.getInstance().sendDeletePlayer(selectedPlayer);
                 if(line.equals(OTrainProtocol.SUCCESS)) {
                     Client.getInstance().updateAdminAll();
                     update();
+                    selectedPlayer = (String) select_player.getSelectedItem();
                 }
             }
         });
