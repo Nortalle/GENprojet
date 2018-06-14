@@ -39,15 +39,11 @@ public class CraftController {
                             int finalAmount = finalProduct.getQuantity();
                             //finalAmount = db.canUpdatePlayerObjectsOnReservedCargo(c.getUsername(), finalAmount, finalAmount);
                             db.updatePlayerObjects(c.getUsername(), finalProduct.getRessource().ordinal(), finalAmount);
-                            System.out.println("7");
                             Server.getInstance().getReserveCargoController().removeReservedCargo(c.getUsername(), finalProduct.getQuantity());
-                            System.out.println("8");
                             toRemove.add(c);
                         }
                     }
-                    System.out.println("9");
                     for (Craft c : toRemove) crafts.remove(c);
-                    System.out.println("10");
                     lock.unlockWrite();
                 } catch (InterruptedException e) {
                     e.printStackTrace();

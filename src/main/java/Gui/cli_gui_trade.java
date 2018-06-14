@@ -80,6 +80,8 @@ public class cli_gui_trade {
     }
 
     public void updateTypeLists() {
+        dropdown_ressource_offer.removeAllItems();
+        dropdown_ressource_price.removeAllItems();
         dropdown_ressource_offer.addItem("ANY");
         dropdown_ressource_price.addItem("ANY");
         for(Ressource.Type t : Ressource.Type.values()) {
