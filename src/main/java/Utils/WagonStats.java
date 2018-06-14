@@ -199,7 +199,7 @@ public class WagonStats {
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_TUBE, costPerLevel(w.getLevel(), 5)));
                 ra.add(new ResourceAmount(Ressource.Type.COPPER_GEAR, costPerLevel(w.getLevel(), 3)));
                 ra.add(new ResourceAmount(Ressource.Type.STEEL_INGOT, costPerLevel(w.getLevel(), 7)));
-                ra.add(new ResourceAmount(Ressource.Type.REFINED_PETROL_BARREL, costPerLevel(w.getLevel(), 12)));
+                ra.add(new ResourceAmount(Ressource.Type.PETROL_BARREL, costPerLevel(w.getLevel(), 12)));
                 break;
             case DRILL:
                 ra.add(new ResourceAmount(Ressource.Type.IRON_PLATE, costPerLevel(w.getLevel(), 10)));

@@ -33,7 +33,7 @@ public class cli_gui_Rank {
         sawRanking.clear();
         pumpRanking.clear();
         itemsRanking.clear();
-        
+
         for(Ranking r : rankings){
             globalRanking.add(r.getGlobalRank());
             drillRanking.add(r.getDrillRank());
