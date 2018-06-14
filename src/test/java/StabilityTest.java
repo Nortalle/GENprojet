@@ -25,7 +25,7 @@ public class StabilityTest {
     private static class TestClient {
         private String name;
         private boolean finished;
-        private String ipAddress = "217.119.149.13";
+        private String ipAddress = "localhost";//217.119.149.13
         private Socket socket;
         private BufferedReader reader;
         private PrintWriter writer;
@@ -121,9 +121,9 @@ public class StabilityTest {
 
     @BeforeAll
     public static void setUpBeforeAll() {
-        //Server.getInstance().startServer();
+        Server.getInstance().startServer();
         for (int i = 0; i < players.length; i++) {
-            //Server.getInstance().getDataBase().deleteUser(players[i]);
+            Server.getInstance().getDataBase().deleteUser(players[i]);
             clients[i] = new TestClient(players[i]);
             clients[i].connectServer();
             clients[i].signUp("DRILL");
