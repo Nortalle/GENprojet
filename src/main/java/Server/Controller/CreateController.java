@@ -4,6 +4,7 @@ import Game.CreateWagon;
 import Game.Wagon;
 import Server.Server;
 import Server.DataBase;
+import Utils.ReadWriteLock;
 import Utils.ResourceAmount;
 import Utils.WagonRecipe;
 
@@ -14,6 +15,7 @@ import java.util.TimerTask;
 public class CreateController {
     private ArrayList<CreateWagon> createWagons = new ArrayList<>();
     private final int INTERVAL_MS = 1000;
+    private ReadWriteLock lock = new ReadWriteLock();
 
     public CreateController() {
         new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
@@ -21,7 +23,8 @@ public class CreateController {
             public void run() {
                 DataBase db = Server.getInstance().getDataBase();
                 ArrayList<CreateWagon> toRemove = new ArrayList<>();
-                synchronized (createWagons) {
+                try {
+                    lock.lockRead();
                     for (CreateWagon cw : createWagons) {
                         cw.decreaseRemainingTime();
                         if (cw.getRemainingTime() <= 0) {
@@ -31,16 +34,24 @@ public class CreateController {
                             toRemove.add(cw);
                         }
                     }
-
+                    lock.unlockRead();
+                    lock.lockWrite();
                     for (CreateWagon c : toRemove) createWagons.remove(c);
+                    lock.unlockWrite();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }, INTERVAL_MS, INTERVAL_MS);
     }
 
     public void addCraft(CreateWagon createWagon) {
-        synchronized (createWagons) {
+        try {
+            lock.lockWrite();
             createWagons.add(createWagon);
+            lock.unlockWrite();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -62,12 +73,16 @@ public class CreateController {
 
     public ArrayList<CreateWagon> getPlayerCreateWagons(String username) {
         ArrayList<CreateWagon> result = new ArrayList<>();
-        synchronized (createWagons) {
+        try {
+            lock.lockRead();
             for (CreateWagon c : createWagons) {
                 if (c.getUsername().equals(username)) {
                     result.add(c);
                 }
             }
+            lock.unlockRead();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         return result;
     }

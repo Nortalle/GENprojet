@@ -3,6 +3,7 @@ package Server.Controller;
 import Game.*;
 import Server.Server;
 import Server.DataBase;
+import Utils.ReadWriteLock;
 import Utils.ResourceAmount;
 import Utils.WagonStats;
 
@@ -15,9 +16,9 @@ import java.util.stream.Collectors;
 public class MineController {
 
     private ArrayList<WagonMining> wagonMining = new ArrayList<>();
-    //private ArrayList<Integer> ETMs = new ArrayList<>();
 
     private final int INTERVAL_MS = 1000;
+    private ReadWriteLock lock = new ReadWriteLock();
 
 
     public MineController() {
@@ -25,19 +26,25 @@ public class MineController {
             @Override
             public void run() {
                 DataBase db = Server.getInstance().getDataBase();
-                for (WagonMining wm : wagonMining) {
-                    String username = db.getUsernameByWagonId(wm.getWagon().getId()).orElse("");
-                    // TODO TEST IF TRAIN IS STILL AT STATION WHERE MINE IS
-                    int miningAmount = WagonStats.getMiningAmount(wm.getWagon());
-                    miningAmount = -db.canChangeMineAmount(wm.getCurrentMine().getId(), -miningAmount);
-                    miningAmount = db.canUpdatePlayerObjects(username, miningAmount);
-                    if (miningAmount != 0) {
-                        if (db.changeMineAmount(wm.getCurrentMine().getId(), -miningAmount)) {
-                            if (db.updatePlayerObjects(username, wm.getCurrentMine().getResource(), miningAmount)) {
-                                // SUCCESS
+                try {
+                    lock.lockRead();
+                    for (WagonMining wm : wagonMining) {
+                        String username = db.getUsernameByWagonId(wm.getWagon().getId()).orElse("");
+                        // TODO TEST IF TRAIN IS STILL AT STATION WHERE MINE IS
+                        int miningAmount = WagonStats.getMiningAmount(wm.getWagon());
+                        miningAmount = -db.canChangeMineAmount(wm.getCurrentMine().getId(), -miningAmount);
+                        miningAmount = db.canUpdatePlayerObjects(username, miningAmount);
+                        if (miningAmount != 0) {
+                            if (db.changeMineAmount(wm.getCurrentMine().getId(), -miningAmount)) {
+                                if (db.updatePlayerObjects(username, wm.getCurrentMine().getResource(), miningAmount)) {
+                                    // SUCCESS
+                                }
                             }
                         }
                     }
+                    lock.unlockRead();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }, INTERVAL_MS, INTERVAL_MS);
@@ -61,17 +68,24 @@ public class MineController {
     public void addWagon(WagonMining wm){
         boolean found = false;
         int i;
-        for(i = 0; i < wagonMining.size(); i++) {
-            if(wagonMining.get(i).getWagon().getId() == wm.getWagon().getId()) {
-                found = true;
-                break;
+        try {
+            lock.lockRead();
+            for (i = 0; i < wagonMining.size(); i++) {
+                if (wagonMining.get(i).getWagon().getId() == wm.getWagon().getId()) {
+                    found = true;
+                    break;
+                }
             }
-        }
-
-        if(found) {
-            wagonMining.set(i,wm);
-        } else {
-            wagonMining.add(wm);
+            lock.unlockRead();
+            lock.lockWrite();
+            if (found) {
+                wagonMining.set(i, wm);
+            } else {
+                wagonMining.add(wm);
+            }
+            lock.unlockWrite();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
     }
@@ -81,22 +95,35 @@ public class MineController {
     }
 
     public boolean removeWagon(int id) {// need tests
-        for(int i = 0; i < wagonMining.size(); i++) {
-            if(wagonMining.get(i).getWagon().getId() == id) {
-                wagonMining.remove(i);
-                return true;
+        try {
+            lock.lockWrite();
+            for (int i = 0; i < wagonMining.size(); i++) {
+                if (wagonMining.get(i).getWagon().getId() == id) {
+                    wagonMining.remove(i);
+                    lock.unlockWrite();
+                    return true;
+                }
             }
+            lock.unlockWrite();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         return false;
     }
 
     public ArrayList<WagonMining> getPlayerWagonMining(String username) {
         ArrayList<WagonMining> result = new ArrayList<>();
-        for(WagonMining wm : wagonMining) {
-            if(Server.getInstance().getDataBase().getUsernameByWagonId(wm.getWagon().getId()).orElse("").equals(username)) {
-                Server.getInstance().getDataBase().getMine(wm.getCurrentMine().getId()).ifPresent(wm::setCurrentMine);
-                result.add(wm);
+        try {
+            lock.lockRead();
+            for (WagonMining wm : wagonMining) {
+                if (Server.getInstance().getDataBase().getUsernameByWagonId(wm.getWagon().getId()).orElse("").equals(username)) {
+                    Server.getInstance().getDataBase().getMine(wm.getCurrentMine().getId()).ifPresent(wm::setCurrentMine);
+                    result.add(wm);
+                }
             }
+            lock.unlockRead();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         return result;

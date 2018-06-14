@@ -4,6 +4,7 @@ import Game.Craft;
 import Game.Train;
 import Server.Server;
 import Server.DataBase;
+import Utils.ReadWriteLock;
 import Utils.Recipe;
 import Utils.ResourceAmount;
 import Utils.WagonStats;
@@ -17,6 +18,7 @@ public class CraftController {
     private ArrayList<Craft> crafts = new ArrayList<>();
 
     private final int INTERVAL_MS = 1000;
+    private ReadWriteLock lock = new ReadWriteLock();
 
     public CraftController() {
         new java.util.Timer().scheduleAtFixedRate(new TimerTask() {
@@ -25,7 +27,8 @@ public class CraftController {
                 DataBase db = Server.getInstance().getDataBase();
                 ArrayList<Craft> toRemove = new ArrayList<>();
                 HashMap<String, Integer> nbrCrafts = new HashMap<>();
-                synchronized (crafts) {
+                try {
+                    lock.lockWrite();
                     for (Craft c : crafts) {
                         if (nbrCrafts.merge(c.getUsername(), 1, (a, b) -> a + b) > WagonStats.getMaxParallelCraft(db.getTrain(c.getUsername()).orElse(new Train())))
                             continue;
@@ -36,20 +39,30 @@ public class CraftController {
                             int finalAmount = finalProduct.getQuantity();
                             //finalAmount = db.canUpdatePlayerObjectsOnReservedCargo(c.getUsername(), finalAmount, finalAmount);
                             db.updatePlayerObjects(c.getUsername(), finalProduct.getRessource().ordinal(), finalAmount);
+                            System.out.println("7");
                             Server.getInstance().getReserveCargoController().removeReservedCargo(c.getUsername(), finalProduct.getQuantity());
+                            System.out.println("8");
                             toRemove.add(c);
                         }
                     }
-
+                    System.out.println("9");
                     for (Craft c : toRemove) crafts.remove(c);
+                    System.out.println("10");
+                    lock.unlockWrite();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }, INTERVAL_MS, INTERVAL_MS);
     }
 
     public void addCraft(Craft craft) {
-        synchronized (crafts) {
+        try {
+            lock.lockWrite();
             crafts.add(craft);
+            lock.unlockWrite();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -73,12 +86,16 @@ public class CraftController {
 
     public ArrayList<Craft> getPlayerCrafts(String username) {
         ArrayList<Craft> result = new ArrayList<>();
-        synchronized (crafts) {
+        try {
+            lock.lockRead();
             for (Craft c : crafts) {
                 if (c.getUsername().equals(username)) {
                     result.add(c);
                 }
             }
+            lock.unlockRead();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         return result;
     }
